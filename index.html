@@ -302,6 +302,24 @@ footer{border-top:1px solid var(--border);padding:26px 0}
 @media(max-width:600px){
   .stats-inner,.svc-grid,.stack-grid,.tray-grid,.content-grid,.deals-grid,.keys-grid{grid-template-columns:1fr}
 }
+
+/* CLIENT CARDS v8 - live iframe */
+.clients-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.client-card{background:var(--bg2);border:1px solid var(--border);border-radius:0;transition:border-color .25s,transform .2s;overflow:hidden;display:flex;flex-direction:column}
+.client-card:hover{border-color:var(--gold);transform:translateY(-3px)}
+.client-top-label{padding:14px 18px 12px;border-bottom:1px solid var(--border)}
+.client-company-name{font-family:"Barlow Condensed",sans-serif;font-size:20px;font-weight:800;letter-spacing:.5px;color:var(--white);display:block;margin-bottom:3px}
+.client-company-tag{font-family:"Barlow Condensed",sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase}
+.frame-live{position:relative;width:100%;overflow:hidden;background:var(--bg3)}
+.frame-live iframe{display:block;width:167%;height:280px;transform:scale(0.6);transform-origin:top left;border:none;pointer-events:none}
+.frame-live::after{content:"";position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(to bottom,transparent,var(--bg2));pointer-events:none}
+.client-bottom{padding:14px 18px 18px;display:flex;flex-direction:column;gap:8px}
+.client-svc-label{font-family:"Barlow Condensed",sans-serif;font-size:9px;font-weight:600;color:var(--gold);letter-spacing:3px;text-transform:uppercase}
+.client-pills{display:flex;flex-wrap:wrap;gap:5px}
+.svc-pill2{font-family:"Barlow Condensed",sans-serif;font-size:9px;font-weight:600;border:1px solid var(--gray3);color:var(--gray2);padding:3px 9px;letter-spacing:2px;text-transform:uppercase}
+.client-link{font-family:"Space Mono",monospace;font-size:10px;color:var(--gray2);text-decoration:none;letter-spacing:1px;transition:color .2s}
+.client-link:hover{color:var(--gold)}
+
 </style>
 </head>
 <body>
@@ -724,44 +742,69 @@ footer{border-top:1px solid var(--border);padding:26px 0}
   <h2 class="sec-title">Clientes &amp; proyectos</h2>
   <p class="sec-sub">Sitios web que he desarrollado y mantengo actualmente.</p>
   <div class="clients-grid">
+
+    <!-- COGASEN -->
     <div class="client-card">
       <div class="client-top-label">
         <span class="client-company-name">Cogasen</span>
         <span class="client-company-tag">Sector energético · Corporativo</span>
       </div>
-      <div>
-        <div class="frame-chrome"><div class="frame-dots"><span></span><span></span><span></span></div><div class="frame-url">cogasen.com.co</div></div>
-        <div class="frame-body"><iframe src="https://cogasen.com.co/" scrolling="no" loading="lazy" title="Cogasen" sandbox="allow-same-origin"></iframe></div>
+      <div class="frame-live">
+        <iframe src="https://cogasen.com.co/" loading="lazy" title="Cogasen" scrolling="no" sandbox="allow-same-origin allow-scripts"></iframe>
       </div>
-      <div class="client-info">
-        <div class="client-desc-title">Servicios ejecutados</div>
-        <div class="client-desc">Desarrollo y mantenimiento del sitio corporativo. Gestión de contenido, normatividad CREG, galería de proyectos y sección de actualidad del sector del gas natural en Colombia.</div>
-        <div class="client-services"><span class="svc-pill">Desarrollo Web</span><span class="svc-pill">Mantenimiento</span><span class="svc-pill">Hosting</span><span class="svc-pill">Contenido</span></div>
-        <a href="https://cogasen.com.co/" target="_blank" class="client-url">↗ cogasen.com.co</a>
+      <div class="client-bottom">
+        <div class="client-svc-label">Servicios ejecutados</div>
+        <div class="client-pills">
+          <span class="svc-pill2">Administración TI</span>
+          <span class="svc-pill2">Desarrollo Web</span>
+          <span class="svc-pill2">Mantenimiento</span>
+          <span class="svc-pill2">Hosting</span>
+        </div>
+        <a href="https://cogasen.com.co/" target="_blank" class="client-link">↗ cogasen.com.co</a>
       </div>
     </div>
+
+    <!-- BACK TO BAG -->
     <div class="client-card">
       <div class="client-top-label">
         <span class="client-company-name">Back to Bag</span>
         <span class="client-company-tag">Turismo · App web · E-Commerce</span>
       </div>
-      <div>
-        <div class="frame-chrome"><div class="frame-dots"><span></span><span></span><span></span></div><div class="frame-url">backtobag.co</div></div>
-        <div class="frame-body"><iframe src="https://backtobag.co/es" scrolling="no" loading="lazy" title="Back to Bag" sandbox="allow-same-origin"></iframe></div>
+      <div class="frame-live">
+        <iframe src="https://backtobag.co/es" loading="lazy" title="Back to Bag" scrolling="no" sandbox="allow-same-origin allow-scripts"></iframe>
       </div>
-      <div class="client-info">
-        <div class="client-desc-title">Servicios ejecutados</div>
-        <div class="client-desc">Plataforma web completa para servicio de lockers en Cartagena. Sistema de reservas online, gestión de tarifas, sedes y módulo de transporte de equipaje.</div>
-        <div class="client-services"><span class="svc-pill">App Web</span><span class="svc-pill">Reservas Online</span><span class="svc-pill">UI/UX</span><span class="svc-pill">Despliegue</span></div>
-        <a href="https://backtobag.co/es" target="_blank" class="client-url">↗ backtobag.co</a>
-      </div>
-    </div>
-    <div class="client-add">
-      <div class="client-add-inner">
-        <div class="client-add-ico">+</div>
-        <div class="client-add-t">Próximo cliente</div>
+      <div class="client-bottom">
+        <div class="client-svc-label">Servicios ejecutados</div>
+        <div class="client-pills">
+          <span class="svc-pill2">Desarrollo Web</span>
+          <span class="svc-pill2">Backend</span>
+          <span class="svc-pill2">Reservas Online</span>
+          <span class="svc-pill2">Despliegue</span>
+        </div>
+        <a href="https://backtobag.co/es" target="_blank" class="client-link">↗ backtobag.co</a>
       </div>
     </div>
+
+    <!-- ABBALAB -->
+    <div class="client-card">
+      <div class="client-top-label">
+        <span class="client-company-name">Abbalab</span>
+        <span class="client-company-tag">TI · Seguridad · Infraestructura</span>
+      </div>
+      <div class="frame-live">
+        <iframe src="https://abbalabsi.com/" loading="lazy" title="Abbalab" scrolling="no" sandbox="allow-same-origin allow-scripts"></iframe>
+      </div>
+      <div class="client-bottom">
+        <div class="client-svc-label">Servicios ejecutados</div>
+        <div class="client-pills">
+          <span class="svc-pill2">Infraestructura TI</span>
+          <span class="svc-pill2">Seguridad</span>
+          <span class="svc-pill2">Gestión de Sistemas</span>
+        </div>
+        <a href="https://abbalabsi.com/" target="_blank" class="client-link">↗ abbalabsi.com</a>
+      </div>
+    </div>
+
   </div>
 </div></section>
 
