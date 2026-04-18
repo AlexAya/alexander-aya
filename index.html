@@ -29,8 +29,31 @@ nav{position:sticky;top:0;z-index:200;background:rgba(8,8,8,0.97);backdrop-filte
 .nav-right{display:flex;align-items:center;gap:14px}
 .nav-avail{display:flex;align-items:center;gap:7px;font-family:"Space Mono",monospace;font-size:9px;color:#4a4;letter-spacing:2px}
 .nav-dot{width:6px;height:6px;border-radius:50%;background:#4a4;animation:pulse 2s infinite}
+
+/* THEME TOGGLE */
+.btn-theme-toggle{background:transparent;border:1px solid var(--border2);color:var(--gray);width:32px;height:32px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;border-radius:0;flex-shrink:0}
+.btn-theme-toggle:hover{border-color:var(--gold);color:var(--gold)}
+/* LIGHT THEME */
+body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;--gray:#555;--gray2:#777;--gray3:#ccc;--border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14)}
+body.light nav{background:rgba(244,244,240,0.97)}
+body.light .photo-img{filter:none}
+
+
+/* MARCAS */
+.brands-strip{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0;background:var(--border);margin-top:40px}
+.brand-tile{background:var(--bg);padding:28px 36px;display:flex;flex-direction:column;align-items:center;gap:10px;transition:background .2s;cursor:default;border:none;flex:1;min-width:150px}
+.brand-tile:hover{background:var(--bg3)}
+.brand-logo-svg{height:36px;display:flex;align-items:center;justify-content:center;filter:brightness(0) invert(0.55);transition:filter .2s}
+.brand-tile:hover .brand-logo-svg{filter:brightness(0) invert(1)}
+.brand-name-lbl{font-family:"Barlow Condensed",sans-serif;font-size:9px;color:var(--gray);letter-spacing:3px;text-transform:uppercase}
+
 .btn-cotizar-nav{font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:var(--gold);color:#000;border:none;padding:8px 18px;cursor:pointer;transition:all .2s}
 .btn-cotizar-nav:hover{background:#d4b26a}
+
+/* BLOG NAV */
+.btn-blog-nav{font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(196,162,90,0.4);padding:7px 14px;text-decoration:none;transition:all .2s}
+.btn-blog-nav:hover{background:var(--gold);color:#000}
+
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
 /* HERO */
@@ -102,7 +125,7 @@ hr.div{border:none;border-top:1px solid var(--border)}
 .svc-t{font-family:"Barlow Condensed",sans-serif;font-size:18px;font-weight:700;letter-spacing:.5px;margin-bottom:8px}
 .svc-d{font-size:13px;color:var(--gray);line-height:1.65;font-weight:300}
 .svc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:14px}
-.tag{font-family:"Barlow Condensed",sans-serif;font-size:10px;border:1px solid var(--gray3);color:var(--gray2);padding:3px 9px;letter-spacing:2px;text-transform:uppercase}
+.tag{font-family:"Barlow Condensed",sans-serif;font-size:10px;border:1px solid rgba(196,162,90,0.35);color:var(--gold);padding:3px 9px;letter-spacing:2px;text-transform:uppercase;background:rgba(196,162,90,0.06)}
 
 /* STACK */
 .stack-sec{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:56px 0}
@@ -316,8 +339,8 @@ footer{border-top:1px solid var(--border);padding:26px 0}
 .client-bottom{padding:14px 18px 18px;display:flex;flex-direction:column;gap:8px}
 .client-svc-label{font-family:"Barlow Condensed",sans-serif;font-size:9px;font-weight:600;color:var(--gold);letter-spacing:3px;text-transform:uppercase}
 .client-pills{display:flex;flex-wrap:wrap;gap:5px}
-.svc-pill2{font-family:"Barlow Condensed",sans-serif;font-size:9px;font-weight:600;border:1px solid var(--gray3);color:var(--gray2);padding:3px 9px;letter-spacing:2px;text-transform:uppercase}
-.client-link{font-family:"Space Mono",monospace;font-size:10px;color:var(--gray2);text-decoration:none;letter-spacing:1px;transition:color .2s}
+.svc-pill2{font-family:"Barlow Condensed",sans-serif;font-size:9px;font-weight:600;border:1px solid rgba(196,162,90,0.35);color:var(--gold);padding:3px 9px;letter-spacing:2px;text-transform:uppercase;background:rgba(196,162,90,0.06)}
+.client-link{font-family:"Space Mono",monospace;font-size:10px;color:var(--gray);text-decoration:none;letter-spacing:1px;transition:color .2s}
 .client-link:hover{color:var(--gold)}
 
 </style>
@@ -518,6 +541,8 @@ footer{border-top:1px solid var(--border);padding:26px 0}
   </div>
   <div class="nav-right">
     <div class="nav-avail"><div class="nav-dot"></div>Disponible</div>
+    <button class="btn-theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Cambiar tema">☀</button>
+    <a href="blog.html" target="_blank" class="btn-blog-nav">Blog</a>
     <button class="btn-cotizar-nav" onclick="openModal()">Cotizar</button>
   </div>
 </div></div>
@@ -553,7 +578,8 @@ footer{border-top:1px solid var(--border);padding:26px 0}
         <div class="pb-val">9.6K Suscriptores</div>
       </div>
       <div class="photo-badge2">
-        <div class="pb2-val">Tech Youtuber</div>
+        <div class="pb2-lbl">Tech</div>
+        <div class="pb2-lbl">Youtuber</div>
       </div>
     </div>
   </div>
@@ -608,10 +634,10 @@ footer{border-top:1px solid var(--border);padding:26px 0}
   </div>
 </div></div>
 
-<!-- EXPERIENCIA — acordeón de cargos -->
+<!-- TRAYECTORIA — acordeón de cargos -->
 <section class="sec" id="trayectoria"><div class="w">
-  <div class="sec-lbl">Experiencia</div>
-  <h2 class="sec-title">Trayectoria Profesional</h2>
+  <div class="sec-lbl">Trayectoria</div>
+  <h2 class="sec-title">Cargos desempeñados</h2>
   <p class="sec-sub">Haz clic en cada cargo para ver más detalles sobre las responsabilidades y tecnologías usadas.</p>
   <div class="tray-grid">
 
@@ -763,7 +789,7 @@ footer{border-top:1px solid var(--border);padding:26px 0}
     <div class="client-card">
       <div class="client-top-label">
         <span class="client-company-name">Back to Bag</span>
-        <span class="client-company-tag">Turismo</span>
+        <span class="client-company-tag">Turismo · App web · E-Commerce</span>
       </div>
       <div class="frame-live">
         <iframe src="https://backtobag.co/es" loading="lazy" title="Back to Bag" scrolling="no" sandbox="allow-same-origin allow-scripts"></iframe>
@@ -784,7 +810,7 @@ footer{border-top:1px solid var(--border);padding:26px 0}
     <div class="client-card">
       <div class="client-top-label">
         <span class="client-company-name">Abbalab</span>
-        <span class="client-company-tag">Sector de la Salud</span>
+        <span class="client-company-tag">TI · Seguridad · Infraestructura</span>
       </div>
       <div class="frame-live">
         <iframe src="https://abbalabsi.com/" loading="lazy" title="Abbalab" scrolling="no" sandbox="allow-same-origin allow-scripts"></iframe>
@@ -799,6 +825,7 @@ footer{border-top:1px solid var(--border);padding:26px 0}
         <a href="https://abbalabsi.com/" target="_blank" class="client-link">↗ abbalabsi.com</a>
       </div>
     </div>
+
 
     <!-- ACB -->
     <div class="client-card">
@@ -872,6 +899,86 @@ footer{border-top:1px solid var(--border);padding:26px 0}
   </div>
 </div></section>
 
+
+<!-- MARCAS PATROCINADORAS -->
+<section class="sec" id="marcas" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)"><div class="w">
+  <div class="sec-lbl">Patrocinadores &amp; Afiliados</div>
+  <h2 class="sec-title">Marcas que confían en mí</h2>
+  <p class="sec-sub">Empresas con las que he colaborado en contenido, reviews y programas de afiliados.</p>
+  <div class="brands-strip">
+
+    <!-- MOTOROLA -->
+    <div class="brand-tile">
+      <div class="brand-logo-svg">
+        <svg height="36" viewBox="0 0 120 36" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="28" font-family="Arial Black,sans-serif" font-size="28" font-weight="900" fill="currentColor">motorola</text>
+        </svg>
+      </div>
+      <div class="brand-name-lbl">Motorola</div>
+    </div>
+
+    <!-- LENOVO -->
+    <div class="brand-tile">
+      <div class="brand-logo-svg">
+        <svg height="36" viewBox="0 0 100 36" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="28" font-family="Arial,sans-serif" font-size="26" font-weight="700" fill="currentColor">LENOVO</text>
+        </svg>
+      </div>
+      <div class="brand-name-lbl">Lenovo</div>
+    </div>
+
+    <!-- ALIEXPRESS -->
+    <div class="brand-tile">
+      <div class="brand-logo-svg">
+        <svg height="36" viewBox="0 0 140 36" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="28" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#ff4d00">AliExpress</text>
+        </svg>
+      </div>
+      <div class="brand-name-lbl">AliExpress</div>
+    </div>
+
+    <!-- KEYSFAN -->
+    <div class="brand-tile">
+      <div class="brand-logo-svg">
+        <svg height="36" viewBox="0 0 120 36" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="8" width="20" height="20" rx="3" fill="currentColor"/>
+          <text x="4" y="24" font-family="Arial,sans-serif" font-size="14" font-weight="900" fill="white">K</text>
+          <text x="26" y="26" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="currentColor">KEYSFAN</text>
+        </svg>
+      </div>
+      <div class="brand-name-lbl">Keysfan</div>
+    </div>
+
+    <!-- LENSGO -->
+    <div class="brand-tile">
+      <div class="brand-logo-svg">
+        <svg height="36" viewBox="0 0 110 36" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="18" r="14" fill="none" stroke="currentColor" stroke-width="3"/>
+          <circle cx="18" cy="18" r="7" fill="currentColor"/>
+          <text x="38" y="26" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="currentColor">LENSGO</text>
+        </svg>
+      </div>
+      <div class="brand-name-lbl">Lensgo</div>
+    </div>
+
+    <!-- AMAZON -->
+    <div class="brand-tile">
+      <div class="brand-logo-svg">
+        <svg height="36" viewBox="0 0 110 36" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="22" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="currentColor">amazon</text>
+          <path d="M2 28 Q55 38 108 28" stroke="#ff9900" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <polygon points="100,24 108,28 103,32" fill="#ff9900"/>
+        </svg>
+      </div>
+      <div class="brand-name-lbl">Amazon</div>
+    </div>
+
+  </div>
+  <div style="text-align:center;margin-top:32px">
+    <button onclick="openCollab()" class="btn-cotizar" style="font-size:12px;padding:12px 28px">Colaborar con mi canal →</button>
+  </div>
+</div></section>
+
 <!-- DEALS -->
 <section class="sec" id="deals" style="background:var(--bg2);border-top:1px solid var(--border)"><div class="w">
   <div class="sec-lbl">Ofertas &amp; Descuentos</div>
@@ -932,7 +1039,8 @@ footer{border-top:1px solid var(--border);padding:26px 0}
     <a href="#deals">Deals</a>
   </div>
 </div>
-</div></footer>
+  <a href="admin.html" style="font-family:'Space Mono',monospace;font-size:9px;color:var(--gray3);text-decoration:none;letter-spacing:1px;transition:color .2s" title="Admin">⚙</a>
+</div></div></footer>
 
 <script>
 // ACORDEÓN
@@ -1041,6 +1149,24 @@ function submitCollab(){
     closeCollab();
   },4000);
 }
+
+
+// THEME TOGGLE
+var isLight = false;
+function toggleTheme(){
+  isLight = !isLight;
+  document.body.classList.toggle('light', isLight);
+  document.getElementById('themeToggle').textContent = isLight ? '🌙' : '☀';
+  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+}
+(function(){
+  if(localStorage.getItem('theme')==='light'){
+    isLight=true;
+    document.body.classList.add('light');
+    var b=document.getElementById('themeToggle');
+    if(b)b.textContent='🌙';
+  }
+})();
 
 // COPY
 function cp(id,btn){

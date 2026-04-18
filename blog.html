@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog · Alexander Aya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080808;--bg2:#0f0f0f;--bg3:#161616;--white:#efefef;--gray:#888;--gray2:#444;--gray3:#252525;--gold:#c4a25a;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14)}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:"Barlow",sans-serif;font-weight:300;overflow-x:hidden}
+.w{max-width:1100px;margin:0 auto;padding:0 32px}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;background:rgba(8,8,8,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:58px}
+.logo-nav{display:flex;align-items:center;gap:14px;text-decoration:none}
+.logo-nav-text{font-family:"Barlow Condensed",sans-serif;font-size:16px;font-weight:700;color:var(--white);letter-spacing:3px;text-transform:uppercase}
+.nav-back{font-family:"Barlow Condensed",sans-serif;font-size:11px;color:var(--gray);text-decoration:none;letter-spacing:3px;text-transform:uppercase;transition:color .2s;display:flex;align-items:center;gap:8px}
+.nav-back:hover{color:var(--white)}
+
+/* PAGE HEADER */
+.blog-header{padding:56px 0 40px;border-bottom:1px solid var(--border)}
+.blog-eyebrow{font-family:"Barlow Condensed",sans-serif;font-size:11px;color:var(--gray);letter-spacing:4px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.blog-eyebrow::before{content:"";display:inline-block;width:18px;height:1px;background:var(--gray2)}
+.blog-h1{font-family:"Barlow Condensed",sans-serif;font-size:52px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}
+.blog-sub{font-size:14px;color:var(--gray);font-weight:300}
+
+/* TABS */
+.tabs{display:flex;gap:1px;background:var(--border);margin-top:40px}
+.tab{font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gray);padding:14px 24px;cursor:pointer;background:var(--bg2);border-bottom:2px solid transparent;transition:all .2s;text-decoration:none}
+.tab.active{color:var(--white);border-bottom-color:var(--gold)}
+.tab:hover{color:var(--white)}
+
+/* FEED */
+.feed-section{padding:48px 0}
+.feed{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feed-item{background:var(--bg2);border:1px solid var(--border);overflow:hidden;transition:border-color .2s,transform .2s;cursor:pointer;text-decoration:none;display:block}
+.feed-item:hover{border-color:var(--gold);transform:translateY(-3px)}
+.feed-thumb{width:100%;aspect-ratio:16/9;background:var(--bg3);overflow:hidden;position:relative}
+.feed-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .3s}
+.feed-thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:40px;color:var(--gray2)}
+.feed-thumb-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3);opacity:0;transition:opacity .2s}
+.feed-item:hover .feed-thumb-play{opacity:1}
+.play-icon{width:52px;height:52px;background:rgba(196,162,90,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:#000}
+.feed-meta{padding:14px 16px 18px}
+.feed-platform{font-family:"Barlow Condensed",sans-serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-bottom:6px}
+.yt-lbl{color:#ff5555}
+.tt-lbl{color:#00c8ff}
+.ig-lbl{color:#e05574}
+.feed-title{font-family:"Barlow Condensed",sans-serif;font-size:16px;font-weight:700;color:var(--white);line-height:1.3;margin-bottom:6px}
+.feed-date{font-size:11px;color:var(--gray);font-family:"Space Mono",monospace}
+
+/* LOADING & NOTE */
+.feed-loading{display:flex;align-items:center;justify-content:center;height:240px;color:var(--gray);font-family:"Space Mono",monospace;font-size:12px;letter-spacing:2px;grid-column:1/-1}
+.feed-note{text-align:center;padding:48px 20px;color:var(--gray);font-size:14px;line-height:1.8;grid-column:1/-1}
+.feed-note a{color:var(--gold);text-decoration:none}
+.feed-note a:hover{text-decoration:underline}
+.feed-note .channel-link{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border:1px solid var(--border2);margin:8px 4px;font-family:"Barlow Condensed",sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;transition:all .2s}
+.feed-note .channel-link:hover{border-color:var(--gold);background:rgba(196,162,90,0.08)}
+
+/* CHANNELS SIDEBAR or section */
+.channels-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:32px}
+.channel-card{background:var(--bg2);border:1px solid var(--border);padding:20px;display:flex;align-items:center;gap:16px;transition:border-color .2s}
+.channel-card:hover{border-color:var(--gold)}
+.ch-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.ch-info{}
+.ch-name{font-family:"Barlow Condensed",sans-serif;font-size:17px;font-weight:700}
+.ch-handle{font-family:"Space Mono",monospace;font-size:9px;color:var(--gray);margin-top:3px}
+.ch-btn{margin-top:8px;display:inline-block;font-family:"Barlow Condensed",sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;text-decoration:none;transition:all .2s}
+
+footer{border-top:1px solid var(--border);padding:24px 0;margin-top:40px}
+.foot-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.foot-text{font-family:"Barlow Condensed",sans-serif;font-size:11px;color:var(--gray);letter-spacing:2px;text-transform:uppercase}
+
+@media(max-width:900px){.feed{grid-template-columns:1fr 1fr}.channels-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.feed{grid-template-columns:1fr}.blog-h1{font-size:36px}}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="w"><div class="nav-inner">
+  <a href="index.html" class="logo-nav">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
+      <polygon points="50,4 96,92 4,92" fill="none" stroke="#efefef" stroke-width="4" stroke-linejoin="miter"/>
+      <line x1="27" y1="66" x2="73" y2="66" stroke="#efefef" stroke-width="3.5"/>
+      <line x1="50" y1="20" x2="21" y2="82" stroke="#efefef" stroke-width="3" opacity="0.45"/>
+      <line x1="50" y1="20" x2="79" y2="82" stroke="#efefef" stroke-width="3" opacity="0.45"/>
+    </svg>
+    <span class="logo-nav-text">Alexander Aya</span>
+  </a>
+  <a href="index.html" class="nav-back">← Volver al inicio</a>
+</div></div>
+</nav>
+
+<div class="w">
+  <div class="blog-header">
+    <div class="blog-eyebrow">Contenido</div>
+    <div class="blog-h1">Blog &amp; Canal</div>
+    <div class="blog-sub">Videos, tutoriales y contenido tech en todos mis canales</div>
+
+    <div class="tabs">
+      <a class="tab active" onclick="setTab('yt');return false;" href="#">▶ YouTube</a>
+      <a class="tab" onclick="setTab('gaming');return false;" href="#">🎮 Gaming</a>
+      <a class="tab" onclick="setTab('tt');return false;" href="#">♪ TikTok</a>
+      <a class="tab" onclick="setTab('ig');return false;" href="#">◉ Instagram</a>
+    </div>
+  </div>
+
+  <div class="feed-section">
+    <div class="feed" id="feed">
+      <div class="feed-loading">Cargando videos...</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+<div class="w">
+<div class="foot-inner">
+  <span class="foot-text">© 2026 Alexander Aya Aponte · Bogotá, Colombia</span>
+  <a href="index.html" class="foot-text" style="color:var(--gold);text-decoration:none">← Volver al portafolio</a>
+</div>
+</div>
+</footer>
+
+<script>
+var currentTab = 'yt';
+
+var tabConfig = {
+  yt:     { label: '▶ YouTube · @AlexanderAya', cls: 'yt-lbl', channelId: 'UCCVyeHCXlxBnBH-F5gKXBRg', handle: '@AlexanderAya',  url: 'https://youtube.com/@AlexanderAya' },
+  gaming: { label: '▶ YouTube · @xandersgamerspc', cls: 'yt-lbl', channelId: 'UCzK7LEnKMEbKAVFbmmf3Vpg', handle: '@xandersgamerspc', url: 'https://youtube.com/@xandersgamerspc' },
+  tt:     { label: null, cls: 'tt-lbl', handle: '@alexander_aya_tech', url: 'https://tiktok.com/@alexander_aya_tech' },
+  ig:     { label: null, cls: 'ig-lbl', handle: '@alex.ayaaponte', url: 'https://instagram.com/alex.ayaaponte' }
+};
+
+function setTab(tab){
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(function(el,i){
+    var tabs = ['yt','gaming','tt','ig'];
+    el.classList.toggle('active', tabs[i] === tab);
+  });
+  loadTab(tab);
+}
+
+function loadTab(tab){
+  var feed = document.getElementById('feed');
+  feed.innerHTML = '<div class="feed-loading">Cargando contenido...</div>';
+  var cfg = tabConfig[tab];
+
+  if(tab === 'yt' || tab === 'gaming'){
+    var rssUrl = 'https://www.youtube.com/feeds/videos.xml?channel_id=' + cfg.channelId;
+    var apiUrl = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(rssUrl) + '&count=9';
+    fetch(apiUrl)
+      .then(function(r){return r.json()})
+      .then(function(data){
+        if(data.status === 'ok' && data.items && data.items.length){
+          renderYT(data.items, cfg);
+        } else {
+          renderNote(cfg);
+        }
+      })
+      .catch(function(){ renderNote(cfg); });
+  } else {
+    renderNote(cfg);
+  }
+}
+
+function renderYT(items, cfg){
+  var feed = document.getElementById('feed');
+  var html = '';
+  items.forEach(function(item){
+    var vid = item.link ? item.link.split('v=')[1] : '';
+    if(vid && vid.indexOf('&') > -1) vid = vid.split('&')[0];
+    var thumb = vid ? 'https://img.youtube.com/vi/'+vid+'/mqdefault.jpg' : '';
+    var date = item.pubDate ? new Date(item.pubDate).toLocaleDateString('es-CO',{day:'numeric',month:'short',year:'numeric'}) : '';
+    html += '<a class="feed-item" href="'+item.link+'" target="_blank" rel="noopener">';
+    html += '<div class="feed-thumb">';
+    if(thumb){
+      html += '<img src="'+thumb+'" loading="lazy" alt="'+escHtml(item.title)+'">';
+    } else {
+      html += '<div class="feed-thumb-placeholder">▶</div>';
+    }
+    html += '<div class="feed-thumb-play"><div class="play-icon">▶</div></div></div>';
+    html += '<div class="feed-meta">';
+    html += '<div class="feed-platform '+cfg.cls+'">'+cfg.label+'</div>';
+    html += '<div class="feed-title">'+escHtml(item.title)+'</div>';
+    html += '<div class="feed-date">'+date+'</div>';
+    html += '</div></a>';
+  });
+  feed.innerHTML = html;
+}
+
+function renderNote(cfg){
+  var feed = document.getElementById('feed');
+  var icon = cfg.cls === 'yt-lbl' ? '▶' : cfg.cls === 'tt-lbl' ? '♪' : '◉';
+  feed.innerHTML = '<div class="feed-note">'+
+    '<p style="margin-bottom:20px;font-size:16px">Visita el canal directamente para ver el contenido más reciente:</p>'+
+    '<a href="'+cfg.url+'" target="_blank" class="channel-link '+cfg.cls+'">'+icon+' '+cfg.handle+'  →</a>'+
+    '</div>';
+}
+
+function escHtml(str){
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Load on init
+loadTab('yt');
+</script>
+</body>
+</html>

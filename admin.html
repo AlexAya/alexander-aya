@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · Alexander Aya</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#080808;--bg2:#0f0f0f;--bg3:#161616;--white:#efefef;--gray:#888;--gray2:#444;--gray3:#252525;--gold:#c4a25a;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);--red:#e05555}
+body{background:var(--bg);color:var(--white);font-family:"Barlow",sans-serif;font-weight:300;min-height:100vh;display:flex;flex-direction:column}
+.w{max-width:1100px;margin:0 auto;padding:0 32px}
+
+nav{background:rgba(8,8,8,0.97);border-bottom:1px solid var(--border);padding:0}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:58px}
+.logo-nav{display:flex;align-items:center;gap:14px;text-decoration:none}
+.logo-nav-text{font-family:"Barlow Condensed",sans-serif;font-size:16px;font-weight:700;color:var(--white);letter-spacing:3px;text-transform:uppercase}
+.nav-badge{font-family:"Barlow Condensed",sans-serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(196,162,90,0.4);padding:4px 10px}
+
+/* LOGIN */
+#loginScreen{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+.login-box{background:var(--bg2);border:1px solid var(--border2);padding:40px;width:100%;max-width:400px}
+.login-title{font-family:"Barlow Condensed",sans-serif;font-size:28px;font-weight:800;margin-bottom:8px;letter-spacing:.5px}
+.login-sub{font-size:13px;color:var(--gray);margin-bottom:28px;font-weight:300}
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.form-label{font-family:"Barlow Condensed",sans-serif;font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase}
+.form-input{background:var(--bg3);border:1px solid var(--gray3);color:var(--white);padding:12px 14px;font-family:"Barlow",sans-serif;font-size:14px;outline:none;width:100%;transition:border-color .2s}
+.form-input:focus{border-color:var(--gold)}
+.btn-login{background:var(--gold);color:#000;border:none;padding:14px;font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;width:100%;margin-top:4px;transition:all .2s}
+.btn-login:hover{background:#d4b26a}
+.login-error{color:var(--red);font-size:12px;margin-top:8px;font-family:"Space Mono",monospace;display:none}
+
+/* ADMIN PANEL */
+#adminPanel{display:none;flex:1;padding:40px 0}
+.admin-header{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.admin-title{font-family:"Barlow Condensed",sans-serif;font-size:36px;font-weight:800;margin-bottom:4px}
+.admin-sub{font-size:13px;color:var(--gray);font-weight:300}
+.admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:32px}
+.admin-stat{background:var(--bg2);padding:20px 22px}
+.admin-stat-n{font-family:"Barlow Condensed",sans-serif;font-size:32px;font-weight:800;color:var(--gold);letter-spacing:-1px}
+.admin-stat-l{font-family:"Barlow Condensed",sans-serif;font-size:9px;color:var(--gray);letter-spacing:3px;text-transform:uppercase;margin-top:4px}
+
+.section-title{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:700;margin-bottom:16px;padding-top:8px}
+.admin-card{background:var(--bg2);border:1px solid var(--border);padding:24px;margin-bottom:16px}
+.admin-card-title{font-family:"Barlow Condensed",sans-serif;font-size:16px;font-weight:700;margin-bottom:16px;color:var(--gold);letter-spacing:.5px}
+.admin-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.btn-save{background:var(--gold);color:#000;border:none;padding:10px 24px;font-family:"Barlow Condensed",sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.btn-save:hover{background:#d4b26a}
+.btn-danger{background:transparent;color:var(--red);border:1px solid var(--red);padding:8px 18px;font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.btn-danger:hover{background:var(--red);color:#fff}
+
+.table-wrap{overflow-x:auto;margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-family:"Barlow Condensed",sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;padding:10px 14px;text-align:left;background:var(--bg3);border-bottom:1px solid var(--border2)}
+td{padding:12px 14px;border-bottom:1px solid var(--border);color:var(--gray);vertical-align:middle}
+tr:hover td{background:var(--bg3)}
+.badge{font-family:"Barlow Condensed",sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border:1px solid}
+.badge-green{color:#4a4;border-color:#4a4;background:rgba(68,170,68,0.08)}
+.badge-gray{color:var(--gray);border-color:var(--gray3)}
+
+.btn-sm{font-family:"Barlow Condensed",sans-serif;font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:5px 12px;cursor:pointer;border:1px solid var(--gray3);background:transparent;color:var(--gray);transition:all .2s}
+.btn-sm:hover{color:var(--white);border-color:var(--white)}
+
+.logout-btn{font-family:"Barlow Condensed",sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;background:transparent;color:var(--gray);border:1px solid var(--gray3);padding:7px 16px;cursor:pointer;transition:all .2s}
+.logout-btn:hover{color:var(--red);border-color:var(--red)}
+
+.notice{background:rgba(196,162,90,0.08);border:1px solid rgba(196,162,90,0.25);padding:12px 16px;font-size:12px;color:var(--gray);font-family:"Space Mono",monospace;margin-bottom:24px}
+
+footer{border-top:1px solid var(--border);padding:20px 0;margin-top:auto}
+.foot-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.foot-text{font-family:"Barlow Condensed",sans-serif;font-size:10px;color:var(--gray2);letter-spacing:2px;text-transform:uppercase}
+
+@media(max-width:700px){.admin-grid,.admin-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="w"><div class="nav-inner">
+  <a href="index.html" class="logo-nav">
+    <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
+      <polygon points="50,4 96,92 4,92" fill="none" stroke="#efefef" stroke-width="4" stroke-linejoin="miter"/>
+      <line x1="27" y1="66" x2="73" y2="66" stroke="#efefef" stroke-width="3.5"/>
+    </svg>
+    <span class="logo-nav-text">Alexander Aya</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span class="nav-badge">Panel Admin</span>
+    <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
+  </div>
+</div></div>
+</nav>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-title">Acceso Admin</div>
+    <div class="login-sub">Módulo administrativo privado de Alexander Aya</div>
+    <div class="form-group">
+      <label class="form-label">Contraseña</label>
+      <input class="form-input" type="password" id="pwInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn-login" onclick="doLogin()">Entrar →</button>
+    <div class="login-error" id="loginError">Contraseña incorrecta. Inténtalo de nuevo.</div>
+    <div style="margin-top:16px;font-size:11px;color:var(--gray2);font-family:'Space Mono',monospace">
+      Esta página es de uso exclusivo del administrador.
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+<div class="w">
+
+  <div class="admin-header">
+    <div class="admin-title">Panel Administrativo</div>
+    <div class="admin-sub">Gestiona clientes, marcas, códigos y configuración del sitio</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="admin-grid">
+    <div class="admin-stat"><div class="admin-stat-n">4</div><div class="admin-stat-l">Clientes activos</div></div>
+    <div class="admin-stat"><div class="admin-stat-n">6</div><div class="admin-stat-l">Marcas patrocinadoras</div></div>
+    <div class="admin-stat"><div class="admin-stat-n">7</div><div class="admin-stat-l">Códigos activos</div></div>
+  </div>
+
+  <div class="notice">ℹ Este módulo es una demo funcional. Los cambios aquí son visuales (localStorage). Para persistir cambios en el sitio, edita el index.html y haz push a GitHub.</div>
+
+  <!-- CLIENTES -->
+  <div class="section-title">Clientes</div>
+  <div class="admin-card">
+    <div class="admin-card-title">Clientes activos</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Empresa</th><th>Sector</th><th>URL</th><th>Servicios</th><th>Estado</th><th>Acción</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Cogasen</strong></td>
+            <td>Energético</td>
+            <td><a href="https://cogasen.com.co" target="_blank" style="color:var(--gold)">cogasen.com.co</a></td>
+            <td>Admin TI · Web · Hosting</td>
+            <td><span class="badge badge-green">Activo</span></td>
+            <td><button class="btn-sm">Editar</button></td>
+          </tr>
+          <tr>
+            <td><strong>Back to Bag</strong></td>
+            <td>Turismo</td>
+            <td><a href="https://backtobag.co" target="_blank" style="color:var(--gold)">backtobag.co</a></td>
+            <td>Web · Backend · Reservas</td>
+            <td><span class="badge badge-green">Activo</span></td>
+            <td><button class="btn-sm">Editar</button></td>
+          </tr>
+          <tr>
+            <td><strong>Abbalab</strong></td>
+            <td>Salud</td>
+            <td><a href="https://abbalabsi.com" target="_blank" style="color:var(--gold)">abbalabsi.com</a></td>
+            <td>Infraestructura · Seguridad</td>
+            <td><span class="badge badge-green">Activo</span></td>
+            <td><button class="btn-sm">Editar</button></td>
+          </tr>
+          <tr>
+            <td><strong>ACB</strong></td>
+            <td>Residuos sólidos</td>
+            <td><a href="https://acbesp.com" target="_blank" style="color:var(--gold)">acbesp.com</a></td>
+            <td>Infraestructura · Gestión</td>
+            <td><span class="badge badge-green">Activo</span></td>
+            <td><button class="btn-sm">Editar</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn-save">+ Agregar cliente</button>
+    </div>
+  </div>
+
+  <!-- MARCAS -->
+  <div class="section-title">Marcas Patrocinadoras</div>
+  <div class="admin-card">
+    <div class="admin-card-title">Gestión de marcas</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Marca</th><th>Tipo</th><th>URL afiliado / código</th><th>Estado</th><th>Acción</th></tr>
+        </thead>
+        <tbody id="brandsTable">
+          <tr><td><strong>Motorola</strong></td><td>Review · Unboxing</td><td>—</td><td><span class="badge badge-green">Activa</span></td><td><button class="btn-sm">Editar</button></td></tr>
+          <tr><td><strong>Lenovo</strong></td><td>Hardware · Laptops</td><td>—</td><td><span class="badge badge-green">Activa</span></td><td><button class="btn-sm">Editar</button></td></tr>
+          <tr><td><strong>AliExpress</strong></td><td>Afiliado</td><td>AAYA15</td><td><span class="badge badge-green">Activa</span></td><td><button class="btn-sm">Editar</button></td></tr>
+          <tr><td><strong>Keysfan</strong></td><td>Software · Licencias</td><td>ALX62 / ALX52</td><td><span class="badge badge-green">Activa</span></td><td><button class="btn-sm">Editar</button></td></tr>
+          <tr><td><strong>Lensgo</strong></td><td>Audio · Video</td><td>—</td><td><span class="badge badge-green">Activa</span></td><td><button class="btn-sm">Editar</button></td></tr>
+          <tr><td><strong>Amazon</strong></td><td>Afiliado</td><td>ALEX10 / ALEXPRIME</td><td><span class="badge badge-green">Activa</span></td><td><button class="btn-sm">Editar</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:16px">
+      <button class="btn-save">+ Agregar marca</button>
+    </div>
+  </div>
+
+  <!-- CÓDIGOS -->
+  <div class="section-title">Códigos &amp; Descuentos</div>
+  <div class="admin-card">
+    <div class="admin-card-title">Códigos activos</div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Código</th><th>Plataforma</th><th>Descuento</th><th>Descripción</th><th>Estado</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code style="color:var(--gold)">ALEX10</code></td><td>Amazon</td><td>10% OFF</td><td>Electrónica y tech</td><td><span class="badge badge-green">Activo</span></td></tr>
+          <tr><td><code style="color:var(--gold)">ALEXPRIME</code></td><td>Amazon Prime</td><td>30 días</td><td>Trial gratuito</td><td><span class="badge badge-green">Activo</span></td></tr>
+          <tr><td><code style="color:var(--gold)">AAYA15</code></td><td>AliExpress</td><td>15% OFF</td><td>Primera compra</td><td><span class="badge badge-green">Activo</span></td></tr>
+          <tr><td><code style="color:var(--gold)">TECHCOL</code></td><td>AliExpress</td><td>Envío gratis</td><td>+$20 USD</td><td><span class="badge badge-green">Activo</span></td></tr>
+          <tr><td><code style="color:var(--gold)">ALX62</code></td><td>Keysfan</td><td>62% OFF</td><td>Office 2016/2019</td><td><span class="badge badge-green">Activo</span></td></tr>
+          <tr><td><code style="color:var(--gold)">ALX52</code></td><td>Keysfan</td><td>50% OFF</td><td>Windows Series</td><td><span class="badge badge-green">Activo</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CONFIG SITIO -->
+  <div class="section-title">Configuración del Sitio</div>
+  <div class="admin-card">
+    <div class="admin-card-title">Información general</div>
+    <div class="admin-row">
+      <div>
+        <label class="form-label" style="display:block;margin-bottom:6px;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase">Suscriptores YouTube</label>
+        <input class="form-input" type="text" value="9.6K" id="cfgSubs">
+      </div>
+      <div>
+        <label class="form-label" style="display:block;margin-bottom:6px;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase">Videos publicados</label>
+        <input class="form-input" type="text" value="656" id="cfgVideos">
+      </div>
+    </div>
+    <div class="admin-row">
+      <div>
+        <label class="form-label" style="display:block;margin-bottom:6px;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase">Años de experiencia</label>
+        <input class="form-input" type="text" value="8+" id="cfgYears">
+      </div>
+      <div>
+        <label class="form-label" style="display:block;margin-bottom:6px;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase">Estado disponibilidad</label>
+        <select class="form-input" id="cfgStatus" style="cursor:pointer;background:var(--bg3)">
+          <option value="disponible">🟢 Disponible</option>
+          <option value="ocupado">🔴 No disponible</option>
+          <option value="limitado">🟡 Disponibilidad limitada</option>
+        </select>
+      </div>
+    </div>
+    <button class="btn-save" onclick="saveConfig()">Guardar cambios</button>
+    <span id="saveMsg" style="margin-left:14px;font-family:'Space Mono',monospace;font-size:10px;color:#4a4;display:none">✓ Guardado</span>
+  </div>
+
+  <!-- DANGER ZONE -->
+  <div class="section-title" style="color:var(--red)">Zona de riesgo</div>
+  <div class="admin-card" style="border-color:rgba(224,85,85,0.2)">
+    <div class="admin-card-title" style="color:var(--red)">Acciones irreversibles</div>
+    <p style="font-size:13px;color:var(--gray);margin-bottom:16px">Estas acciones no se pueden deshacer. Úsalas con cuidado.</p>
+    <button class="btn-danger" onclick="confirmReset()">Resetear configuración local</button>
+  </div>
+
+</div>
+</div>
+
+<footer>
+<div class="w">
+<div class="foot-inner">
+  <span class="foot-text">Panel Admin · Alexander Aya Aponte · 2026</span>
+  <a href="index.html" class="foot-text" style="color:var(--gold);text-decoration:none">← Volver al sitio</a>
+</div>
+</div>
+</footer>
+
+<script>
+// Simple password - in production use a real auth system
+var ADMIN_PASS = 'alexander2026';
+var SESSION_KEY = 'alex_admin_ok';
+
+function doLogin(){
+  var pw = document.getElementById('pwInput').value;
+  var err = document.getElementById('loginError');
+  if(pw === ADMIN_PASS){
+    sessionStorage.setItem(SESSION_KEY, '1');
+    showPanel();
+  } else {
+    err.style.display = 'block';
+    document.getElementById('pwInput').value = '';
+    document.getElementById('pwInput').focus();
+  }
+}
+
+function showPanel(){
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('adminPanel').style.display = 'block';
+}
+
+function logout(){
+  sessionStorage.removeItem(SESSION_KEY);
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('adminPanel').style.display = 'none';
+  document.getElementById('pwInput').value = '';
+}
+
+function saveConfig(){
+  var msg = document.getElementById('saveMsg');
+  msg.style.display = 'inline';
+  setTimeout(function(){msg.style.display='none'},2500);
+}
+
+function confirmReset(){
+  if(confirm('¿Seguro que quieres resetear la configuración local? Esta acción borra los datos guardados en este navegador.')){
+    localStorage.clear();
+    sessionStorage.removeItem(SESSION_KEY);
+    location.reload();
+  }
+}
+
+// Check session
+if(sessionStorage.getItem(SESSION_KEY) === '1'){
+  showPanel();
+}
+</script>
+</body>
+</html>
