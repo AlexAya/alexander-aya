@@ -330,6 +330,8 @@ footer{border-top:1px solid var(--border);padding:26px 0}
 
 /* CLIENT CARDS v8 - live iframe */
 .clients-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+@media(max-width:900px){.clients-grid{grid-template-columns:1fr!important}}
+@media(max-width:600px){.clients-grid{grid-template-columns:1fr!important}}
 .client-card{background:var(--bg2);border:1px solid var(--border);border-radius:0;transition:border-color .25s,transform .2s;overflow:hidden;display:flex;flex-direction:column}
 .client-card:hover{border-color:var(--gold);transform:translateY(-3px)}
 .client-top-label{padding:14px 18px 12px;border-bottom:1px solid var(--border)}
