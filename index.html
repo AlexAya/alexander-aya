@@ -368,16 +368,17 @@ footer{border-top:1px solid var(--border);padding:26px 0}
 
 /* CARRUSEL MARCAS */
 .brands-carousel-wrap{width:100%;overflow:hidden;margin-top:32px;position:relative}
-.brands-carousel-wrap::before,.brands-carousel-wrap::after{content:"";position:absolute;top:0;bottom:0;width:100px;z-index:2;pointer-events:none}
+.brands-carousel-wrap::before,.brands-carousel-wrap::after{content:"";position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
 .brands-carousel-wrap::before{left:0;background:linear-gradient(to right,var(--bg2),transparent)}
 .brands-carousel-wrap::after{right:0;background:linear-gradient(to left,var(--bg2),transparent)}
-.brands-carousel{display:flex;gap:16px;animation:scroll-brands 35s linear infinite;width:max-content;padding:8px 0}
+.brands-carousel{display:flex;gap:16px;animation:scroll-brands 30s linear infinite;width:max-content}
 .brands-carousel:hover{animation-play-state:paused}
-.brand-card{background:var(--bg);border:1px solid var(--border);padding:20px 28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-width:160px;height:100px;transition:all .3s;cursor:default;flex-shrink:0}
-.brand-card:hover{border-color:var(--gold);transform:translateY(-3px);background:var(--bg3)}
-.brand-card svg{opacity:0.6;transition:opacity .3s}
-.brand-card:hover svg{opacity:1}
+.brand-card{background:var(--bg);border:1px solid var(--border2);padding:24px 32px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-width:160px;height:110px;transition:all .3s;cursor:default;flex-shrink:0}
+.brand-card:hover{border-color:var(--gold);transform:translateY(-3px)}
+.brand-card img{height:36px;width:auto;max-width:120px;object-fit:contain;filter:brightness(0) invert(0.6);transition:filter .3s}
+.brand-card:hover img{filter:brightness(0) invert(1)}
 .brand-card span{font-family:"Barlow Condensed",sans-serif;font-size:9px;color:var(--gray);letter-spacing:3px;text-transform:uppercase}
+
 @keyframes scroll-brands{
   0%{transform:translateX(0)}
   100%{transform:translateX(-50%)}
