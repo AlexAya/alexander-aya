@@ -366,6 +366,24 @@ footer{border-top:1px solid var(--border);padding:26px 0}
   .btn-hamburger{display:flex}
 }
 
+/* CARRUSEL MARCAS */
+.brands-carousel-wrap{width:100%;overflow:hidden;margin-top:32px;position:relative}
+.brands-carousel-wrap::before,.brands-carousel-wrap::after{content:"";position:absolute;top:0;bottom:0;width:80px;z-index:2;pointer-events:none}
+.brands-carousel-wrap::before{left:0;background:linear-gradient(to right,var(--bg2),transparent)}
+.brands-carousel-wrap::after{right:0;background:linear-gradient(to left,var(--bg2),transparent)}
+.brands-carousel{display:flex;gap:16px;animation:scroll-brands 30s linear infinite;width:max-content}
+.brands-carousel:hover{animation-play-state:paused}
+.brand-card{background:var(--bg);border:1px solid var(--border2);padding:24px 32px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-width:160px;height:110px;transition:all .3s;cursor:default;flex-shrink:0}
+.brand-card:hover{border-color:var(--gold);transform:translateY(-3px)}
+.brand-card img{height:36px;width:auto;max-width:120px;object-fit:contain;filter:brightness(0) invert(0.6);transition:filter .3s}
+.brand-card:hover img{filter:brightness(0) invert(1)}
+.brand-card span{font-family:"Barlow Condensed",sans-serif;font-size:9px;color:var(--gray);letter-spacing:3px;text-transform:uppercase}
+
+@keyframes scroll-brands{
+  0%{transform:translateX(0)}
+  100%{transform:translateX(-50%)}
+}
+
 </style>
 <meta name="description"
   content="Alexander Aya Aponte — Ingeniero de Sistemas, desarrollador web, creador de contenido tech en Bogotá. Servicios de infraestructura TI, cloud, Docker y desarrollo web.">
@@ -991,85 +1009,103 @@ footer{border-top:1px solid var(--border);padding:26px 0}
   </div>
 </div></section>
 
-
 <!-- MARCAS PATROCINADORAS -->
-<section class="sec" id="marcas" style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border)"><div class="w">
-  <div class="sec-lbl">Patrocinadores &amp; Afiliados</div>
-  <h2 class="sec-title">Marcas que confían en mí</h2>
-  <p class="sec-sub">Empresas con las que he colaborado en contenido, reviews y programas de afiliados.</p>
-  <div class="brands-strip">
-
-    <!-- MOTOROLA -->
-    <div class="brand-tile">
-      <div class="brand-logo-svg">
-        <svg height="36" viewBox="0 0 120 36" xmlns="http://www.w3.org/2000/svg">
-          <text x="0" y="28" font-family="Arial Black,sans-serif" font-size="28" font-weight="900" fill="currentColor">motorola</text>
-        </svg>
-      </div>
-      <div class="brand-name-lbl">Motorola</div>
-    </div>
-
-    <!-- LENOVO -->
-    <div class="brand-tile">
-      <div class="brand-logo-svg">
-        <svg height="36" viewBox="0 0 100 36" xmlns="http://www.w3.org/2000/svg">
-          <text x="0" y="28" font-family="Arial,sans-serif" font-size="26" font-weight="700" fill="currentColor">LENOVO</text>
-        </svg>
-      </div>
-      <div class="brand-name-lbl">Lenovo</div>
-    </div>
-
-    <!-- ALIEXPRESS -->
-    <div class="brand-tile">
-      <div class="brand-logo-svg">
-        <svg height="36" viewBox="0 0 140 36" xmlns="http://www.w3.org/2000/svg">
-          <text x="0" y="28" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="#ff4d00">AliExpress</text>
-        </svg>
-      </div>
-      <div class="brand-name-lbl">AliExpress</div>
-    </div>
-
-    <!-- KEYSFAN -->
-    <div class="brand-tile">
-      <div class="brand-logo-svg">
-        <svg height="36" viewBox="0 0 120 36" xmlns="http://www.w3.org/2000/svg">
-          <rect x="0" y="8" width="20" height="20" rx="3" fill="currentColor"/>
-          <text x="4" y="24" font-family="Arial,sans-serif" font-size="14" font-weight="900" fill="white">K</text>
-          <text x="26" y="26" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="currentColor">KEYSFAN</text>
-        </svg>
-      </div>
-      <div class="brand-name-lbl">Keysfan</div>
-    </div>
-
-    <!-- LENSGO -->
-    <div class="brand-tile">
-      <div class="brand-logo-svg">
-        <svg height="36" viewBox="0 0 110 36" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="18" cy="18" r="14" fill="none" stroke="currentColor" stroke-width="3"/>
-          <circle cx="18" cy="18" r="7" fill="currentColor"/>
-          <text x="38" y="26" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="currentColor">LENSGO</text>
-        </svg>
-      </div>
-      <div class="brand-name-lbl">Lensgo</div>
-    </div>
-
-    <!-- AMAZON -->
-    <div class="brand-tile">
-      <div class="brand-logo-svg">
-        <svg height="36" viewBox="0 0 110 36" xmlns="http://www.w3.org/2000/svg">
-          <text x="0" y="22" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="currentColor">amazon</text>
-          <path d="M2 28 Q55 38 108 28" stroke="#ff9900" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <polygon points="100,24 108,28 103,32" fill="#ff9900"/>
-        </svg>
-      </div>
-      <div class="brand-name-lbl">Amazon</div>
-    </div>
-
+<section class="sec" id="marcas"
+  style="background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);overflow:hidden">
+  <div class="w">
+    <div class="sec-lbl">Patrocinadores &amp; Afiliados</div>
+    <h2 class="sec-title">Marcas que confían en mí</h2>
+    <p class="sec-sub">Empresas con las que he colaborado en contenido, reviews y programas de afiliados.</p>
   </div>
-  <div style="text-align:center;margin-top:32px">
-    <button onclick="openCollab()" class="btn-cotizar" style="font-size:12px;padding:12px 28px">Colaborar con mi canal →</button>
+
+  <!-- CARRUSEL -->
+  <div class="brands-carousel-wrap">
+    <div class="brands-carousel">
+
+      <div class="brand-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+        <span>Amazon</span>
+      </div>
+
+      <div class="brand-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Motorola_Logo.svg" alt="Motorola">
+        <span>Motorola</span>
+      </div>
+
+      <div class="brand-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/Lenovo_logo_2015.svg" alt="Lenovo">
+        <span>Lenovo</span>
+      </div>
+
+      <div class="brand-card">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/AliExpress_logo.svg/2560px-AliExpress_logo.svg.png"
+          alt="AliExpress">
+        <span>AliExpress</span>
+      </div>
+
+      <div class="brand-card" style="background:var(--bg3)">
+        <div
+          style="font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:var(--gold);letter-spacing:2px">
+          KEYSFAN</div>
+        <span>Keysfan</span>
+      </div>
+
+      <div class="brand-card" style="background:var(--bg3)">
+        <div
+          style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:#4f46e5;letter-spacing:2px">
+          GoLogin</div>
+        <span>GoLogin</span>
+      </div>
+
+      <div class="brand-card" style="background:var(--bg3)">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Filmora_logo.svg/1200px-Filmora_logo.svg.png"
+          alt="Filmora" onerror="this.style.display='none';this.nextSibling.style.display='block'">
+        <div
+          style="display:none;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:#00adef">
+          Filmora</div>
+        <span>Filmora</span>
+      </div>
+
+      <div class="brand-card" style="background:var(--bg3)">
+        <div
+          style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;color:#1a1a2e;background:#fff;padding:6px 12px;border-radius:4px">
+          GAMSGO</div>
+        <span>Gamsgo</span>
+      </div>
+
+      <!-- Repetir para loop infinito -->
+      <div class="brand-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+        <span>Amazon</span>
+      </div>
+
+      <div class="brand-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/Motorola_Logo.svg" alt="Motorola">
+        <span>Motorola</span>
+      </div>
+
+      <div class="brand-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/Lenovo_logo_2015.svg" alt="Lenovo">
+        <span>Lenovo</span>
+      </div>
+
+      <div class="brand-card">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/AliExpress_logo.svg/2560px-AliExpress_logo.svg.png"
+          alt="AliExpress">
+        <span>AliExpress</span>
+      </div>
+
+    </div>
   </div>
-</div></section>
+
+  <div class="w" style="text-align:center;margin-top:32px;padding-bottom:0">
+    <button onclick="openCollab()" class="btn-cotizar" style="font-size:12px;padding:12px 28px">Colaborar con mi canal
+      →</button>
+  </div>
+</section>
 
 <!-- DEALS -->
 <section class="sec" id="deals" style="background:var(--bg2);border-top:1px solid var(--border)"><div class="w">
