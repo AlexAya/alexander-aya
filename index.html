@@ -26,7 +26,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(8,8,8,0.97);backdrop-filte
 .nav-links{display:flex;gap:28px}
 .nav-links a{font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:400;color:var(--gray);text-decoration:none;letter-spacing:3px;text-transform:uppercase;transition:color .2s}
 .nav-links a:hover{color:var(--white)}
-.nav-right{display:flex;align-items:center;gap:14px}
+.nav-right{display:flex;align-items:center;gap:14px } 
 .nav-avail{display:flex;align-items:center;gap:7px;font-family:"Space Mono",monospace;font-size:9px;color:#4a4;letter-spacing:2px}
 .nav-dot{width:6px;height:6px;border-radius:50%;background:#4a4;animation:pulse 2s infinite}
 
@@ -347,6 +347,25 @@ footer{border-top:1px solid var(--border);padding:26px 0}
 .client-link{font-family:"Space Mono",monospace;font-size:10px;color:var(--gray);text-decoration:none;letter-spacing:1px;transition:color .2s}
 .client-link:hover{color:var(--gold)}
 
+/* HAMBURGER */
+.btn-hamburger{display:none;background:transparent;border:1px solid var(--border2);color:var(--white);width:36px;height:36px;font-size:18px;cursor:pointer;align-items:center;justify-content:center;transition:all .2s}
+.btn-hamburger:hover{border-color:var(--gold);color:var(--gold)}
+
+/* MENÚ MÓVIL */
+.mobile-menu{position:fixed;top:0;right:-280px;width:280px;height:100vh;background:var(--bg2);border-left:1px solid var(--border2);z-index:400;transition:right .3s ease;display:flex;flex-direction:column;padding:24px}
+.mobile-menu.open{right:0}
+.mobile-menu-inner{display:flex;flex-direction:column;gap:4px;margin-top:40px}
+.mobile-menu-inner a{font-family:"Barlow Condensed",sans-serif;font-size:18px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--white);text-decoration:none;padding:14px 0;border-bottom:1px solid var(--border);transition:color .2s}
+.mobile-menu-inner a:hover{color:var(--gold)}
+.mobile-menu-close{position:absolute;top:18px;right:18px;background:transparent;border:1px solid var(--gray3);color:var(--gray);width:32px;height:32px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.mobile-menu-close:hover{border-color:var(--white);color:var(--white)}
+.mobile-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:399;display:none}
+.mobile-overlay.open{display:block}
+
+@media(max-width:900px){
+  .btn-hamburger{display:flex}
+}
+
 </style>
 <meta name="description"
   content="Alexander Aya Aponte — Ingeniero de Sistemas, desarrollador web, creador de contenido tech en Bogotá. Servicios de infraestructura TI, cloud, Docker y desarrollo web.">
@@ -562,9 +581,28 @@ footer{border-top:1px solid var(--border);padding:26px 0}
     <button class="btn-theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Cambiar tema">☀</button>
     <a href="blog.html" target="_blank" class="btn-blog-nav">Blog</a>
     <button class="btn-cotizar-nav" onclick="openModal()">Cotizar</button>
+    <button class="btn-hamburger" id="hamburgerBtn" onclick="toggleMenu()">☰</button>
   </div>
 </div></div>
 </nav>
+
+<!-- MENÚ MÓVIL -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <button class="mobile-menu-close" onclick="toggleMenu()">✕</button>
+    <a href="#servicios" onclick="toggleMenu()">Servicios</a>
+    <a href="#trayectoria" onclick="toggleMenu()">Trayectoria</a>
+    <a href="#clientes" onclick="toggleMenu()">Clientes</a>
+    <a href="#contenido" onclick="toggleMenu()">Contenido</a>
+    <a href="#deals" onclick="toggleMenu()">Deals</a>
+    <a href="#contacto" onclick="toggleMenu()">Contacto</a>
+    <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
+      <a href="blog.html" target="_blank" class="btn-blog-nav">Blog</a>
+      <button class="btn-cotizar-nav" onclick="toggleMenu();openModal()">Cotizar</button>
+    </div>
+  </div>
+</div>
+<div class="mobile-overlay" id="mobileOverlay" onclick="toggleMenu()"></div>
 
 <!-- HERO -->
 <div class="w"><div class="hero">
@@ -1276,6 +1314,12 @@ function cp(id,btn){
     btn.style.color='#c4a25a';btn.style.borderColor='#c4a25a';
     setTimeout(function(){btn.textContent=o;btn.style.color='';btn.style.borderColor=''},2000);
   }).catch(function(){btn.textContent='✓';setTimeout(function(){btn.textContent='Copiar'},1500)});
+}
+
+function toggleMenu(){
+  document.getElementById('mobileMenu').classList.toggle('open');
+  document.getElementById('mobileOverlay').classList.toggle('open');
+  document.body.style.overflow = document.getElementById('mobileMenu').classList.contains('open') ? 'hidden' : '';
 }
 </script>
 </body>
