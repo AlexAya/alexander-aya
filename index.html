@@ -611,17 +611,17 @@ footer{border-top:1px solid var(--border);padding:26px 0}
 
 <!-- MENÚ MÓVIL -->
 <div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" onclick="toggleMenu()">✕</button>
   <div class="mobile-menu-inner">
-    <button class="mobile-menu-close" onclick="toggleMenu()">✕</button>
     <a href="#servicios" onclick="toggleMenu()">Servicios</a>
     <a href="#trayectoria" onclick="toggleMenu()">Trayectoria</a>
     <a href="#clientes" onclick="toggleMenu()">Clientes</a>
     <a href="#contenido" onclick="toggleMenu()">Contenido</a>
     <a href="#deals" onclick="toggleMenu()">Deals</a>
     <a href="#contacto" onclick="toggleMenu()">Contacto</a>
-    <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
-      <a href="blog.html" target="_blank" class="btn-blog-nav">Blog</a>
-      <button class="btn-cotizar-nav" onclick="toggleMenu();openModal()">Cotizar</button>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:24px;padding-top:24px;border-top:1px solid var(--border)">
+      <a href="blog.html" target="_blank" onclick="toggleMenu()" class="btn-cotizar" style="text-align:center;text-decoration:none;background:transparent;color:var(--gold);border:1px solid rgba(196,162,90,0.4);padding:12px 20px;font-size:12px">Blog</a>
+      <button class="btn-cotizar" onclick="toggleMenu();openModal()" style="width:100%;padding:14px 20px;font-size:13px">Cotizar servicio →</button>
     </div>
   </div>
 </div>
