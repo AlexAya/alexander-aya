@@ -3,324 +3,527 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin · Alexander Aya</title>
+<title>Admin — Alexander Aya</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#080808;--bg2:#0f0f0f;--bg3:#161616;--white:#efefef;--gray:#888;--gray2:#444;--gray3:#252525;--gold:#c4a25a;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);--red:#e05555}
-body{background:var(--bg);color:var(--white);font-family:"Barlow",sans-serif;font-weight:300;min-height:100vh;display:flex;flex-direction:column}
-.w{max-width:1100px;margin:0 auto;padding:0 32px}
-
-nav{background:rgba(8,8,8,0.97);border-bottom:1px solid var(--border);padding:0}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:58px}
-.logo-nav{display:flex;align-items:center;gap:14px;text-decoration:none}
-.logo-nav-text{font-family:"Barlow Condensed",sans-serif;font-size:16px;font-weight:700;color:var(--white);letter-spacing:3px;text-transform:uppercase}
-.nav-badge{font-family:"Barlow Condensed",sans-serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(196,162,90,0.4);padding:4px 10px}
+:root{
+  --bg:#080808;--bg2:#0f0f0f;--bg3:#161616;--bg4:#1c1c1c;
+  --white:#efefef;--gray:#888;--gray2:#444;--gray3:#252525;
+  --gold:#c4a25a;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
+  --green:#22c55e;--red:#ef4444;--blue:#3b82f6;--yellow:#f59e0b;
+}
+body.light{
+  --bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;
+  --white:#111;--gray:#555;--gray2:#777;--gray3:#ccc;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14)
+}
+body{background:var(--bg);color:var(--white);font-family:"Barlow",sans-serif;font-weight:300;min-height:100vh;transition:background .3s,color .3s}
 
 /* LOGIN */
-#loginScreen{flex:1;display:flex;align-items:center;justify-content:center;padding:40px 20px}
-.login-box{background:var(--bg2);border:1px solid var(--border2);padding:40px;width:100%;max-width:400px}
-.login-title{font-family:"Barlow Condensed",sans-serif;font-size:28px;font-weight:800;margin-bottom:8px;letter-spacing:.5px}
-.login-sub{font-size:13px;color:var(--gray);margin-bottom:28px;font-weight:300}
-.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:18px}
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.login-box{background:var(--bg2);border:1px solid var(--border2);padding:48px 40px;width:100%;max-width:400px}
+.login-title{font-family:"Barlow Condensed",sans-serif;font-size:28px;font-weight:800;letter-spacing:2px;margin-bottom:6px}
+.login-sub{font-size:13px;color:var(--gray);font-weight:300;margin-bottom:32px}
+.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
 .form-label{font-family:"Barlow Condensed",sans-serif;font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase}
-.form-input{background:var(--bg3);border:1px solid var(--gray3);color:var(--white);padding:12px 14px;font-family:"Barlow",sans-serif;font-size:14px;outline:none;width:100%;transition:border-color .2s}
+.form-input{background:var(--bg3);border:1px solid var(--gray3);color:var(--white);padding:12px 14px;font-family:"Barlow",sans-serif;font-size:14px;font-weight:300;outline:none;transition:border-color .2s;width:100%}
 .form-input:focus{border-color:var(--gold)}
-.btn-login{background:var(--gold);color:#000;border:none;padding:14px;font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;width:100%;margin-top:4px;transition:all .2s}
+.btn-login{background:var(--gold);color:#000;border:none;padding:14px;font-family:"Barlow Condensed",sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;width:100%;transition:all .2s;margin-top:8px}
 .btn-login:hover{background:#d4b26a}
-.login-error{color:var(--red);font-size:12px;margin-top:8px;font-family:"Space Mono",monospace;display:none}
+.login-error{color:var(--red);font-size:12px;margin-top:8px;display:none;font-family:"Space Mono",monospace}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px}
 
-/* ADMIN PANEL */
-#adminPanel{display:none;flex:1;padding:40px 0}
-.admin-header{margin-bottom:36px;padding-bottom:24px;border-bottom:1px solid var(--border)}
-.admin-title{font-family:"Barlow Condensed",sans-serif;font-size:36px;font-weight:800;margin-bottom:4px}
-.admin-sub{font-size:13px;color:var(--gray);font-weight:300}
-.admin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-bottom:32px}
-.admin-stat{background:var(--bg2);padding:20px 22px}
-.admin-stat-n{font-family:"Barlow Condensed",sans-serif;font-size:32px;font-weight:800;color:var(--gold);letter-spacing:-1px}
-.admin-stat-l{font-family:"Barlow Condensed",sans-serif;font-size:9px;color:var(--gray);letter-spacing:3px;text-transform:uppercase;margin-top:4px}
+/* DASHBOARD */
+.dashboard{display:none}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 32px;height:58px;display:flex;align-items:center;justify-content:space-between}
+body.light .topbar{background:rgba(244,244,240,0.97)}
+.topbar-left{display:flex;align-items:center;gap:16px}
+.topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.topbar-title{font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:700;color:var(--white);letter-spacing:3px;text-transform:uppercase}
+.topbar-badge{font-family:"Space Mono",monospace;font-size:9px;color:var(--green);background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);padding:3px 8px;letter-spacing:2px;display:flex;align-items:center;gap:6px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;display:inline-block}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.btn-icon{background:transparent;border:1px solid var(--border2);color:var(--gray);width:34px;height:34px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.btn-icon:hover{border-color:var(--gold);color:var(--gold)}
+.btn-logout{font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gray);background:transparent;border:1px solid var(--gray3);padding:7px 14px;cursor:pointer;transition:all .2s}
+.btn-logout:hover{color:var(--red);border-color:var(--red)}
 
-.section-title{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:700;margin-bottom:16px;padding-top:8px}
-.admin-card{background:var(--bg2);border:1px solid var(--border);padding:24px;margin-bottom:16px}
-.admin-card-title{font-family:"Barlow Condensed",sans-serif;font-size:16px;font-weight:700;margin-bottom:16px;color:var(--gold);letter-spacing:.5px}
-.admin-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
-.btn-save{background:var(--gold);color:#000;border:none;padding:10px 24px;font-family:"Barlow Condensed",sans-serif;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
-.btn-save:hover{background:#d4b26a}
-.btn-danger{background:transparent;color:var(--red);border:1px solid var(--red);padding:8px 18px;font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s}
-.btn-danger:hover{background:var(--red);color:#fff}
+/* MAIN */
+.main{padding:32px;max-width:1400px;margin:0 auto}
+.page-header{margin-bottom:32px}
+.page-lbl{font-family:"Barlow Condensed",sans-serif;font-size:11px;color:var(--gray);letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.page-lbl::before{content:"";display:inline-block;width:18px;height:1px;background:var(--gray2)}
+.page-title{font-family:"Barlow Condensed",sans-serif;font-size:36px;font-weight:800;letter-spacing:-.5px}
 
-.table-wrap{overflow-x:auto;margin-top:12px}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{font-family:"Barlow Condensed",sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;padding:10px 14px;text-align:left;background:var(--bg3);border-bottom:1px solid var(--border2)}
-td{padding:12px 14px;border-bottom:1px solid var(--border);color:var(--gray);vertical-align:middle}
-tr:hover td{background:var(--bg3)}
-.badge{font-family:"Barlow Condensed",sans-serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border:1px solid}
-.badge-green{color:#4a4;border-color:#4a4;background:rgba(68,170,68,0.08)}
-.badge-gray{color:var(--gray);border-color:var(--gray3)}
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin-bottom:32px}
+.stat-card{background:var(--bg2);padding:24px;border-top:2px solid transparent}
+.stat-card.gold{border-top-color:var(--gold)}
+.stat-card.green{border-top-color:var(--green)}
+.stat-card.blue{border-top-color:var(--blue)}
+.stat-card.purple{border-top-color:#a78bfa}
+.stat-n{font-family:"Barlow Condensed",sans-serif;font-size:40px;font-weight:800;letter-spacing:-1px;line-height:1}
+.stat-l{font-family:"Barlow Condensed",sans-serif;font-size:10px;color:var(--gray);letter-spacing:3px;text-transform:uppercase;margin-top:6px}
 
-.btn-sm{font-family:"Barlow Condensed",sans-serif;font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:5px 12px;cursor:pointer;border:1px solid var(--gray3);background:transparent;color:var(--gray);transition:all .2s}
-.btn-sm:hover{color:var(--white);border-color:var(--white)}
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:24px}
+.tab{font-family:"Barlow Condensed",sans-serif;font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gray);padding:13px 22px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;background:transparent;border-top:none;border-left:none;border-right:none}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab:hover{color:var(--white)}
+.tab-content{display:none}
+.tab-content.active{display:block}
 
-.logout-btn{font-family:"Barlow Condensed",sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;background:transparent;color:var(--gray);border:1px solid var(--gray3);padding:7px 16px;cursor:pointer;transition:all .2s}
-.logout-btn:hover{color:var(--red);border-color:var(--red)}
+/* FILTERS */
+.filters{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
+.filter-input{background:var(--bg2);border:1px solid var(--gray3);color:var(--white);padding:9px 14px;font-family:"Barlow",sans-serif;font-size:13px;font-weight:300;outline:none;transition:border-color .2s;min-width:220px}
+.filter-input:focus{border-color:var(--gold)}
+.filter-select{background:var(--bg2);border:1px solid var(--gray3);color:var(--white);padding:9px 14px;font-family:"Barlow",sans-serif;font-size:13px;font-weight:300;outline:none;cursor:pointer}
+.filter-select option{background:var(--bg2)}
+.results-count{font-family:"Space Mono",monospace;font-size:10px;color:var(--gray);margin-left:auto}
 
-.notice{background:rgba(196,162,90,0.08);border:1px solid rgba(196,162,90,0.25);padding:12px 16px;font-size:12px;color:var(--gray);font-family:"Space Mono",monospace;margin-bottom:24px}
+/* TABLE */
+.table-wrap{overflow-x:auto;background:var(--bg2);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;min-width:750px}
+thead{background:var(--bg3)}
+th{font-family:"Barlow Condensed",sans-serif;font-size:9px;font-weight:600;color:var(--gold);letter-spacing:3px;text-transform:uppercase;padding:14px 16px;text-align:left;border-bottom:1px solid var(--border)}
+td{font-size:13px;color:var(--white);padding:13px 16px;border-bottom:1px solid var(--border);font-weight:300;vertical-align:middle}
+tr:hover td{background:rgba(255,255,255,0.02)}
+tr:last-child td{border-bottom:none}
 
-footer{border-top:1px solid var(--border);padding:20px 0;margin-top:auto}
-.foot-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-.foot-text{font-family:"Barlow Condensed",sans-serif;font-size:10px;color:var(--gray2);letter-spacing:2px;text-transform:uppercase}
+.badge{font-family:"Barlow Condensed",sans-serif;font-size:9px;font-weight:600;padding:3px 9px;letter-spacing:2px;text-transform:uppercase;display:inline-block}
+.badge-new{background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.3)}
+.badge-contacted{background:rgba(59,130,246,0.1);color:var(--blue);border:1px solid rgba(59,130,246,0.3)}
+.badge-closed{background:rgba(196,162,90,0.1);color:var(--gold);border:1px solid rgba(196,162,90,0.3)}
 
-@media(max-width:700px){.admin-grid,.admin-row{grid-template-columns:1fr}}
+.td-name{font-weight:500}
+.td-mono{font-family:"Space Mono",monospace;font-size:10px;color:var(--gray)}
+.td-actions{display:flex;gap:6px;flex-wrap:wrap}
+.btn-action{font-family:"Barlow Condensed",sans-serif;font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:5px 10px;cursor:pointer;border:1px solid var(--gray3);background:transparent;color:var(--gray);transition:all .2s;white-space:nowrap}
+.btn-action:hover{color:var(--white);border-color:var(--gray)}
+.btn-action.danger:hover{color:var(--red);border-color:var(--red)}
+.btn-action.success:hover{color:var(--green);border-color:var(--green)}
+
+/* EMPTY & LOADING */
+.empty-state{padding:60px;text-align:center;color:var(--gray)}
+.empty-ico{font-size:36px;margin-bottom:12px}
+.empty-t{font-family:"Barlow Condensed",sans-serif;font-size:20px;font-weight:700;margin-bottom:6px;color:var(--white)}
+.empty-s{font-size:13px;font-weight:300}
+.loading{padding:48px;text-align:center}
+.spinner{width:32px;height:32px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:20px}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg2);border:1px solid var(--border2);width:100%;max-width:560px;max-height:90vh;overflow-y:auto}
+.modal-header{padding:24px 28px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between}
+.modal-title{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800}
+.modal-close{background:transparent;border:1px solid var(--gray3);color:var(--gray);width:30px;height:30px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-close:hover{border-color:var(--white);color:var(--white)}
+.modal-body{padding:24px 28px}
+.detail-row{display:flex;flex-direction:column;gap:4px;padding:13px 0;border-bottom:1px solid var(--border)}
+.detail-row:last-child{border-bottom:none}
+.detail-lbl{font-family:"Barlow Condensed",sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase}
+.detail-val{font-size:14px;color:var(--white);font-weight:300;line-height:1.6;word-break:break-word}
+.status-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .main{padding:16px}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .topbar{padding:0 16px}
+  .filters{flex-direction:column;align-items:stretch}
+  .filter-input{min-width:unset}
+  .results-count{margin-left:0}
+  .login-box{padding:32px 24px}
+}
+@media(max-width:480px){
+  .stats-row{grid-template-columns:1fr}
+  .topbar-badge{display:none}
+}
 </style>
 </head>
 <body>
 
-<nav>
-<div class="w"><div class="nav-inner">
-  <a href="index.html" class="logo-nav">
-    <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
-      <polygon points="50,4 96,92 4,92" fill="none" stroke="#efefef" stroke-width="4" stroke-linejoin="miter"/>
-      <line x1="27" y1="66" x2="73" y2="66" stroke="#efefef" stroke-width="3.5"/>
-    </svg>
-    <span class="logo-nav-text">Alexander Aya</span>
-  </a>
-  <div style="display:flex;align-items:center;gap:12px">
-    <span class="nav-badge">Panel Admin</span>
-    <button class="logout-btn" onclick="logout()">Cerrar sesión</button>
-  </div>
-</div></div>
-</nav>
-
-<!-- LOGIN SCREEN -->
-<div id="loginScreen">
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
   <div class="login-box">
-    <div class="login-title">Acceso Admin</div>
-    <div class="login-sub">Módulo administrativo privado de Alexander Aya</div>
+    <div class="login-logo">
+      <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
+        <polygon points="50,4 96,92 4,92" fill="none" stroke="#c4a25a" stroke-width="5"/>
+        <line x1="27" y1="66" x2="73" y2="66" stroke="#c4a25a" stroke-width="4"/>
+      </svg>
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--white)">Alexander Aya</span>
+    </div>
+    <div class="login-title">Panel Admin</div>
+    <div class="login-sub">Acceso restringido — solo personal autorizado</div>
     <div class="form-group">
       <label class="form-label">Contraseña</label>
-      <input class="form-input" type="password" id="pwInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+      <input class="form-input" type="password" id="passInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
     </div>
-    <button class="btn-login" onclick="doLogin()">Entrar →</button>
-    <div class="login-error" id="loginError">Contraseña incorrecta. Inténtalo de nuevo.</div>
-    <div style="margin-top:16px;font-size:11px;color:var(--gray2);font-family:'Space Mono',monospace">
-      Esta página es de uso exclusivo del administrador.
-    </div>
+    <button class="btn-login" onclick="doLogin()">Ingresar →</button>
+    <div class="login-error" id="loginError">Contraseña incorrecta</div>
   </div>
 </div>
 
-<!-- ADMIN PANEL -->
-<div id="adminPanel">
-<div class="w">
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
 
-  <div class="admin-header">
-    <div class="admin-title">Panel Administrativo</div>
-    <div class="admin-sub">Gestiona clientes, marcas, códigos y configuración del sitio</div>
-  </div>
-
-  <!-- STATS -->
-  <div class="admin-grid">
-    <div class="admin-stat"><div class="admin-stat-n">4</div><div class="admin-stat-l">Clientes activos</div></div>
-    <div class="admin-stat"><div class="admin-stat-n">6</div><div class="admin-stat-l">Marcas patrocinadoras</div></div>
-    <div class="admin-stat"><div class="admin-stat-n">7</div><div class="admin-stat-l">Códigos activos</div></div>
-  </div>
-
-  <div class="notice">ℹ Este módulo es una demo funcional. Los cambios aquí son visuales (localStorage). Para persistir cambios en el sitio, edita el index.html y haz push a GitHub.</div>
-
-  <!-- CLIENTES -->
-  <div class="section-title">Clientes</div>
-  <div class="admin-card">
-    <div class="admin-card-title">Clientes activos</div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Empresa</th><th>Sector</th><th>URL</th><th>Servicios</th><th>Estado</th><th>Acción</th></tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Cogasen</strong></td>
-            <td>Energético</td>
-            <td><a href="https://cogasen.com.co" target="_blank" style="color:var(--gold)">cogasen.com.co</a></td>
-            <td>Admin TI · Web · Hosting</td>
-            <td><span class="badge badge-green">Activo</span></td>
-            <td><button class="btn-sm">Editar</button></td>
-          </tr>
-          <tr>
-            <td><strong>Back to Bag</strong></td>
-            <td>Turismo</td>
-            <td><a href="https://backtobag.co" target="_blank" style="color:var(--gold)">backtobag.co</a></td>
-            <td>Web · Backend · Reservas</td>
-            <td><span class="badge badge-green">Activo</span></td>
-            <td><button class="btn-sm">Editar</button></td>
-          </tr>
-          <tr>
-            <td><strong>Abbalab</strong></td>
-            <td>Salud</td>
-            <td><a href="https://abbalabsi.com" target="_blank" style="color:var(--gold)">abbalabsi.com</a></td>
-            <td>Infraestructura · Seguridad</td>
-            <td><span class="badge badge-green">Activo</span></td>
-            <td><button class="btn-sm">Editar</button></td>
-          </tr>
-          <tr>
-            <td><strong>ACB</strong></td>
-            <td>Residuos sólidos</td>
-            <td><a href="https://acbesp.com" target="_blank" style="color:var(--gold)">acbesp.com</a></td>
-            <td>Infraestructura · Gestión</td>
-            <td><span class="badge badge-green">Activo</span></td>
-            <td><button class="btn-sm">Editar</button></td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="topbar-logo">
+        <svg width="22" height="22" viewBox="0 0 100 100" fill="none">
+          <polygon points="50,4 96,92 4,92" fill="none" stroke="#c4a25a" stroke-width="5"/>
+          <line x1="27" y1="66" x2="73" y2="66" stroke="#c4a25a" stroke-width="4"/>
+        </svg>
+        <span class="topbar-title">Alexander Aya</span>
+      </a>
+      <span class="topbar-badge"><span class="live-dot"></span>LIVE</span>
     </div>
-    <div style="margin-top:16px">
-      <button class="btn-save">+ Agregar cliente</button>
+    <div class="topbar-right">
+      <button class="btn-icon" id="themeToggle" onclick="toggleTheme()" title="Cambiar tema">☀</button>
+      <button class="btn-logout" onclick="doLogout()">Salir</button>
     </div>
   </div>
 
-  <!-- MARCAS -->
-  <div class="section-title">Marcas Patrocinadoras</div>
-  <div class="admin-card">
-    <div class="admin-card-title">Gestión de marcas</div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Marca</th><th>Tipo</th><th>URL afiliado / código</th><th>Estado</th><th>Acción</th></tr>
-        </thead>
-        <tbody id="brandsTable">
-          <tr><td><strong>Motorola</strong></td><td>Review · Unboxing</td><td>—</td><td><span class="badge badge-green">Activa</span></td><td><button class="btn-sm">Editar</button></td></tr>
-          <tr><td><strong>Lenovo</strong></td><td>Hardware · Laptops</td><td>—</td><td><span class="badge badge-green">Activa</span></td><td><button class="btn-sm">Editar</button></td></tr>
-          <tr><td><strong>AliExpress</strong></td><td>Afiliado</td><td>AAYA15</td><td><span class="badge badge-green">Activa</span></td><td><button class="btn-sm">Editar</button></td></tr>
-          <tr><td><strong>Keysfan</strong></td><td>Software · Licencias</td><td>ALX62 / ALX52</td><td><span class="badge badge-green">Activa</span></td><td><button class="btn-sm">Editar</button></td></tr>
-          <tr><td><strong>Lensgo</strong></td><td>Audio · Video</td><td>—</td><td><span class="badge badge-green">Activa</span></td><td><button class="btn-sm">Editar</button></td></tr>
-          <tr><td><strong>Amazon</strong></td><td>Afiliado</td><td>ALEX10 / ALEXPRIME</td><td><span class="badge badge-green">Activa</span></td><td><button class="btn-sm">Editar</button></td></tr>
-        </tbody>
-      </table>
+  <div class="main">
+    <div class="page-header">
+      <div class="page-lbl">Dashboard</div>
+      <h1 class="page-title">Centro de control</h1>
     </div>
-    <div style="margin-top:16px">
-      <button class="btn-save">+ Agregar marca</button>
-    </div>
-  </div>
 
-  <!-- CÓDIGOS -->
-  <div class="section-title">Códigos &amp; Descuentos</div>
-  <div class="admin-card">
-    <div class="admin-card-title">Códigos activos</div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Código</th><th>Plataforma</th><th>Descuento</th><th>Descripción</th><th>Estado</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code style="color:var(--gold)">ALEX10</code></td><td>Amazon</td><td>10% OFF</td><td>Electrónica y tech</td><td><span class="badge badge-green">Activo</span></td></tr>
-          <tr><td><code style="color:var(--gold)">ALEXPRIME</code></td><td>Amazon Prime</td><td>30 días</td><td>Trial gratuito</td><td><span class="badge badge-green">Activo</span></td></tr>
-          <tr><td><code style="color:var(--gold)">AAYA15</code></td><td>AliExpress</td><td>15% OFF</td><td>Primera compra</td><td><span class="badge badge-green">Activo</span></td></tr>
-          <tr><td><code style="color:var(--gold)">TECHCOL</code></td><td>AliExpress</td><td>Envío gratis</td><td>+$20 USD</td><td><span class="badge badge-green">Activo</span></td></tr>
-          <tr><td><code style="color:var(--gold)">ALX62</code></td><td>Keysfan</td><td>62% OFF</td><td>Office 2016/2019</td><td><span class="badge badge-green">Activo</span></td></tr>
-          <tr><td><code style="color:var(--gold)">ALX52</code></td><td>Keysfan</td><td>50% OFF</td><td>Windows Series</td><td><span class="badge badge-green">Activo</span></td></tr>
-        </tbody>
-      </table>
+    <div class="stats-row">
+      <div class="stat-card gold"><div class="stat-n" id="statTotal">—</div><div class="stat-l">Total leads</div></div>
+      <div class="stat-card green"><div class="stat-n" id="statNew">—</div><div class="stat-l">Nuevos</div></div>
+      <div class="stat-card blue"><div class="stat-n" id="statContacted">—</div><div class="stat-l">Contactados</div></div>
+      <div class="stat-card purple"><div class="stat-n" id="statCollab">—</div><div class="stat-l">Colaboraciones</div></div>
     </div>
-  </div>
 
-  <!-- CONFIG SITIO -->
-  <div class="section-title">Configuración del Sitio</div>
-  <div class="admin-card">
-    <div class="admin-card-title">Información general</div>
-    <div class="admin-row">
-      <div>
-        <label class="form-label" style="display:block;margin-bottom:6px;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase">Suscriptores YouTube</label>
-        <input class="form-input" type="text" value="9.6K" id="cfgSubs">
-      </div>
-      <div>
-        <label class="form-label" style="display:block;margin-bottom:6px;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase">Videos publicados</label>
-        <input class="form-input" type="text" value="656" id="cfgVideos">
-      </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('cotizaciones',this)">Cotizaciones</button>
+      <button class="tab" onclick="switchTab('colaboraciones',this)">Colaboraciones</button>
     </div>
-    <div class="admin-row">
-      <div>
-        <label class="form-label" style="display:block;margin-bottom:6px;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase">Años de experiencia</label>
-        <input class="form-input" type="text" value="8+" id="cfgYears">
-      </div>
-      <div>
-        <label class="form-label" style="display:block;margin-bottom:6px;font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase">Estado disponibilidad</label>
-        <select class="form-input" id="cfgStatus" style="cursor:pointer;background:var(--bg3)">
-          <option value="disponible">🟢 Disponible</option>
-          <option value="ocupado">🔴 No disponible</option>
-          <option value="limitado">🟡 Disponibilidad limitada</option>
+
+    <!-- COTIZACIONES -->
+    <div class="tab-content active" id="tab-cotizaciones">
+      <div class="filters">
+        <input class="filter-input" type="text" placeholder="Buscar por nombre o correo..." id="searchCot" oninput="renderCotizaciones()">
+        <select class="filter-select" id="filterStatusCot" onchange="renderCotizaciones()">
+          <option value="">Todos los estados</option>
+          <option value="nuevo">Nuevo</option>
+          <option value="contactado">Contactado</option>
+          <option value="cerrado">Cerrado</option>
         </select>
+        <span class="results-count" id="countCot">— registros</span>
+      </div>
+      <div class="table-wrap">
+        <div class="loading" id="loadingCot">
+          <div class="spinner"></div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gray)">Conectando con Firebase...</div>
+        </div>
+        <table id="tableCot" style="display:none">
+          <thead><tr>
+            <th>Nombre</th><th>Correo</th><th>Servicio</th>
+            <th>Presupuesto</th><th>Estado</th><th>Fecha</th><th>Acciones</th>
+          </tr></thead>
+          <tbody id="bodyCot"></tbody>
+        </table>
+        <div class="empty-state" id="emptyCot" style="display:none">
+          <div class="empty-ico">📋</div>
+          <div class="empty-t">Sin cotizaciones aún</div>
+          <div class="empty-s">Aquí aparecerán los formularios enviados desde la landing</div>
+        </div>
       </div>
     </div>
-    <button class="btn-save" onclick="saveConfig()">Guardar cambios</button>
-    <span id="saveMsg" style="margin-left:14px;font-family:'Space Mono',monospace;font-size:10px;color:#4a4;display:none">✓ Guardado</span>
+
+    <!-- COLABORACIONES -->
+    <div class="tab-content" id="tab-colaboraciones">
+      <div class="filters">
+        <input class="filter-input" type="text" placeholder="Buscar por nombre o marca..." id="searchCol" oninput="renderColaboraciones()">
+        <select class="filter-select" id="filterStatusCol" onchange="renderColaboraciones()">
+          <option value="">Todos los estados</option>
+          <option value="nuevo">Nuevo</option>
+          <option value="contactado">Contactado</option>
+          <option value="cerrado">Cerrado</option>
+        </select>
+        <span class="results-count" id="countCol">— registros</span>
+      </div>
+      <div class="table-wrap">
+        <div class="loading" id="loadingCol">
+          <div class="spinner"></div>
+          <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gray)">Conectando con Firebase...</div>
+        </div>
+        <table id="tableCol" style="display:none">
+          <thead><tr>
+            <th>Nombre</th><th>Marca</th><th>Correo</th>
+            <th>Tipo</th><th>Presupuesto</th><th>Estado</th><th>Fecha</th><th>Acciones</th>
+          </tr></thead>
+          <tbody id="bodyCol"></tbody>
+        </table>
+        <div class="empty-state" id="emptyCol" style="display:none">
+          <div class="empty-ico">🤝</div>
+          <div class="empty-t">Sin colaboraciones aún</div>
+          <div class="empty-s">Aquí aparecerán las solicitudes de colaboración con marcas</div>
+        </div>
+      </div>
+    </div>
+
   </div>
+</div>
 
-  <!-- DANGER ZONE -->
-  <div class="section-title" style="color:var(--red)">Zona de riesgo</div>
-  <div class="admin-card" style="border-color:rgba(224,85,85,0.2)">
-    <div class="admin-card-title" style="color:var(--red)">Acciones irreversibles</div>
-    <p style="font-size:13px;color:var(--gray);margin-bottom:16px">Estas acciones no se pueden deshacer. Úsalas con cuidado.</p>
-    <button class="btn-danger" onclick="confirmReset()">Resetear configuración local</button>
+<!-- MODAL DETALLE -->
+<div class="modal-overlay" id="detailOverlay" onclick="closeDetail(event)">
+  <div class="modal" id="detailModal">
+    <div class="modal-header">
+      <div class="modal-title" id="detailTitle">Detalle</div>
+      <button class="modal-close" onclick="closeDetailModal()">✕</button>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
   </div>
-
-</div>
 </div>
 
-<footer>
-<div class="w">
-<div class="foot-inner">
-  <span class="foot-text">Panel Admin · Alexander Aya Aponte · 2026</span>
-  <a href="index.html" class="foot-text" style="color:var(--gold);text-decoration:none">← Volver al sitio</a>
-</div>
-</div>
-</footer>
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDhyVgXxZLxQKatA_xx7nV8kKhIkl6b0xQ",
+  authDomain: "alexander-aya.firebaseapp.com",
+  projectId: "alexander-aya",
+  storageBucket: "alexander-aya.firebasestorage.app",
+  messagingSenderId: "506245432199",
+  appId: "1:506245432199:web:a927212f973cc409578922"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window._db = db;
+window._doc = doc;
+window._updateDoc = updateDoc;
+window._deleteDoc = deleteDoc;
+window._cotizaciones = [];
+window._colaboraciones = [];
+
+// Escuchar cotizaciones en tiempo real
+try {
+  const qCot = query(collection(db, "cotizaciones"), orderBy("fecha", "desc"));
+  onSnapshot(qCot, snap => {
+    window._cotizaciones = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    window.renderCotizaciones && window.renderCotizaciones();
+    window.updateStats && window.updateStats();
+  }, err => {
+    console.warn("cotizaciones:", err.message);
+    document.getElementById('loadingCot').style.display = 'none';
+    document.getElementById('emptyCot').style.display = 'block';
+  });
+} catch(e){ console.warn(e); }
+
+// Escuchar colaboraciones en tiempo real
+try {
+  const qCol = query(collection(db, "colaboraciones"), orderBy("fecha", "desc"));
+  onSnapshot(qCol, snap => {
+    window._colaboraciones = snap.docs.map(d => ({id: d.id, ...d.data()}));
+    window.renderColaboraciones && window.renderColaboraciones();
+    window.updateStats && window.updateStats();
+  }, err => {
+    console.warn("colaboraciones:", err.message);
+    document.getElementById('loadingCol').style.display = 'none';
+    document.getElementById('emptyCol').style.display = 'block';
+  });
+} catch(e){ console.warn(e); }
+</script>
 
 <script>
-// Simple password - in production use a real auth system
-var ADMIN_PASS = 'alexander2026';
-var SESSION_KEY = 'alex_admin_ok';
+var PASS = 'alexander2026';
+var isLight = false;
+
+// Auto-login
+if(localStorage.getItem('admin_auth')==='1'){
+  document.getElementById('loginWrap').style.display='none';
+  document.getElementById('dashboard').style.display='block';
+}
+
+// Tema guardado
+if(localStorage.getItem('admin_theme')==='light'){
+  isLight=true;
+  document.body.classList.add('light');
+  setTimeout(function(){var b=document.getElementById('themeToggle');if(b)b.textContent='🌙';},0);
+}
 
 function doLogin(){
-  var pw = document.getElementById('pwInput').value;
-  var err = document.getElementById('loginError');
-  if(pw === ADMIN_PASS){
-    sessionStorage.setItem(SESSION_KEY, '1');
-    showPanel();
+  if(document.getElementById('passInput').value===PASS){
+    localStorage.setItem('admin_auth','1');
+    document.getElementById('loginWrap').style.display='none';
+    document.getElementById('dashboard').style.display='block';
   } else {
-    err.style.display = 'block';
-    document.getElementById('pwInput').value = '';
-    document.getElementById('pwInput').focus();
+    var e=document.getElementById('loginError');
+    e.style.display='block';
+    setTimeout(function(){e.style.display='none';},3000);
   }
 }
 
-function showPanel(){
-  document.getElementById('loginScreen').style.display = 'none';
-  document.getElementById('adminPanel').style.display = 'block';
+function doLogout(){
+  localStorage.removeItem('admin_auth');
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('loginWrap').style.display='flex';
+  document.getElementById('passInput').value='';
 }
 
-function logout(){
-  sessionStorage.removeItem(SESSION_KEY);
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('adminPanel').style.display = 'none';
-  document.getElementById('pwInput').value = '';
+function toggleTheme(){
+  isLight=!isLight;
+  document.body.classList.toggle('light',isLight);
+  document.getElementById('themeToggle').textContent=isLight?'🌙':'☀';
+  localStorage.setItem('admin_theme',isLight?'light':'dark');
 }
 
-function saveConfig(){
-  var msg = document.getElementById('saveMsg');
-  msg.style.display = 'inline';
-  setTimeout(function(){msg.style.display='none'},2500);
+function switchTab(name,btn){
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
 }
 
-function confirmReset(){
-  if(confirm('¿Seguro que quieres resetear la configuración local? Esta acción borra los datos guardados en este navegador.')){
-    localStorage.clear();
-    sessionStorage.removeItem(SESSION_KEY);
-    location.reload();
+function fmtDate(ts){
+  if(!ts) return '—';
+  var d;
+  try {
+    if(ts.toDate) d=ts.toDate();
+    else if(ts.seconds) d=new Date(ts.seconds*1000);
+    else d=new Date(ts);
+    return d.toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  } catch(e){ return '—'; }
+}
+
+window.updateStats = function(){
+  var cot = window._cotizaciones||[];
+  var col = window._colaboraciones||[];
+  document.getElementById('statTotal').textContent = cot.length + col.length;
+  document.getElementById('statNew').textContent = cot.filter(function(c){return !c.estado||c.estado==='nuevo';}).length;
+  document.getElementById('statContacted').textContent = cot.filter(function(c){return c.estado==='contactado';}).length;
+  document.getElementById('statCollab').textContent = col.length;
+};
+
+function badge(e){
+  var m={nuevo:'badge-new',contactado:'badge-contacted',cerrado:'badge-closed'};
+  var s=e||'nuevo';
+  return '<span class="badge '+(m[s]||'badge-new')+'">'+s.charAt(0).toUpperCase()+s.slice(1)+'</span>';
+}
+
+window.renderCotizaciones = function(){
+  var search=(document.getElementById('searchCot').value||'').toLowerCase();
+  var status=document.getElementById('filterStatusCot').value;
+  var data=(window._cotizaciones||[]).filter(function(c){
+    return (!search||(c.nombre||'').toLowerCase().includes(search)||(c.email||'').toLowerCase().includes(search))
+      && (!status||(c.estado||'nuevo')===status);
+  });
+  document.getElementById('loadingCot').style.display='none';
+  document.getElementById('countCot').textContent=data.length+' registros';
+  if(!data.length){
+    document.getElementById('tableCot').style.display='none';
+    document.getElementById('emptyCot').style.display='block';
+    return;
   }
+  document.getElementById('tableCot').style.display='table';
+  document.getElementById('emptyCot').style.display='none';
+  document.getElementById('bodyCot').innerHTML=data.map(function(c){
+    return '<tr>'+
+      '<td><span class="td-name">'+(c.nombre||'—')+'</span></td>'+
+      '<td><span class="td-mono">'+(c.email||'—')+'</span></td>'+
+      '<td style="font-size:12px;max-width:160px">'+(c.servicio||'—')+'</td>'+
+      '<td style="font-size:12px">'+(c.presupuesto||'—')+'</td>'+
+      '<td>'+badge(c.estado)+'</td>'+
+      '<td><span class="td-mono">'+fmtDate(c.fecha)+'</span></td>'+
+      '<td><div class="td-actions">'+
+        '<button class="btn-action" onclick="viewDetail(\'cot\',\''+c.id+'\')">Ver</button>'+
+        '<button class="btn-action success" onclick="setStatus(\'cotizaciones\',\''+c.id+'\',\'contactado\')">Contactado</button>'+
+        '<button class="btn-action danger" onclick="delLead(\'cotizaciones\',\''+c.id+'\')">Eliminar</button>'+
+      '</div></td>'+
+    '</tr>';
+  }).join('');
+};
+
+window.renderColaboraciones = function(){
+  var search=(document.getElementById('searchCol').value||'').toLowerCase();
+  var status=document.getElementById('filterStatusCol').value;
+  var data=(window._colaboraciones||[]).filter(function(c){
+    return (!search||(c.nombre||'').toLowerCase().includes(search)||(c.marca||'').toLowerCase().includes(search)||(c.email||'').toLowerCase().includes(search))
+      && (!status||(c.estado||'nuevo')===status);
+  });
+  document.getElementById('loadingCol').style.display='none';
+  document.getElementById('countCol').textContent=data.length+' registros';
+  if(!data.length){
+    document.getElementById('tableCol').style.display='none';
+    document.getElementById('emptyCol').style.display='block';
+    return;
+  }
+  document.getElementById('tableCol').style.display='table';
+  document.getElementById('emptyCol').style.display='none';
+  document.getElementById('bodyCol').innerHTML=data.map(function(c){
+    return '<tr>'+
+      '<td><span class="td-name">'+(c.nombre||'—')+'</span></td>'+
+      '<td style="font-size:12px">'+(c.marca||'—')+'</td>'+
+      '<td><span class="td-mono">'+(c.email||'—')+'</span></td>'+
+      '<td style="font-size:12px">'+(c.tipo||'—')+'</td>'+
+      '<td style="font-size:12px">'+(c.presupuesto||'—')+'</td>'+
+      '<td>'+badge(c.estado)+'</td>'+
+      '<td><span class="td-mono">'+fmtDate(c.fecha)+'</span></td>'+
+      '<td><div class="td-actions">'+
+        '<button class="btn-action" onclick="viewDetail(\'col\',\''+c.id+'\')">Ver</button>'+
+        '<button class="btn-action success" onclick="setStatus(\'colaboraciones\',\''+c.id+'\',\'contactado\')">Contactado</button>'+
+        '<button class="btn-action danger" onclick="delLead(\'colaboraciones\',\''+c.id+'\')">Eliminar</button>'+
+      '</div></td>'+
+    '</tr>';
+  }).join('');
+};
+
+function setStatus(col,id,status){
+  if(!window._db) return;
+  window._updateDoc(window._doc(window._db,col,id),{estado:status});
 }
 
-// Check session
-if(sessionStorage.getItem(SESSION_KEY) === '1'){
-  showPanel();
+function delLead(col,id){
+  if(!confirm('¿Eliminar este registro permanentemente?')) return;
+  if(!window._db) return;
+  window._deleteDoc(window._doc(window._db,col,id));
 }
+
+function viewDetail(type,id){
+  var data=type==='cot'?window._cotizaciones:window._colaboraciones;
+  var item=data.find(function(c){return c.id===id;});
+  if(!item) return;
+  document.getElementById('detailTitle').textContent=type==='cot'?'Detalle cotización':'Detalle colaboración';
+  var col=type==='cot'?'cotizaciones':'colaboraciones';
+  var fields=type==='cot'?[
+    {l:'Nombre',v:item.nombre},{l:'Empresa',v:item.empresa},
+    {l:'Correo',v:item.email},{l:'Servicio',v:item.servicio},
+    {l:'Presupuesto',v:item.presupuesto},{l:'Descripción',v:item.descripcion},
+    {l:'Estado',v:item.estado||'nuevo'},{l:'Fecha',v:fmtDate(item.fecha)}
+  ]:[
+    {l:'Nombre',v:item.nombre},{l:'Marca / Empresa',v:item.marca},
+    {l:'Correo',v:item.email},{l:'Tipo de colaboración',v:item.tipo},
+    {l:'Canales de interés',v:item.canales},{l:'Presupuesto',v:item.presupuesto},
+    {l:'Descripción',v:item.descripcion},{l:'Estado',v:item.estado||'nuevo'},
+    {l:'Fecha',v:fmtDate(item.fecha)}
+  ];
+  document.getElementById('detailBody').innerHTML=
+    fields.filter(function(f){return f.v;}).map(function(f){
+      return '<div class="detail-row"><div class="detail-lbl">'+f.l+'</div><div class="detail-val">'+(f.v||'—')+'</div></div>';
+    }).join('')+
+    '<div class="status-btns">'+
+      '<button class="btn-action success" onclick="setStatus(\''+col+'\',\''+id+'\',\'contactado\');closeDetailModal()">Marcar contactado</button>'+
+      '<button class="btn-action" onclick="setStatus(\''+col+'\',\''+id+'\',\'cerrado\');closeDetailModal()">Marcar cerrado</button>'+
+      '<button class="btn-action danger" onclick="delLead(\''+col+'\',\''+id+'\');closeDetailModal()">Eliminar</button>'+
+    '</div>';
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function closeDetailModal(){document.getElementById('detailOverlay').classList.remove('open');}
+function closeDetail(e){if(e.target===document.getElementById('detailOverlay'))closeDetailModal();}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDetailModal();});
 </script>
 </body>
 </html>

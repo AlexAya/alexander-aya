@@ -1221,6 +1221,28 @@ footer{border-top:1px solid var(--border);padding:26px 0}
   <a href="admin.html" style="font-family:'Space Mono',monospace;font-size:9px;color:var(--gray3);text-decoration:none;letter-spacing:1px;transition:color .2s" title="Admin">⚙</a>
 </div></div></footer>
 
+<!-- FIREBASE -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDhyVgXxZLxQKatA_xx7nV8kKhIkl6b0xQ",
+  authDomain: "alexander-aya.firebaseapp.com",
+  projectId: "alexander-aya",
+  storageBucket: "alexander-aya.firebasestorage.app",
+  messagingSenderId: "506245432199",
+  appId: "1:506245432199:web:a927212f973cc409578922"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+window._db = db;
+window._collection = collection;
+window._addDoc = addDoc;
+window._serverTimestamp = serverTimestamp;
+</script>
+
 <script>
 // ACORDEÓN
 function toggleTray(n){
@@ -1252,14 +1274,30 @@ function submitForm(){
   if(!name||!email||!service){
     alert('Por favor completa nombre, correo y servicio de interés.');return;
   }
+  var data={
+    nombre:name,
+    empresa:document.getElementById('f-company').value||'',
+    email:email,
+    servicio:service,
+    presupuesto:document.getElementById('f-budget').value||'',
+    descripcion:document.getElementById('f-desc').value||'',
+    estado:'nuevo',
+    fecha:window._serverTimestamp ? window._serverTimestamp() : new Date().toISOString()
+  };
+  // Guardar en Firebase
+  if(window._db){
+    window._addDoc(window._collection(window._db,'cotizaciones'), data)
+      .catch(function(e){console.warn('Firebase:',e);});
+  }
+  // Enviar correo
   var subject=encodeURIComponent('Cotización: '+service);
   var body=encodeURIComponent(
     'Nombre: '+name+'\n'+
-    'Empresa: '+(document.getElementById('f-company').value||'N/A')+'\n'+
+    'Empresa: '+(data.empresa||'N/A')+'\n'+
     'Correo: '+email+'\n'+
     'Servicio: '+service+'\n'+
-    'Presupuesto: '+(document.getElementById('f-budget').value||'A definir')+'\n\n'+
-    'Descripción:\n'+document.getElementById('f-desc').value
+    'Presupuesto: '+(data.presupuesto||'A definir')+'\n\n'+
+    'Descripción:\n'+data.descripcion
   );
   window.location.href='mailto:alexanderayaaponte@gmail.com?subject='+subject+'&body='+body;
   document.getElementById('modalForm').style.display='none';
@@ -1271,7 +1309,6 @@ function submitForm(){
     closeModal();
   },4000);
 }
-
 
 // COLLAB MODAL
 var selectedCollabType = '';
@@ -1308,15 +1345,32 @@ function submitCollab(){
     var el=document.getElementById(id);
     if(el&&el.checked)channels.push(el.value);
   });
+  var data={
+    nombre:name,
+    marca:brand||'',
+    email:email,
+    tipo:type,
+    canales:channels.join(', ')||'No especificado',
+    presupuesto:document.getElementById('cb-budget').value||'',
+    descripcion:document.getElementById('cb-desc').value||'',
+    estado:'nuevo',
+    fecha:window._serverTimestamp ? window._serverTimestamp() : new Date().toISOString()
+  };
+  // Guardar en Firebase
+  if(window._db){
+    window._addDoc(window._collection(window._db,'colaboraciones'), data)
+      .catch(function(e){console.warn('Firebase:',e);});
+  }
+  // Enviar correo
   var subject=encodeURIComponent('Colaboración: '+type+' — '+brand);
   var body=encodeURIComponent(
     'Nombre: '+name+'\n'+
     'Marca/Empresa: '+(brand||'N/A')+'\n'+
     'Correo: '+email+'\n'+
     'Tipo de colaboración: '+type+'\n'+
-    'Canales de interés: '+(channels.length?channels.join(', '):'No especificado')+'\n'+
-    'Presupuesto: '+(document.getElementById('cb-budget').value||'A negociar')+'\n\n'+
-    'Descripción:\n'+document.getElementById('cb-desc').value
+    'Canales de interés: '+data.canales+'\n'+
+    'Presupuesto: '+(data.presupuesto||'A negociar')+'\n\n'+
+    'Descripción:\n'+data.descripcion
   );
   window.location.href='mailto:alexanderayaaponte@gmail.com?subject='+subject+'&body='+body;
   document.getElementById('collabForm').style.display='none';
