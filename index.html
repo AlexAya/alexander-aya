@@ -19,7 +19,8 @@ body{background:var(--bg);color:var(--white);font-family:"Barlow",sans-serif;ove
 .w{max-width:1100px;margin:0 auto;padding:0 32px}
 
 /* NAV */
-nav{position:sticky;top:0;z-index:200;background:rgba(8,8,8,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(8,8,8,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+body{padding-top:58px}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:58px}
 .logo-nav{display:flex;align-items:center;gap:14px;text-decoration:none}
 .logo-nav-text{font-family:"Barlow Condensed",sans-serif;font-size:16px;font-weight:700;color:var(--white);letter-spacing:3px;text-transform:uppercase}
