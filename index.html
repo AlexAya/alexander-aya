@@ -1275,6 +1275,7 @@ function submitForm(){
     alert('Por favor completa nombre, correo y servicio de interés.');return;
   }
   var data={
+    type:'cotizacion',
     nombre:name,
     empresa:document.getElementById('f-company').value||'',
     email:email,
@@ -1286,20 +1287,16 @@ function submitForm(){
   };
   // Guardar en Firebase
   if(window._db){
-    window._addDoc(window._collection(window._db,'cotizaciones'), data)
+    window._addDoc(window._collection(window._db,'cotizaciones'),data)
       .catch(function(e){console.warn('Firebase:',e);});
   }
-  // Enviar correo
-  var subject=encodeURIComponent('Cotización: '+service);
-  var body=encodeURIComponent(
-    'Nombre: '+name+'\n'+
-    'Empresa: '+(data.empresa||'N/A')+'\n'+
-    'Correo: '+email+'\n'+
-    'Servicio: '+service+'\n'+
-    'Presupuesto: '+(data.presupuesto||'A definir')+'\n\n'+
-    'Descripción:\n'+data.descripcion
-  );
-  window.location.href='mailto:alexanderayaaponte@gmail.com?subject='+subject+'&body='+body;
+  // Enviar correo via Resend
+  fetch('/api/send-email',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(data)
+  }).catch(function(e){console.warn('Resend:',e);});
+  // Mostrar éxito
   document.getElementById('modalForm').style.display='none';
   var s=document.getElementById('formSuccess');
   s.style.display='flex';
@@ -1309,6 +1306,7 @@ function submitForm(){
     closeModal();
   },4000);
 }
+
 
 // COLLAB MODAL
 var selectedCollabType = '';
@@ -1346,6 +1344,7 @@ function submitCollab(){
     if(el&&el.checked)channels.push(el.value);
   });
   var data={
+    type:'colaboracion',
     nombre:name,
     marca:brand||'',
     email:email,
@@ -1358,21 +1357,16 @@ function submitCollab(){
   };
   // Guardar en Firebase
   if(window._db){
-    window._addDoc(window._collection(window._db,'colaboraciones'), data)
+    window._addDoc(window._collection(window._db,'colaboraciones'),data)
       .catch(function(e){console.warn('Firebase:',e);});
   }
-  // Enviar correo
-  var subject=encodeURIComponent('Colaboración: '+type+' — '+brand);
-  var body=encodeURIComponent(
-    'Nombre: '+name+'\n'+
-    'Marca/Empresa: '+(brand||'N/A')+'\n'+
-    'Correo: '+email+'\n'+
-    'Tipo de colaboración: '+type+'\n'+
-    'Canales de interés: '+data.canales+'\n'+
-    'Presupuesto: '+(data.presupuesto||'A negociar')+'\n\n'+
-    'Descripción:\n'+data.descripcion
-  );
-  window.location.href='mailto:alexanderayaaponte@gmail.com?subject='+subject+'&body='+body;
+  // Enviar correo via Resend
+  fetch('/api/send-email',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(data)
+  }).catch(function(e){console.warn('Resend:',e);});
+  // Mostrar éxito
   document.getElementById('collabForm').style.display='none';
   var s=document.getElementById('collabSuccess');
   s.style.display='flex';
