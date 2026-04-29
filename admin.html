@@ -11,138 +11,161 @@
   --bg:#080808;--bg2:#0f0f0f;--bg3:#161616;--bg4:#1c1c1c;
   --white:#efefef;--gray:#888;--gray2:#444;--gray3:#252525;
   --gold:#c4a25a;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
-  --green:#22c55e;--red:#ef4444;--blue:#3b82f6;--yellow:#f59e0b;
+  --green:#4a4;--red:#e05574;--blue:#4f8ef7;
 }
-body.light{
-  --bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;
-  --white:#111;--gray:#555;--gray2:#777;--gray3:#ccc;
-  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14)
-}
-body{background:var(--bg);color:var(--white);font-family:"Barlow",sans-serif;font-weight:300;min-height:100vh;transition:background .3s,color .3s}
+body{background:var(--bg);color:var(--white);font-family:"Barlow",sans-serif;font-weight:300;min-height:100vh}
+body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;--gray:#555;--gray2:#777;--gray3:#ccc;--border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14)}
 
 /* LOGIN */
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 .login-box{background:var(--bg2);border:1px solid var(--border2);padding:48px 40px;width:100%;max-width:400px}
-.login-title{font-family:"Barlow Condensed",sans-serif;font-size:28px;font-weight:800;letter-spacing:2px;margin-bottom:6px}
-.login-sub{font-size:13px;color:var(--gray);font-weight:300;margin-bottom:32px}
-.form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
-.form-label{font-family:"Barlow Condensed",sans-serif;font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase}
-.form-input{background:var(--bg3);border:1px solid var(--gray3);color:var(--white);padding:12px 14px;font-family:"Barlow",sans-serif;font-size:14px;font-weight:300;outline:none;transition:border-color .2s;width:100%}
-.form-input:focus{border-color:var(--gold)}
-.btn-login{background:var(--gold);color:#000;border:none;padding:14px;font-family:"Barlow Condensed",sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;width:100%;transition:all .2s;margin-top:8px}
-.btn-login:hover{background:#d4b26a}
-.login-error{color:var(--red);font-size:12px;margin-top:8px;display:none;font-family:"Space Mono",monospace}
-.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:32px}
+.login-logo{font-family:"Barlow Condensed",sans-serif;font-size:13px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--gray);margin-bottom:32px;display:flex;align-items:center;gap:10px}
+.login-title{font-family:"Barlow Condensed",sans-serif;font-size:32px;font-weight:800;letter-spacing:-.5px;margin-bottom:8px}
+.login-sub{font-size:13px;color:var(--gray);margin-bottom:32px;font-weight:300}
+.login-input{background:var(--bg3);border:1px solid var(--gray3);color:var(--white);padding:14px 16px;font-family:"Barlow",sans-serif;font-size:14px;font-weight:300;outline:none;width:100%;transition:border-color .2s;margin-bottom:12px}
+.login-input:focus{border-color:var(--gold)}
+.login-btn{background:var(--gold);color:#000;border:none;padding:14px;font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;width:100%;transition:all .2s}
+.login-btn:hover{background:#d4b26a}
+.login-err{font-size:12px;color:var(--red);margin-top:8px;text-align:center;display:none}
 
-/* DASHBOARD */
-.dashboard{display:none}
-.topbar{position:sticky;top:0;z-index:100;background:rgba(8,8,8,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 32px;height:58px;display:flex;align-items:center;justify-content:space-between}
-body.light .topbar{background:rgba(244,244,240,0.97)}
-.topbar-left{display:flex;align-items:center;gap:16px}
-.topbar-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.topbar-title{font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:700;color:var(--white);letter-spacing:3px;text-transform:uppercase}
-.topbar-badge{font-family:"Space Mono",monospace;font-size:9px;color:var(--green);background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);padding:3px 8px;letter-spacing:2px;display:flex;align-items:center;gap:6px}
-.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;display:inline-block}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.topbar-right{display:flex;align-items:center;gap:12px}
-.btn-icon{background:transparent;border:1px solid var(--border2);color:var(--gray);width:34px;height:34px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.btn-icon:hover{border-color:var(--gold);color:var(--gold)}
-.btn-logout{font-family:"Barlow Condensed",sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gray);background:transparent;border:1px solid var(--gray3);padding:7px 14px;cursor:pointer;transition:all .2s}
-.btn-logout:hover{color:var(--red);border-color:var(--red)}
+/* ADMIN LAYOUT */
+.admin-wrap{display:none;min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100}
+.sidebar-logo{padding:24px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sidebar-logo-text{font-family:"Barlow Condensed",sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--white)}
+.sidebar-nav{flex:1;padding:16px 0;overflow-y:auto}
+.nav-group-label{font-family:"Barlow Condensed",sans-serif;font-size:9px;color:var(--gray);letter-spacing:3px;text-transform:uppercase;padding:8px 20px 4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-family:"Barlow Condensed",sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--gray);cursor:pointer;transition:all .2s;border-left:2px solid transparent}
+.nav-item:hover{color:var(--white);background:rgba(255,255,255,0.03)}
+.nav-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(196,162,90,0.06)}
+.nav-item .nav-ico{font-size:14px;width:18px;text-align:center}
+.sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
+.sidebar-footer a,.sidebar-footer button{font-family:"Barlow Condensed",sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);text-decoration:none;background:transparent;border:none;cursor:pointer;transition:color .2s;text-align:left;padding:0}
+.sidebar-footer a:hover,.sidebar-footer button:hover{color:var(--white)}
+.live-badge{display:flex;align-items:center;gap:5px;font-family:"Space Mono",monospace;font-size:9px;color:var(--green);letter-spacing:2px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-/* MAIN */
-.main{padding:32px;max-width:1400px;margin:0 auto}
-.page-header{margin-bottom:32px}
-.page-lbl{font-family:"Barlow Condensed",sans-serif;font-size:11px;color:var(--gray);letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:10px}
-.page-lbl::before{content:"";display:inline-block;width:18px;height:1px;background:var(--gray2)}
-.page-title{font-family:"Barlow Condensed",sans-serif;font-size:36px;font-weight:800;letter-spacing:-.5px}
+.main-content{margin-left:220px;padding:32px;min-height:100vh}
+.page{display:none}
+.page.active{display:block}
 
-/* STATS */
+/* HEADER */
+.page-header{margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.page-title{font-family:"Barlow Condensed",sans-serif;font-size:28px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--gray);font-weight:300}
+
+/* STATS CARDS */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin-bottom:32px}
-.stat-card{background:var(--bg2);padding:24px;border-top:2px solid transparent}
-.stat-card.gold{border-top-color:var(--gold)}
-.stat-card.green{border-top-color:var(--green)}
-.stat-card.blue{border-top-color:var(--blue)}
-.stat-card.purple{border-top-color:#a78bfa}
-.stat-n{font-family:"Barlow Condensed",sans-serif;font-size:40px;font-weight:800;letter-spacing:-1px;line-height:1}
-.stat-l{font-family:"Barlow Condensed",sans-serif;font-size:10px;color:var(--gray);letter-spacing:3px;text-transform:uppercase;margin-top:6px}
+.stat-card{background:var(--bg2);padding:20px 24px}
+.stat-card-n{font-family:"Barlow Condensed",sans-serif;font-size:32px;font-weight:800;color:var(--white);letter-spacing:-2px}
+.stat-card-l{font-family:"Barlow Condensed",sans-serif;font-size:10px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-top:4px}
 
-/* TABS */
-.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:24px}
-.tab{font-family:"Barlow Condensed",sans-serif;font-size:12px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--gray);padding:13px 22px;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;background:transparent;border-top:none;border-left:none;border-right:none}
-.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
-.tab:hover{color:var(--white)}
-.tab-content{display:none}
-.tab-content.active{display:block}
-
-/* FILTERS */
-.filters{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
-.filter-input{background:var(--bg2);border:1px solid var(--gray3);color:var(--white);padding:9px 14px;font-family:"Barlow",sans-serif;font-size:13px;font-weight:300;outline:none;transition:border-color .2s;min-width:220px}
-.filter-input:focus{border-color:var(--gold)}
-.filter-select{background:var(--bg2);border:1px solid var(--gray3);color:var(--white);padding:9px 14px;font-family:"Barlow",sans-serif;font-size:13px;font-weight:300;outline:none;cursor:pointer}
-.filter-select option{background:var(--bg2)}
-.results-count{font-family:"Space Mono",monospace;font-size:10px;color:var(--gray);margin-left:auto}
-
-/* TABLE */
-.table-wrap{overflow-x:auto;background:var(--bg2);border:1px solid var(--border)}
-table{width:100%;border-collapse:collapse;min-width:750px}
-thead{background:var(--bg3)}
-th{font-family:"Barlow Condensed",sans-serif;font-size:9px;font-weight:600;color:var(--gold);letter-spacing:3px;text-transform:uppercase;padding:14px 16px;text-align:left;border-bottom:1px solid var(--border)}
-td{font-size:13px;color:var(--white);padding:13px 16px;border-bottom:1px solid var(--border);font-weight:300;vertical-align:middle}
-tr:hover td{background:rgba(255,255,255,0.02)}
-tr:last-child td{border-bottom:none}
-
-.badge{font-family:"Barlow Condensed",sans-serif;font-size:9px;font-weight:600;padding:3px 9px;letter-spacing:2px;text-transform:uppercase;display:inline-block}
-.badge-new{background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.3)}
-.badge-contacted{background:rgba(59,130,246,0.1);color:var(--blue);border:1px solid rgba(59,130,246,0.3)}
-.badge-closed{background:rgba(196,162,90,0.1);color:var(--gold);border:1px solid rgba(196,162,90,0.3)}
-
-.td-name{font-weight:500}
-.td-mono{font-family:"Space Mono",monospace;font-size:10px;color:var(--gray)}
-.td-actions{display:flex;gap:6px;flex-wrap:wrap}
-.btn-action{font-family:"Barlow Condensed",sans-serif;font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:5px 10px;cursor:pointer;border:1px solid var(--gray3);background:transparent;color:var(--gray);transition:all .2s;white-space:nowrap}
+/* TABLES */
+.data-table{width:100%;border-collapse:collapse;background:var(--bg2)}
+.data-table th{font-family:"Barlow Condensed",sans-serif;font-size:10px;color:var(--gray);letter-spacing:3px;text-transform:uppercase;padding:12px 16px;border-bottom:1px solid var(--border);text-align:left;font-weight:600}
+.data-table td{padding:14px 16px;border-bottom:1px solid var(--border);font-size:13px;font-weight:300;vertical-align:middle}
+.data-table tr:hover td{background:rgba(255,255,255,0.02)}
+.data-table .status-badge{display:inline-flex;align-items:center;gap:5px;font-family:"Barlow Condensed",sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:3px 10px}
+.status-nuevo{background:rgba(74,170,74,0.12);color:var(--green);border:1px solid rgba(74,170,74,0.3)}
+.status-contactado{background:rgba(79,142,247,0.12);color:var(--blue);border:1px solid rgba(79,142,247,0.3)}
+.status-cerrado{background:rgba(136,136,136,0.12);color:var(--gray);border:1px solid var(--border)}
+.status-activo{background:rgba(74,170,74,0.12);color:var(--green);border:1px solid rgba(74,170,74,0.3)}
+.status-inactivo{background:rgba(224,85,116,0.12);color:var(--red);border:1px solid rgba(224,85,116,0.3)}
+.btn-action{font-family:"Barlow Condensed",sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:5px 12px;cursor:pointer;transition:all .2s;border:1px solid var(--gray3);background:transparent;color:var(--gray)}
 .btn-action:hover{color:var(--white);border-color:var(--gray)}
 .btn-action.danger:hover{color:var(--red);border-color:var(--red)}
-.btn-action.success:hover{color:var(--green);border-color:var(--green)}
+.btn-action.primary{background:var(--gold);color:#000;border-color:var(--gold)}
+.btn-action.primary:hover{background:#d4b26a}
+.btn-action.success{border-color:var(--green);color:var(--green)}
+.btn-action.success:hover{background:rgba(74,170,74,0.1)}
 
-/* EMPTY & LOADING */
-.empty-state{padding:60px;text-align:center;color:var(--gray)}
-.empty-ico{font-size:36px;margin-bottom:12px}
-.empty-t{font-family:"Barlow Condensed",sans-serif;font-size:20px;font-weight:700;margin-bottom:6px;color:var(--white)}
-.empty-s{font-size:13px;font-weight:300}
-.loading{padding:48px;text-align:center}
-.spinner{width:32px;height:32px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px}
-@keyframes spin{to{transform:rotate(360deg)}}
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:28px}
+.tab{font-family:"Barlow Condensed",sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:12px 20px;cursor:pointer;color:var(--gray);border-bottom:2px solid transparent;transition:all .2s}
+.tab:hover{color:var(--white)}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* FORMS */
+.form-section{background:var(--bg2);border:1px solid var(--border);padding:28px;margin-bottom:24px}
+.form-section-title{font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.form-row.three{grid-template-columns:1fr 1fr 1fr}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-label{font-family:"Barlow Condensed",sans-serif;font-size:10px;color:var(--gray);letter-spacing:3px;text-transform:uppercase}
+.form-input,.form-select,.form-textarea{background:var(--bg3);border:1px solid var(--gray3);color:var(--white);padding:10px 12px;font-family:"Barlow",sans-serif;font-size:13px;font-weight:300;outline:none;transition:border-color .2s;width:100%}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--gold)}
+.form-select option{background:var(--bg3)}
+.form-textarea{resize:vertical;min-height:80px}
+.form-actions{display:flex;gap:10px;margin-top:20px}
+
+/* TOGGLE SWITCH */
+.toggle-wrap{display:flex;align-items:center;gap:10px;padding:8px 0}
+.toggle{position:relative;width:40px;height:22px;cursor:pointer}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--gray3);border-radius:22px;transition:.3s}
+.toggle-slider::before{content:"";position:absolute;height:16px;width:16px;left:3px;bottom:3px;background:var(--gray);border-radius:50%;transition:.3s}
+.toggle input:checked + .toggle-slider{background:rgba(74,170,74,0.3)}
+.toggle input:checked + .toggle-slider::before{transform:translateX(18px);background:var(--green)}
+.toggle-label{font-size:13px;color:var(--gray);font-weight:300}
+
+/* CMS GRID ITEMS */
+.cms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:20px}
+.cms-item{background:var(--bg2);border:1px solid var(--border);padding:20px;transition:border-color .2s}
+.cms-item:hover{border-color:var(--border2)}
+.cms-item-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cms-item-title{font-family:"Barlow Condensed",sans-serif;font-size:16px;font-weight:700;letter-spacing:.5px;display:flex;align-items:center;gap:8px}
+.cms-item-body{font-size:12px;color:var(--gray);line-height:1.6;font-weight:300;margin-bottom:14px}
+.cms-item-actions{display:flex;gap:8px;align-items:center}
+
+/* NOTIFICATION */
+.notif{position:fixed;bottom:24px;right:24px;background:var(--bg2);border:1px solid var(--border2);padding:14px 20px;font-family:"Barlow Condensed",sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;z-index:999;transform:translateY(80px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:10px}
+.notif.show{transform:translateY(0);opacity:1}
+.notif.success{border-color:rgba(74,170,74,.4);color:var(--green)}
+.notif.error{border-color:rgba(224,85,116,.4);color:var(--red)}
 
 /* MODAL */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:20px}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s}
 .modal-overlay.open{opacity:1;pointer-events:all}
-.modal{background:var(--bg2);border:1px solid var(--border2);width:100%;max-width:560px;max-height:90vh;overflow-y:auto}
-.modal-header{padding:24px 28px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between}
-.modal-title{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800}
-.modal-close{background:transparent;border:1px solid var(--gray3);color:var(--gray);width:30px;height:30px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal{background:var(--bg2);border:1px solid var(--border2);width:100%;max-width:600px;max-height:90vh;overflow-y:auto;position:relative}
+.modal-header{padding:24px 28px 18px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between}
+.modal-title{font-family:"Barlow Condensed",sans-serif;font-size:22px;font-weight:800;letter-spacing:.5px}
+.modal-close{background:transparent;border:1px solid var(--gray3);color:var(--gray);width:28px;height:28px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
 .modal-close:hover{border-color:var(--white);color:var(--white)}
-.modal-body{padding:24px 28px}
-.detail-row{display:flex;flex-direction:column;gap:4px;padding:13px 0;border-bottom:1px solid var(--border)}
-.detail-row:last-child{border-bottom:none}
-.detail-lbl{font-family:"Barlow Condensed",sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase}
-.detail-val{font-size:14px;color:var(--white);font-weight:300;line-height:1.6;word-break:break-word}
-.status-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+.modal-body{padding:24px 28px 28px}
+
+/* FILTER ROW */
+.filter-row{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center}
+.search-input{background:var(--bg2);border:1px solid var(--gray3);color:var(--white);padding:9px 14px;font-family:"Barlow",sans-serif;font-size:13px;font-weight:300;outline:none;transition:border-color .2s;min-width:220px}
+.search-input:focus{border-color:var(--gold)}
+.filter-select{background:var(--bg2);border:1px solid var(--gray3);color:var(--gray);padding:9px 14px;font-family:"Barlow Condensed",sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;outline:none;cursor:pointer}
+.filter-select option{background:var(--bg3)}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:60px 20px;color:var(--gray)}
+.empty-state-ico{font-size:40px;margin-bottom:12px}
+.empty-state-t{font-family:"Barlow Condensed",sans-serif;font-size:18px;font-weight:700;letter-spacing:1px;margin-bottom:6px;color:var(--white)}
+.empty-state-s{font-size:13px;font-weight:300}
 
 /* RESPONSIVE */
-@media(max-width:768px){
-  .main{padding:16px}
+@media(max-width:900px){
+  .sidebar{display:none}
+  .main-content{margin-left:0}
   .stats-row{grid-template-columns:1fr 1fr}
-  .topbar{padding:0 16px}
-  .filters{flex-direction:column;align-items:stretch}
-  .filter-input{min-width:unset}
-  .results-count{margin-left:0}
-  .login-box{padding:32px 24px}
+  .form-row,.form-row.three{grid-template-columns:1fr}
+  .cms-grid{grid-template-columns:1fr}
 }
-@media(max-width:480px){
-  .stats-row{grid-template-columns:1fr}
-  .topbar-badge{display:none}
-}
+
+/* DETAIL PANEL */
+.detail-panel{background:var(--bg2);border:1px solid var(--border2);padding:28px;margin-top:20px;display:none}
+.detail-panel.open{display:block}
+.detail-row{display:flex;gap:8px;margin-bottom:10px;font-size:13px;font-weight:300}
+.detail-label{font-family:"Barlow Condensed",sans-serif;font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;min-width:120px;margin-top:2px}
+.detail-val{color:var(--white);line-height:1.6}
+
+/* DRAG HANDLE */
+.drag-handle{cursor:grab;color:var(--gray2);font-size:16px;padding:0 4px}
+.drag-handle:active{cursor:grabbing}
 </style>
 </head>
 <body>
@@ -151,143 +174,492 @@ tr:last-child td{border-bottom:none}
 <div class="login-wrap" id="loginWrap">
   <div class="login-box">
     <div class="login-logo">
-      <svg width="28" height="28" viewBox="0 0 100 100" fill="none">
-        <polygon points="50,4 96,92 4,92" fill="none" stroke="#c4a25a" stroke-width="5"/>
-        <line x1="27" y1="66" x2="73" y2="66" stroke="#c4a25a" stroke-width="4"/>
+      <svg width="22" height="22" viewBox="0 0 100 100" fill="none">
+        <polygon points="50,4 96,92 4,92" fill="none" stroke="#888" stroke-width="5" stroke-linejoin="miter"/>
+        <line x1="27" y1="66" x2="73" y2="66" stroke="#888" stroke-width="4"/>
       </svg>
-      <span style="font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--white)">Alexander Aya</span>
+      Alexander Aya — Admin
     </div>
-    <div class="login-title">Panel Admin</div>
-    <div class="login-sub">Acceso restringido — solo personal autorizado</div>
-    <div class="form-group">
-      <label class="form-label">Contraseña</label>
-      <input class="form-input" type="password" id="passInput" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
-    </div>
-    <button class="btn-login" onclick="doLogin()">Ingresar →</button>
-    <div class="login-error" id="loginError">Contraseña incorrecta</div>
+    <div class="login-title">Panel de control</div>
+    <div class="login-sub">Ingresa la contraseña para continuar</div>
+    <input class="login-input" type="password" id="loginPass" placeholder="Contraseña" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Entrar →</button>
+    <div class="login-err" id="loginErr">Contraseña incorrecta</div>
   </div>
 </div>
 
-<!-- DASHBOARD -->
-<div class="dashboard" id="dashboard">
+<!-- ADMIN WRAPPER -->
+<div class="admin-wrap" id="adminWrap">
 
-  <div class="topbar">
-    <div class="topbar-left">
-      <a href="index.html" class="topbar-logo">
-        <svg width="22" height="22" viewBox="0 0 100 100" fill="none">
-          <polygon points="50,4 96,92 4,92" fill="none" stroke="#c4a25a" stroke-width="5"/>
-          <line x1="27" y1="66" x2="73" y2="66" stroke="#c4a25a" stroke-width="4"/>
-        </svg>
-        <span class="topbar-title">Alexander Aya</span>
-      </a>
-      <span class="topbar-badge"><span class="live-dot"></span>LIVE</span>
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="20" height="20" viewBox="0 0 100 100" fill="none">
+        <polygon points="50,4 96,92 4,92" fill="none" stroke="#c4a25a" stroke-width="5" stroke-linejoin="miter"/>
+        <line x1="27" y1="66" x2="73" y2="66" stroke="#c4a25a" stroke-width="4"/>
+      </svg>
+      <span class="sidebar-logo-text">Admin</span>
     </div>
-    <div class="topbar-right">
-      <button class="btn-icon" id="themeToggle" onclick="toggleTheme()" title="Cambiar tema">☀</button>
-      <button class="btn-logout" onclick="doLogout()">Salir</button>
+    <nav class="sidebar-nav">
+      <div class="nav-group-label">General</div>
+      <div class="nav-item active" onclick="goPage('dashboard')">
+        <span class="nav-ico">📊</span> Dashboard
+      </div>
+      
+      <div class="nav-group-label" style="margin-top:12px">CMS — Landing</div>
+      <div class="nav-item" onclick="goPage('cms-stats')">
+        <span class="nav-ico">📈</span> Stats
+      </div>
+      <div class="nav-item" onclick="goPage('cms-servicios')">
+        <span class="nav-ico">🛠️</span> Servicios
+      </div>
+      <div class="nav-item" onclick="goPage('cms-deals')">
+        <span class="nav-ico">🏷️</span> Deals & Cupones
+      </div>
+      <div class="nav-item" onclick="goPage('cms-clientes')">
+        <span class="nav-ico">🏢</span> Clientes
+      </div>
+      <div class="nav-item" onclick="goPage('cms-marcas')">
+        <span class="nav-ico">🎖️</span> Marcas
+      </div>
+
+      <div class="nav-group-label" style="margin-top:12px">Formularios</div>
+      <div class="nav-item" onclick="goPage('cotizaciones')">
+        <span class="nav-ico">📋</span> Cotizaciones
+      </div>
+      <div class="nav-item" onclick="goPage('colaboraciones')">
+        <span class="nav-ico">🤝</span> Colaboraciones
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+      <a href="index.html" target="_blank">← Ver landing</a>
+      <button onclick="toggleTheme()">☀ Tema</button>
+      <button onclick="doLogout()">Salir</button>
     </div>
   </div>
 
-  <div class="main">
-    <div class="page-header">
-      <div class="page-lbl">Dashboard</div>
-      <h1 class="page-title">Centro de control</h1>
+  <!-- MAIN -->
+  <div class="main-content">
+
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div class="page-title">Dashboard</div>
+        <div class="page-sub">Resumen en tiempo real de tu landing page</div>
+      </div>
+      <div class="stats-row" id="dashStats">
+        <div class="stat-card"><div class="stat-card-n" id="ds-total">—</div><div class="stat-card-l">Cotizaciones total</div></div>
+        <div class="stat-card"><div class="stat-card-n" id="ds-nuevas">—</div><div class="stat-card-l">Sin contactar</div></div>
+        <div class="stat-card"><div class="stat-card-n" id="ds-collabs">—</div><div class="stat-card-l">Colaboraciones</div></div>
+        <div class="stat-card"><div class="stat-card-n" id="ds-cerradas">—</div><div class="stat-card-l">Cerradas</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)">
+        <div style="background:var(--bg2);padding:24px">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--gray);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px">Últimas cotizaciones</div>
+          <div id="recentCot" style="display:flex;flex-direction:column;gap:1px"></div>
+        </div>
+        <div style="background:var(--bg2);padding:24px">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--gray);letter-spacing:3px;text-transform:uppercase;margin-bottom:16px">Últimas colaboraciones</div>
+          <div id="recentCollab" style="display:flex;flex-direction:column;gap:1px"></div>
+        </div>
+      </div>
     </div>
 
-    <div class="stats-row">
-      <div class="stat-card gold"><div class="stat-n" id="statTotal">—</div><div class="stat-l">Total leads</div></div>
-      <div class="stat-card green"><div class="stat-n" id="statNew">—</div><div class="stat-l">Nuevos</div></div>
-      <div class="stat-card blue"><div class="stat-n" id="statContacted">—</div><div class="stat-l">Contactados</div></div>
-      <div class="stat-card purple"><div class="stat-n" id="statCollab">—</div><div class="stat-l">Colaboraciones</div></div>
+    <!-- CMS STATS -->
+    <div class="page" id="page-cms-stats">
+      <div class="page-header">
+        <div class="page-title">Stats de la landing</div>
+        <div class="page-sub">Actualiza los números que se muestran en la barra de estadísticas</div>
+      </div>
+      <div class="form-section">
+        <div class="form-section-title">Números visibles en la landing</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Años de experiencia</label>
+            <input class="form-input" type="text" id="stat-anos" placeholder="10+">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Suscriptores YouTube</label>
+            <input class="form-input" type="text" id="stat-suscriptores" placeholder="9.7K">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Videos publicados</label>
+            <input class="form-input" type="text" id="stat-videos" placeholder="658">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Certificaciones</label>
+            <input class="form-input" type="text" id="stat-certificaciones" placeholder="5+">
+          </div>
+        </div>
+        <div style="padding:16px;background:var(--bg3);border:1px solid var(--border);margin-bottom:20px;font-size:12px;color:var(--gray);line-height:1.7">
+          💡 <strong style="color:var(--white)">Tip:</strong> Estos valores se muestran en la barra de stats del hero y también en la bio ("Creador de contenido tech con <strong>X</strong> suscriptores") y en el badge de la foto. Usa formatos como <code style="color:var(--gold)">9.7K</code>, <code style="color:var(--gold)">10+</code>, <code style="color:var(--gold)">658</code>.
+        </div>
+        <div class="form-actions">
+          <button class="btn-action primary" onclick="saveStats()">Guardar stats →</button>
+          <button class="btn-action" onclick="loadStats()">Recargar</button>
+        </div>
+      </div>
     </div>
 
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('cotizaciones',this)">Cotizaciones</button>
-      <button class="tab" onclick="switchTab('colaboraciones',this)">Colaboraciones</button>
+    <!-- CMS SERVICIOS -->
+    <div class="page" id="page-cms-servicios">
+      <div class="page-header">
+        <div class="page-title">Servicios</div>
+        <div class="page-sub">Activa, desactiva o edita los servicios de la landing</div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+        <button class="btn-action primary" onclick="openModalServicio()">+ Nuevo servicio</button>
+      </div>
+      <div id="serviciosContainer"></div>
+    </div>
+
+    <!-- CMS DEALS -->
+    <div class="page" id="page-cms-deals">
+      <div class="page-header">
+        <div class="page-title">Deals & Cupones</div>
+        <div class="page-sub">Gestiona links de afiliado, códigos de descuento y ofertas</div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+        <button class="btn-action primary" onclick="openModalDeal()">+ Nuevo deal</button>
+      </div>
+      <div id="dealsContainer"></div>
+    </div>
+
+    <!-- CMS CLIENTES -->
+    <div class="page" id="page-cms-clientes">
+      <div class="page-header">
+        <div class="page-title">Clientes & Proyectos</div>
+        <div class="page-sub">Gestiona las empresas del portafolio</div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+        <button class="btn-action primary" onclick="openModalCliente()">+ Nuevo cliente</button>
+      </div>
+      <div id="clientesContainer"></div>
+    </div>
+
+    <!-- CMS MARCAS -->
+    <div class="page" id="page-cms-marcas">
+      <div class="page-header">
+        <div class="page-title">Marcas del carrusel</div>
+        <div class="page-sub">Patrocinadores y afiliados que aparecen en el carrusel animado</div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+        <button class="btn-action primary" onclick="openModalMarca()">+ Nueva marca</button>
+      </div>
+      <div id="marcasContainer"></div>
     </div>
 
     <!-- COTIZACIONES -->
-    <div class="tab-content active" id="tab-cotizaciones">
-      <div class="filters">
-        <input class="filter-input" type="text" placeholder="Buscar por nombre o correo..." id="searchCot" oninput="renderCotizaciones()">
-        <select class="filter-select" id="filterStatusCot" onchange="renderCotizaciones()">
+    <div class="page" id="page-cotizaciones">
+      <div class="page-header">
+        <div class="page-title">Cotizaciones</div>
+        <div class="page-sub">Solicitudes de clientes recibidas a través del formulario</div>
+      </div>
+      <div class="filter-row">
+        <input class="search-input" type="text" placeholder="Buscar nombre, email..." oninput="filtrarCot(this.value)">
+        <select class="filter-select" onchange="filtrarCotEstado(this.value)">
           <option value="">Todos los estados</option>
           <option value="nuevo">Nuevo</option>
           <option value="contactado">Contactado</option>
           <option value="cerrado">Cerrado</option>
         </select>
-        <span class="results-count" id="countCot">— registros</span>
+        <span id="cotCount" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-left:auto"></span>
       </div>
-      <div class="table-wrap">
-        <div class="loading" id="loadingCot">
-          <div class="spinner"></div>
-          <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gray)">Conectando con Firebase...</div>
-        </div>
-        <table id="tableCot" style="display:none">
-          <thead><tr>
-            <th>Nombre</th><th>Correo</th><th>Servicio</th>
-            <th>Presupuesto</th><th>Estado</th><th>Fecha</th><th>Acciones</th>
-          </tr></thead>
-          <tbody id="bodyCot"></tbody>
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Email</th>
+              <th>Servicio</th>
+              <th>Presupuesto</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="cotTableBody"></tbody>
         </table>
-        <div class="empty-state" id="emptyCot" style="display:none">
-          <div class="empty-ico">📋</div>
-          <div class="empty-t">Sin cotizaciones aún</div>
-          <div class="empty-s">Aquí aparecerán los formularios enviados desde la landing</div>
-        </div>
       </div>
+      <div class="detail-panel" id="cotDetail"></div>
     </div>
 
     <!-- COLABORACIONES -->
-    <div class="tab-content" id="tab-colaboraciones">
-      <div class="filters">
-        <input class="filter-input" type="text" placeholder="Buscar por nombre o marca..." id="searchCol" oninput="renderColaboraciones()">
-        <select class="filter-select" id="filterStatusCol" onchange="renderColaboraciones()">
+    <div class="page" id="page-colaboraciones">
+      <div class="page-header">
+        <div class="page-title">Colaboraciones</div>
+        <div class="page-sub">Propuestas de marcas y creadores recibidas</div>
+      </div>
+      <div class="filter-row">
+        <input class="search-input" type="text" placeholder="Buscar nombre, marca..." oninput="filtrarCollab(this.value)">
+        <select class="filter-select" onchange="filtrarCollabEstado(this.value)">
           <option value="">Todos los estados</option>
           <option value="nuevo">Nuevo</option>
           <option value="contactado">Contactado</option>
           <option value="cerrado">Cerrado</option>
         </select>
-        <span class="results-count" id="countCol">— registros</span>
+        <span id="collabCount" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-left:auto"></span>
       </div>
-      <div class="table-wrap">
-        <div class="loading" id="loadingCol">
-          <div class="spinner"></div>
-          <div style="font-family:'Space Mono',monospace;font-size:11px;color:var(--gray)">Conectando con Firebase...</div>
-        </div>
-        <table id="tableCol" style="display:none">
-          <thead><tr>
-            <th>Nombre</th><th>Marca</th><th>Correo</th>
-            <th>Tipo</th><th>Presupuesto</th><th>Estado</th><th>Fecha</th><th>Acciones</th>
-          </tr></thead>
-          <tbody id="bodyCol"></tbody>
+      <div style="overflow-x:auto">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Marca</th>
+              <th>Tipo</th>
+              <th>Canales</th>
+              <th>Presupuesto</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="collabTableBody"></tbody>
         </table>
-        <div class="empty-state" id="emptyCol" style="display:none">
-          <div class="empty-ico">🤝</div>
-          <div class="empty-t">Sin colaboraciones aún</div>
-          <div class="empty-s">Aquí aparecerán las solicitudes de colaboración con marcas</div>
+      </div>
+      <div class="detail-panel" id="collabDetail"></div>
+    </div>
+
+  </div><!-- /main-content -->
+</div><!-- /admin-wrap -->
+
+<!-- MODAL SERVICIO -->
+<div class="modal-overlay" id="modalServicio">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalServicioTitle">Nuevo servicio</div>
+      <button class="modal-close" onclick="closeModalServicio()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="svc-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Número / Orden</label>
+          <input class="form-input" type="number" id="svc-orden" placeholder="1">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Icono (emoji)</label>
+          <input class="form-input" type="text" id="svc-icono" placeholder="🌐">
         </div>
       </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label class="form-label">Título del servicio</label>
+        <input class="form-input" type="text" id="svc-titulo" placeholder="Desarrollo Web">
+      </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label class="form-label">Descripción</label>
+        <textarea class="form-textarea" id="svc-descripcion" placeholder="Describe brevemente el servicio..."></textarea>
+      </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label class="form-label">Tags (separados por coma)</label>
+        <input class="form-input" type="text" id="svc-tags" placeholder="React, JavaScript, HTML/CSS">
+      </div>
+      <div class="toggle-wrap">
+        <label class="toggle">
+          <input type="checkbox" id="svc-activo" checked>
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label">Servicio activo (visible en la landing)</span>
+      </div>
+      <div class="form-actions">
+        <button class="btn-action primary" onclick="saveServicio()">Guardar servicio →</button>
+        <button class="btn-action" onclick="closeModalServicio()">Cancelar</button>
+      </div>
     </div>
-
   </div>
 </div>
 
-<!-- MODAL DETALLE -->
-<div class="modal-overlay" id="detailOverlay" onclick="closeDetail(event)">
-  <div class="modal" id="detailModal">
+<!-- MODAL DEAL -->
+<div class="modal-overlay" id="modalDeal">
+  <div class="modal">
     <div class="modal-header">
-      <div class="modal-title" id="detailTitle">Detalle</div>
-      <button class="modal-close" onclick="closeDetailModal()">✕</button>
+      <div class="modal-title" id="modalDealTitle">Nuevo deal</div>
+      <button class="modal-close" onclick="closeModalDeal()">✕</button>
     </div>
-    <div class="modal-body" id="detailBody"></div>
+    <div class="modal-body">
+      <input type="hidden" id="deal-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nombre</label>
+          <input class="form-input" type="text" id="deal-nombre" placeholder="Amazon">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subtítulo</label>
+          <input class="form-input" type="text" id="deal-subtitulo" placeholder="Electrónica & Tech">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Etiqueta del logo (3-4 letras)</label>
+          <input class="form-input" type="text" id="deal-logoLabel" placeholder="AMZ">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Color del logo (hex)</label>
+          <input class="form-input" type="text" id="deal-logoColor" placeholder="#ff9900">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label class="form-label">Link de afiliado / URL</label>
+        <input class="form-input" type="text" id="deal-link" placeholder="https://...">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Código de descuento (opcional)</label>
+          <input class="form-input" type="text" id="deal-codigo" placeholder="ALEXAYA">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Badge (si no hay código)</label>
+          <input class="form-input" type="text" id="deal-badge" placeholder="Link exclusivo">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label class="form-label">Descripción</label>
+        <textarea class="form-textarea" id="deal-descripcion" placeholder="Describe el deal..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Orden</label>
+          <input class="form-input" type="number" id="deal-orden" placeholder="1">
+        </div>
+      </div>
+      <div class="toggle-wrap">
+        <label class="toggle">
+          <input type="checkbox" id="deal-activo" checked>
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label">Deal activo (visible en la landing)</span>
+      </div>
+      <div class="form-actions">
+        <button class="btn-action primary" onclick="saveDeal()">Guardar deal →</button>
+        <button class="btn-action" onclick="closeModalDeal()">Cancelar</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- FIREBASE -->
+<!-- MODAL CLIENTE -->
+<div class="modal-overlay" id="modalCliente">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalClienteTitle">Nuevo cliente</div>
+      <button class="modal-close" onclick="closeModalCliente()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="cli-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nombre de la empresa</label>
+          <input class="form-input" type="text" id="cli-nombre" placeholder="Cogasen">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Sector / Categoría</label>
+          <input class="form-input" type="text" id="cli-sector" placeholder="Sector energético · Corporativo">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label class="form-label">URL del sitio web</label>
+        <input class="form-input" type="text" id="cli-url" placeholder="https://cogasen.com.co/">
+      </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label class="form-label">Texto del link (ej: cogasen.com.co)</label>
+        <input class="form-input" type="text" id="cli-urlLabel" placeholder="cogasen.com.co">
+      </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label class="form-label">Ruta de imagen (ej: img/cogasen.jpg)</label>
+        <input class="form-input" type="text" id="cli-imagen" placeholder="img/cogasen.jpg">
+      </div>
+      <div class="form-group" style="margin-bottom:14px">
+        <label class="form-label">Servicios ejecutados (separados por coma)</label>
+        <input class="form-input" type="text" id="cli-servicios" placeholder="Desarrollo Web, Hosting, Despliegue">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Orden</label>
+          <input class="form-input" type="number" id="cli-orden" placeholder="1">
+        </div>
+      </div>
+      <div class="toggle-wrap">
+        <label class="toggle">
+          <input type="checkbox" id="cli-activo" checked>
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label">Cliente activo (visible en la landing)</span>
+      </div>
+      <div class="form-actions">
+        <button class="btn-action primary" onclick="saveCliente()">Guardar cliente →</button>
+        <button class="btn-action" onclick="closeModalCliente()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL MARCA -->
+<div class="modal-overlay" id="modalMarca">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalMarcaTitle">Nueva marca</div>
+      <button class="modal-close" onclick="closeModalMarca()">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="marca-id">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nombre</label>
+          <input class="form-input" type="text" id="marca-nombre" placeholder="Amazon">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tipo</label>
+          <select class="form-select" id="marca-tipo">
+            <option value="logo">Logo (imagen URL)</option>
+            <option value="texto">Texto personalizado</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:14px" id="marca-logo-group">
+        <label class="form-label">URL del logo</label>
+        <input class="form-input" type="text" id="marca-logoUrl" placeholder="https://upload.wikimedia.org/...">
+      </div>
+      <div class="form-group" style="margin-bottom:14px" id="marca-texto-group">
+        <label class="form-label">Texto del logo</label>
+        <input class="form-input" type="text" id="marca-logoTexto" placeholder="KEYSFAN">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Color del texto</label>
+          <input class="form-input" type="text" id="marca-color" placeholder="#c4a25a">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Orden</label>
+          <input class="form-input" type="number" id="marca-orden" placeholder="1">
+        </div>
+      </div>
+      <div class="toggle-wrap">
+        <label class="toggle">
+          <input type="checkbox" id="marca-activo" checked>
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label">Marca activa (visible en el carrusel)</span>
+      </div>
+      <div class="form-actions">
+        <button class="btn-action primary" onclick="saveMarca()">Guardar marca →</button>
+        <button class="btn-action" onclick="closeModalMarca()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICACIÓN -->
+<div class="notif" id="notif"></div>
+
+<!-- FIREBASE + LÓGICA -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import {
+  getFirestore, collection, addDoc, getDocs, getDoc, setDoc,
+  doc, deleteDoc, updateDoc, query, orderBy, serverTimestamp, where
+} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDhyVgXxZLxQKatA_xx7nV8kKhIkl6b0xQ",
@@ -301,229 +673,877 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-window._db = db;
-window._doc = doc;
-window._updateDoc = updateDoc;
-window._deleteDoc = deleteDoc;
-window._cotizaciones = [];
-window._colaboraciones = [];
+// ─── EXPONER FUNCIONES AL SCOPE GLOBAL ────────────────
 
-// Escuchar cotizaciones en tiempo real
-try {
-  const qCot = query(collection(db, "cotizaciones"), orderBy("fecha", "desc"));
-  onSnapshot(qCot, snap => {
-    window._cotizaciones = snap.docs.map(d => ({id: d.id, ...d.data()}));
-    window.renderCotizaciones && window.renderCotizaciones();
-    window.updateStats && window.updateStats();
-  }, err => {
-    console.warn("cotizaciones:", err.message);
-    document.getElementById('loadingCot').style.display = 'none';
-    document.getElementById('emptyCot').style.display = 'block';
-  });
-} catch(e){ console.warn(e); }
-
-// Escuchar colaboraciones en tiempo real
-try {
-  const qCol = query(collection(db, "colaboraciones"), orderBy("fecha", "desc"));
-  onSnapshot(qCol, snap => {
-    window._colaboraciones = snap.docs.map(d => ({id: d.id, ...d.data()}));
-    window.renderColaboraciones && window.renderColaboraciones();
-    window.updateStats && window.updateStats();
-  }, err => {
-    console.warn("colaboraciones:", err.message);
-    document.getElementById('loadingCol').style.display = 'none';
-    document.getElementById('emptyCol').style.display = 'block';
-  });
-} catch(e){ console.warn(e); }
-</script>
-
-<script>
-var PASS = 'alexander2026';
-var isLight = false;
-
-// Auto-login
-if(localStorage.getItem('admin_auth')==='1'){
-  document.getElementById('loginWrap').style.display='none';
-  document.getElementById('dashboard').style.display='block';
-}
-
-// Tema guardado
-if(localStorage.getItem('admin_theme')==='light'){
-  isLight=true;
-  document.body.classList.add('light');
-  setTimeout(function(){var b=document.getElementById('themeToggle');if(b)b.textContent='🌙';},0);
-}
-
-function doLogin(){
-  if(document.getElementById('passInput').value===PASS){
-    localStorage.setItem('admin_auth','1');
-    document.getElementById('loginWrap').style.display='none';
-    document.getElementById('dashboard').style.display='block';
+// ─── AUTENTICACIÓN ───────────────────────────────────
+window.doLogin = function() {
+  const pass = document.getElementById('loginPass').value;
+  if (pass === 'alexander2026') {
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('adminWrap').style.display = 'flex';
+    loadDashboard();
+    if(localStorage.getItem('theme')==='light') document.body.classList.add('light');
   } else {
-    var e=document.getElementById('loginError');
-    e.style.display='block';
-    setTimeout(function(){e.style.display='none';},3000);
+    document.getElementById('loginErr').style.display = 'block';
+    setTimeout(()=>document.getElementById('loginErr').style.display='none', 3000);
   }
+};
+
+window.doLogout = function() {
+  document.getElementById('adminWrap').style.display = 'none';
+  document.getElementById('loginWrap').style.display = 'flex';
+  document.getElementById('loginPass').value = '';
+};
+
+// ─── NAVEGACIÓN ──────────────────────────────────────
+window.goPage = function(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + pageId).classList.add('active');
+  event.currentTarget.classList.add('active');
+  
+  // Cargar datos al entrar a cada sección
+  if (pageId === 'dashboard') loadDashboard();
+  if (pageId === 'cms-stats') loadStats();
+  if (pageId === 'cms-servicios') loadServicios();
+  if (pageId === 'cms-deals') loadDeals();
+  if (pageId === 'cms-clientes') loadClientes();
+  if (pageId === 'cms-marcas') loadMarcas();
+  if (pageId === 'cotizaciones') loadCotizaciones();
+  if (pageId === 'colaboraciones') loadColaboraciones();
+};
+
+// ─── TEMA ─────────────────────────────────────────────
+window.toggleTheme = function() {
+  document.body.classList.toggle('light');
+  localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+};
+
+// ─── NOTIFICACIÓN ─────────────────────────────────────
+function notif(msg, type='success') {
+  const el = document.getElementById('notif');
+  el.textContent = (type==='success'?'✓ ':'✕ ') + msg;
+  el.className = 'notif ' + type + ' show';
+  setTimeout(() => el.classList.remove('show'), 3500);
 }
 
-function doLogout(){
-  localStorage.removeItem('admin_auth');
-  document.getElementById('dashboard').style.display='none';
-  document.getElementById('loginWrap').style.display='flex';
-  document.getElementById('passInput').value='';
-}
-
-function toggleTheme(){
-  isLight=!isLight;
-  document.body.classList.toggle('light',isLight);
-  document.getElementById('themeToggle').textContent=isLight?'🌙':'☀';
-  localStorage.setItem('admin_theme',isLight?'light':'dark');
-}
-
-function switchTab(name,btn){
-  document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
-  document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
-  btn.classList.add('active');
-  document.getElementById('tab-'+name).classList.add('active');
-}
-
-function fmtDate(ts){
-  if(!ts) return '—';
-  var d;
+// ─── DASHBOARD ────────────────────────────────────────
+async function loadDashboard() {
   try {
-    if(ts.toDate) d=ts.toDate();
-    else if(ts.seconds) d=new Date(ts.seconds*1000);
-    else d=new Date(ts);
-    return d.toLocaleDateString('es-CO',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
-  } catch(e){ return '—'; }
+    const [cotSnap, collabSnap] = await Promise.all([
+      getDocs(collection(db, 'cotizaciones')),
+      getDocs(collection(db, 'colaboraciones'))
+    ]);
+    
+    let total = cotSnap.size, nuevas = 0, cerradas = 0;
+    const cotRows = [];
+    cotSnap.forEach(d => {
+      const data = d.data();
+      if (data.estado === 'nuevo') nuevas++;
+      if (data.estado === 'cerrado') cerradas++;
+      cotRows.push({id: d.id, ...data});
+    });
+
+    document.getElementById('ds-total').textContent = total;
+    document.getElementById('ds-nuevas').textContent = nuevas;
+    document.getElementById('ds-collabs').textContent = collabSnap.size;
+    document.getElementById('ds-cerradas').textContent = cerradas;
+
+    // Últimas cotizaciones
+    const recentCot = document.getElementById('recentCot');
+    recentCot.innerHTML = '';
+    cotRows.slice(-5).reverse().forEach(c => {
+      recentCot.innerHTML += `<div style="padding:10px 12px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:12px;margin-bottom:1px">
+        <div>
+          <div style="font-weight:400;color:var(--white);margin-bottom:2px">${c.nombre || '—'}</div>
+          <div style="color:var(--gray);font-size:11px">${c.servicio || '—'}</div>
+        </div>
+        <span class="status-badge status-${c.estado || 'nuevo'}">${c.estado || 'nuevo'}</span>
+      </div>`;
+    });
+    if (!cotRows.length) recentCot.innerHTML = '<div style="color:var(--gray);font-size:12px;padding:12px 0">Sin cotizaciones aún</div>';
+
+    // Últimas colaboraciones
+    const recentCollab = document.getElementById('recentCollab');
+    recentCollab.innerHTML = '';
+    const collabRows = [];
+    collabSnap.forEach(d => collabRows.push({id: d.id, ...d.data()}));
+    collabRows.slice(-5).reverse().forEach(c => {
+      recentCollab.innerHTML += `<div style="padding:10px 12px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:12px;margin-bottom:1px">
+        <div>
+          <div style="font-weight:400;color:var(--white);margin-bottom:2px">${c.nombre || '—'} ${c.marca ? '· '+c.marca : ''}</div>
+          <div style="color:var(--gray);font-size:11px">${c.tipo || '—'}</div>
+        </div>
+        <span class="status-badge status-${c.estado || 'nuevo'}">${c.estado || 'nuevo'}</span>
+      </div>`;
+    });
+    if (!collabRows.length) recentCollab.innerHTML = '<div style="color:var(--gray);font-size:12px;padding:12px 0">Sin colaboraciones aún</div>';
+
+  } catch(err) { console.warn(err); }
 }
 
-window.updateStats = function(){
-  var cot = window._cotizaciones||[];
-  var col = window._colaboraciones||[];
-  document.getElementById('statTotal').textContent = cot.length + col.length;
-  document.getElementById('statNew').textContent = cot.filter(function(c){return !c.estado||c.estado==='nuevo';}).length;
-  document.getElementById('statContacted').textContent = cot.filter(function(c){return c.estado==='contactado';}).length;
-  document.getElementById('statCollab').textContent = col.length;
+// ─── CMS STATS ───────────────────────────────────────
+window.loadStats = async function() {
+  try {
+    const docSnap = await getDoc(doc(db, 'cms', 'config'));
+    if (docSnap.exists() && docSnap.data().stats) {
+      const s = docSnap.data().stats;
+      document.getElementById('stat-anos').value = s.anos || '10+';
+      document.getElementById('stat-suscriptores').value = s.suscriptores || '9.7K';
+      document.getElementById('stat-videos').value = s.videos || '658';
+      document.getElementById('stat-certificaciones').value = s.certificaciones || '5+';
+    } else {
+      // Valores por defecto
+      document.getElementById('stat-anos').value = '10+';
+      document.getElementById('stat-suscriptores').value = '9.7K';
+      document.getElementById('stat-videos').value = '658';
+      document.getElementById('stat-certificaciones').value = '5+';
+    }
+  } catch(err) { console.warn(err); }
 };
 
-function badge(e){
-  var m={nuevo:'badge-new',contactado:'badge-contacted',cerrado:'badge-closed'};
-  var s=e||'nuevo';
-  return '<span class="badge '+(m[s]||'badge-new')+'">'+s.charAt(0).toUpperCase()+s.slice(1)+'</span>';
-}
-
-window.renderCotizaciones = function(){
-  var search=(document.getElementById('searchCot').value||'').toLowerCase();
-  var status=document.getElementById('filterStatusCot').value;
-  var data=(window._cotizaciones||[]).filter(function(c){
-    return (!search||(c.nombre||'').toLowerCase().includes(search)||(c.email||'').toLowerCase().includes(search))
-      && (!status||(c.estado||'nuevo')===status);
-  });
-  document.getElementById('loadingCot').style.display='none';
-  document.getElementById('countCot').textContent=data.length+' registros';
-  if(!data.length){
-    document.getElementById('tableCot').style.display='none';
-    document.getElementById('emptyCot').style.display='block';
-    return;
-  }
-  document.getElementById('tableCot').style.display='table';
-  document.getElementById('emptyCot').style.display='none';
-  document.getElementById('bodyCot').innerHTML=data.map(function(c){
-    return '<tr>'+
-      '<td><span class="td-name">'+(c.nombre||'—')+'</span></td>'+
-      '<td><span class="td-mono">'+(c.email||'—')+'</span></td>'+
-      '<td style="font-size:12px;max-width:160px">'+(c.servicio||'—')+'</td>'+
-      '<td style="font-size:12px">'+(c.presupuesto||'—')+'</td>'+
-      '<td>'+badge(c.estado)+'</td>'+
-      '<td><span class="td-mono">'+fmtDate(c.fecha)+'</span></td>'+
-      '<td><div class="td-actions">'+
-        '<button class="btn-action" onclick="viewDetail(\'cot\',\''+c.id+'\')">Ver</button>'+
-        '<button class="btn-action success" onclick="setStatus(\'cotizaciones\',\''+c.id+'\',\'contactado\')">Contactado</button>'+
-        '<button class="btn-action danger" onclick="delLead(\'cotizaciones\',\''+c.id+'\')">Eliminar</button>'+
-      '</div></td>'+
-    '</tr>';
-  }).join('');
+window.saveStats = async function() {
+  try {
+    await setDoc(doc(db, 'cms', 'config'), {
+      stats: {
+        anos: document.getElementById('stat-anos').value.trim(),
+        suscriptores: document.getElementById('stat-suscriptores').value.trim(),
+        videos: document.getElementById('stat-videos').value.trim(),
+        certificaciones: document.getElementById('stat-certificaciones').value.trim(),
+      },
+      updatedAt: serverTimestamp()
+    }, { merge: true });
+    notif('Stats actualizados en la landing');
+  } catch(err) { notif('Error al guardar', 'error'); console.warn(err); }
 };
 
-window.renderColaboraciones = function(){
-  var search=(document.getElementById('searchCol').value||'').toLowerCase();
-  var status=document.getElementById('filterStatusCol').value;
-  var data=(window._colaboraciones||[]).filter(function(c){
-    return (!search||(c.nombre||'').toLowerCase().includes(search)||(c.marca||'').toLowerCase().includes(search)||(c.email||'').toLowerCase().includes(search))
-      && (!status||(c.estado||'nuevo')===status);
-  });
-  document.getElementById('loadingCol').style.display='none';
-  document.getElementById('countCol').textContent=data.length+' registros';
-  if(!data.length){
-    document.getElementById('tableCol').style.display='none';
-    document.getElementById('emptyCol').style.display='block';
-    return;
-  }
-  document.getElementById('tableCol').style.display='table';
-  document.getElementById('emptyCol').style.display='none';
-  document.getElementById('bodyCol').innerHTML=data.map(function(c){
-    return '<tr>'+
-      '<td><span class="td-name">'+(c.nombre||'—')+'</span></td>'+
-      '<td style="font-size:12px">'+(c.marca||'—')+'</td>'+
-      '<td><span class="td-mono">'+(c.email||'—')+'</span></td>'+
-      '<td style="font-size:12px">'+(c.tipo||'—')+'</td>'+
-      '<td style="font-size:12px">'+(c.presupuesto||'—')+'</td>'+
-      '<td>'+badge(c.estado)+'</td>'+
-      '<td><span class="td-mono">'+fmtDate(c.fecha)+'</span></td>'+
-      '<td><div class="td-actions">'+
-        '<button class="btn-action" onclick="viewDetail(\'col\',\''+c.id+'\')">Ver</button>'+
-        '<button class="btn-action success" onclick="setStatus(\'colaboraciones\',\''+c.id+'\',\'contactado\')">Contactado</button>'+
-        '<button class="btn-action danger" onclick="delLead(\'colaboraciones\',\''+c.id+'\')">Eliminar</button>'+
-      '</div></td>'+
-    '</tr>';
-  }).join('');
-};
+// ─── CMS SERVICIOS ────────────────────────────────────
+async function loadServicios() {
+  try {
+    const snap = await getDocs(query(collection(db, 'cms_servicios'), orderBy('orden')));
+    const container = document.getElementById('serviciosContainer');
+    
+    if (snap.empty) {
+      // Ofrecer cargar datos por defecto
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-ico">🛠️</div>
+          <div class="empty-state-t">No hay servicios en Firestore</div>
+          <div class="empty-state-s" style="margin-bottom:20px">Carga los servicios actuales de la landing como punto de partida</div>
+          <button class="btn-action primary" onclick="seedServicios()">Cargar servicios por defecto →</button>
+        </div>`;
+      return;
+    }
 
-function setStatus(col,id,status){
-  if(!window._db) return;
-  window._updateDoc(window._doc(window._db,col,id),{estado:status});
+    container.innerHTML = '<div class="cms-grid" id="svcGrid"></div>';
+    const grid = document.getElementById('svcGrid');
+    snap.forEach(d => {
+      const s = d.data();
+      const tags = (s.tags || []).join(', ');
+      grid.innerHTML += `
+        <div class="cms-item" id="svc-item-${d.id}">
+          <div class="cms-item-header">
+            <div class="cms-item-title">${s.icono || '🔧'} ${s.titulo}</div>
+            <span class="status-badge ${s.activo ? 'status-activo' : 'status-inactivo'}">${s.activo ? 'Activo' : 'Inactivo'}</span>
+          </div>
+          <div class="cms-item-body">${s.descripcion || ''}</div>
+          <div style="font-size:11px;color:var(--gray);margin-bottom:14px">${tags}</div>
+          <div class="cms-item-actions">
+            <button class="btn-action" onclick="editServicio('${d.id}')">Editar</button>
+            <button class="btn-action ${s.activo ? 'danger' : 'success'}" onclick="toggleServicio('${d.id}', ${!s.activo})">${s.activo ? 'Desactivar' : 'Activar'}</button>
+            <button class="btn-action danger" onclick="deleteServicio('${d.id}')">Eliminar</button>
+          </div>
+        </div>`;
+    });
+  } catch(err) { console.warn(err); }
 }
 
-function delLead(col,id){
-  if(!confirm('¿Eliminar este registro permanentemente?')) return;
-  if(!window._db) return;
-  window._deleteDoc(window._doc(window._db,col,id));
-}
-
-function viewDetail(type,id){
-  var data=type==='cot'?window._cotizaciones:window._colaboraciones;
-  var item=data.find(function(c){return c.id===id;});
-  if(!item) return;
-  document.getElementById('detailTitle').textContent=type==='cot'?'Detalle cotización':'Detalle colaboración';
-  var col=type==='cot'?'cotizaciones':'colaboraciones';
-  var fields=type==='cot'?[
-    {l:'Nombre',v:item.nombre},{l:'Empresa',v:item.empresa},
-    {l:'Correo',v:item.email},{l:'Servicio',v:item.servicio},
-    {l:'Presupuesto',v:item.presupuesto},{l:'Descripción',v:item.descripcion},
-    {l:'Estado',v:item.estado||'nuevo'},{l:'Fecha',v:fmtDate(item.fecha)}
-  ]:[
-    {l:'Nombre',v:item.nombre},{l:'Marca / Empresa',v:item.marca},
-    {l:'Correo',v:item.email},{l:'Tipo de colaboración',v:item.tipo},
-    {l:'Canales de interés',v:item.canales},{l:'Presupuesto',v:item.presupuesto},
-    {l:'Descripción',v:item.descripcion},{l:'Estado',v:item.estado||'nuevo'},
-    {l:'Fecha',v:fmtDate(item.fecha)}
+// Datos por defecto
+window.seedServicios = async function() {
+  const defaultSvcs = [
+    {orden:1, icono:'🌐', titulo:'Desarrollo Web', descripcion:'Landing pages, apps web y sitios corporativos con React, JavaScript y buenas prácticas de código.', tags:['React','JavaScript','HTML/CSS'], activo:true},
+    {orden:2, icono:'🔌', titulo:'Backend & APIs REST', descripcion:'APIs robustas con Java y Spring Boot. Integración con bases de datos SQL y NoSQL.', tags:['Java','Spring Boot','REST'], activo:true},
+    {orden:3, icono:'🖥️', titulo:'Infraestructura Linux', descripcion:'Administración de servidores Linux y Windows Server. Gestión de usuarios, servicios y seguridad en entornos corporativos.', tags:['Linux','RedHat','Ubuntu'], activo:true},
+    {orden:4, icono:'🐳', titulo:'Docker & DevOps', descripcion:'Despliegue con Docker y Kubernetes. Contenedores, backups y monitoreo de infraestructura.', tags:['Docker','Kubernetes','CI/CD'], activo:true},
+    {orden:5, icono:'☁️', titulo:'Cloud', descripcion:'Soluciones en AWS, Azure, OCI y GCP. Migración, configuración y optimización de recursos cloud.', tags:['AWS','Azure','OCI','GCP'], activo:true},
+    {orden:6, icono:'🔒', titulo:'Seguridad & Redes', descripcion:'Configuración de firewalls, directorio activo, políticas de grupo y control de accesos en entornos empresariales.', tags:['pfSense','Sophos','AD/GPO'], activo:true},
+    {orden:7, icono:'🖥️', titulo:'Ensamble de PCs', descripcion:'Ensamble personalizado de equipos gaming, workstations y servidores. Selección de componentes, optimización y configuración completa según tu presupuesto.', tags:['Gaming','Workstation','Servidores','Componentes'], activo:true},
   ];
-  document.getElementById('detailBody').innerHTML=
-    fields.filter(function(f){return f.v;}).map(function(f){
-      return '<div class="detail-row"><div class="detail-lbl">'+f.l+'</div><div class="detail-val">'+(f.v||'—')+'</div></div>';
-    }).join('')+
-    '<div class="status-btns">'+
-      '<button class="btn-action success" onclick="setStatus(\''+col+'\',\''+id+'\',\'contactado\');closeDetailModal()">Marcar contactado</button>'+
-      '<button class="btn-action" onclick="setStatus(\''+col+'\',\''+id+'\',\'cerrado\');closeDetailModal()">Marcar cerrado</button>'+
-      '<button class="btn-action danger" onclick="delLead(\''+col+'\',\''+id+'\');closeDetailModal()">Eliminar</button>'+
-    '</div>';
-  document.getElementById('detailOverlay').classList.add('open');
+  try {
+    for (const s of defaultSvcs) {
+      await addDoc(collection(db, 'cms_servicios'), {...s, createdAt: serverTimestamp()});
+    }
+    notif('Servicios cargados en Firestore');
+    loadServicios();
+  } catch(err) { notif('Error', 'error'); console.warn(err); }
+};
+
+window.openModalServicio = function() {
+  document.getElementById('svc-id').value = '';
+  document.getElementById('svc-orden').value = '';
+  document.getElementById('svc-icono').value = '';
+  document.getElementById('svc-titulo').value = '';
+  document.getElementById('svc-descripcion').value = '';
+  document.getElementById('svc-tags').value = '';
+  document.getElementById('svc-activo').checked = true;
+  document.getElementById('modalServicioTitle').textContent = 'Nuevo servicio';
+  document.getElementById('modalServicio').classList.add('open');
+};
+window.closeModalServicio = function() { document.getElementById('modalServicio').classList.remove('open'); };
+
+window.editServicio = async function(id) {
+  const snap = await getDoc(doc(db, 'cms_servicios', id));
+  if (!snap.exists()) return;
+  const s = snap.data();
+  document.getElementById('svc-id').value = id;
+  document.getElementById('svc-orden').value = s.orden || '';
+  document.getElementById('svc-icono').value = s.icono || '';
+  document.getElementById('svc-titulo').value = s.titulo || '';
+  document.getElementById('svc-descripcion').value = s.descripcion || '';
+  document.getElementById('svc-tags').value = (s.tags || []).join(', ');
+  document.getElementById('svc-activo').checked = !!s.activo;
+  document.getElementById('modalServicioTitle').textContent = 'Editar servicio';
+  document.getElementById('modalServicio').classList.add('open');
+};
+
+window.saveServicio = async function() {
+  const id = document.getElementById('svc-id').value;
+  const data = {
+    orden: parseInt(document.getElementById('svc-orden').value) || 1,
+    icono: document.getElementById('svc-icono').value.trim(),
+    titulo: document.getElementById('svc-titulo').value.trim(),
+    descripcion: document.getElementById('svc-descripcion').value.trim(),
+    tags: document.getElementById('svc-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
+    activo: document.getElementById('svc-activo').checked,
+    updatedAt: serverTimestamp()
+  };
+  if (!data.titulo) { notif('El título es obligatorio', 'error'); return; }
+  try {
+    if (id) { await updateDoc(doc(db, 'cms_servicios', id), data); }
+    else { await addDoc(collection(db, 'cms_servicios'), {...data, createdAt: serverTimestamp()}); }
+    closeModalServicio();
+    notif('Servicio guardado');
+    loadServicios();
+  } catch(err) { notif('Error al guardar', 'error'); console.warn(err); }
+};
+
+window.toggleServicio = async function(id, activo) {
+  try {
+    await updateDoc(doc(db, 'cms_servicios', id), {activo, updatedAt: serverTimestamp()});
+    notif(activo ? 'Servicio activado' : 'Servicio desactivado');
+    loadServicios();
+  } catch(err) { notif('Error', 'error'); }
+};
+
+window.deleteServicio = async function(id) {
+  if (!confirm('¿Eliminar este servicio?')) return;
+  try {
+    await deleteDoc(doc(db, 'cms_servicios', id));
+    notif('Servicio eliminado');
+    loadServicios();
+  } catch(err) { notif('Error', 'error'); }
+};
+
+// ─── CMS DEALS ────────────────────────────────────────
+async function loadDeals() {
+  try {
+    const snap = await getDocs(query(collection(db, 'cms_deals'), orderBy('orden')));
+    const container = document.getElementById('dealsContainer');
+
+    if (snap.empty) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-ico">🏷️</div>
+          <div class="empty-state-t">No hay deals en Firestore</div>
+          <div class="empty-state-s" style="margin-bottom:20px">Carga los deals actuales como punto de partida</div>
+          <button class="btn-action primary" onclick="seedDeals()">Cargar deals por defecto →</button>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = '<div class="cms-grid" id="dealsGrid"></div>';
+    const grid = document.getElementById('dealsGrid');
+    snap.forEach(d => {
+      const deal = d.data();
+      grid.innerHTML += `
+        <div class="cms-item">
+          <div class="cms-item-header">
+            <div class="cms-item-title">
+              <span style="background:${deal.logoColor||'#333'};color:#fff;padding:2px 8px;font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px">${deal.logoLabel||'??'}</span>
+              ${deal.nombre}
+            </div>
+            <span class="status-badge ${deal.activo ? 'status-activo' : 'status-inactivo'}">${deal.activo ? 'Activo' : 'Inactivo'}</span>
+          </div>
+          <div class="cms-item-body">${deal.descripcion || ''}</div>
+          ${deal.codigo ? `<div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--gold);margin-bottom:10px">Código: ${deal.codigo}</div>` : ''}
+          <div style="font-size:11px;color:var(--gray2);margin-bottom:12px;word-break:break-all">${deal.link || ''}</div>
+          <div class="cms-item-actions">
+            <button class="btn-action" onclick="editDeal('${d.id}')">Editar</button>
+            <button class="btn-action ${deal.activo ? 'danger' : 'success'}" onclick="toggleDeal('${d.id}', ${!deal.activo})">${deal.activo ? 'Desactivar' : 'Activar'}</button>
+            <button class="btn-action danger" onclick="deleteDeal('${d.id}')">Eliminar</button>
+          </div>
+        </div>`;
+    });
+  } catch(err) { console.warn(err); }
 }
 
-function closeDetailModal(){document.getElementById('detailOverlay').classList.remove('open');}
-function closeDetail(e){if(e.target===document.getElementById('detailOverlay'))closeDetailModal();}
-document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDetailModal();});
+window.seedDeals = async function() {
+  const defaultDeals = [
+    {orden:1, nombre:'Amazon', subtitulo:'Electrónica & Tech', logoLabel:'AMZ', logoColor:'#ff9900', link:'https://amzn.to/4mJGzuv', codigo:'', badge:'Link exclusivo', descripcion:'Los mejores productos tech en Amazon seleccionados por Alexander.', activo:true},
+    {orden:2, nombre:'AliExpress', subtitulo:'Gadgets & Accesorios', logoLabel:'ALI', logoColor:'#ff4d00', link:'https://s.click.aliexpress.com/e/_mqlFTO1', codigo:'', badge:'Link exclusivo', descripcion:'Gadgets y accesorios tech a los mejores precios desde AliExpress.', activo:true},
+    {orden:3, nombre:'Gamsgo', subtitulo:'Software & Juegos', logoLabel:'GSG', logoColor:'#1a1a2e', link:'https://www.gamsgo.com/partner/BZ5R8', codigo:'ALEXAYA', badge:'', descripcion:'Licencias de software y juegos digitales al mejor precio.', activo:true},
+    {orden:4, nombre:'Filmora 15', subtitulo:'Editor de video', logoLabel:'FLM', logoColor:'#00adef', link:'https://filmora.pxf.io/c/6239892/2810901/31971', codigo:'', badge:'Oferta especial', descripcion:'El editor de video favorito de creadores. Obtén Filmora 15 con descuento.', activo:true},
+    {orden:5, nombre:'Parallels Desktop', subtitulo:'Mac & Windows', logoLabel:'PAR', logoColor:'#e84c3d', link:'https://prf.hn/l/OJvRMRm/', codigo:'', badge:'Descuento especial', descripcion:'Corre Windows en tu Mac sin reiniciar. La solución preferida por desarrolladores.', activo:true},
+    {orden:6, nombre:'GoLogin', subtitulo:'Navegador antidetect', logoLabel:'GL', logoColor:'#4f46e5', link:'https://bit.ly/gologin_alexander-aya', codigo:'ALXGO', badge:'', descripcion:'Gestión de múltiples cuentas y perfiles de navegador de forma segura y profesional.', activo:true},
+    {orden:7, nombre:'Keysfan', subtitulo:'Licencias Microsoft', logoLabel:'KSF', logoColor:'#f59e0b', link:'https://www.keysfan.com/new-year-2026-alx.html?ksf=saaa19', codigo:'alx50 / alx62', badge:'', descripcion:'Licencias originales de Windows y Office al mejor precio.', activo:true},
+  ];
+  try {
+    for (const d of defaultDeals) {
+      await addDoc(collection(db, 'cms_deals'), {...d, createdAt: serverTimestamp()});
+    }
+    notif('Deals cargados en Firestore');
+    loadDeals();
+  } catch(err) { notif('Error', 'error'); console.warn(err); }
+};
+
+window.openModalDeal = function() {
+  document.getElementById('deal-id').value = '';
+  ['nombre','subtitulo','logoLabel','logoColor','link','codigo','badge','descripcion','orden'].forEach(f => {
+    document.getElementById('deal-'+f).value = '';
+  });
+  document.getElementById('deal-activo').checked = true;
+  document.getElementById('modalDealTitle').textContent = 'Nuevo deal';
+  document.getElementById('modalDeal').classList.add('open');
+};
+window.closeModalDeal = function() { document.getElementById('modalDeal').classList.remove('open'); };
+
+window.editDeal = async function(id) {
+  const snap = await getDoc(doc(db, 'cms_deals', id));
+  if (!snap.exists()) return;
+  const deal = snap.data();
+  document.getElementById('deal-id').value = id;
+  document.getElementById('deal-nombre').value = deal.nombre || '';
+  document.getElementById('deal-subtitulo').value = deal.subtitulo || '';
+  document.getElementById('deal-logoLabel').value = deal.logoLabel || '';
+  document.getElementById('deal-logoColor').value = deal.logoColor || '';
+  document.getElementById('deal-link').value = deal.link || '';
+  document.getElementById('deal-codigo').value = deal.codigo || '';
+  document.getElementById('deal-badge').value = deal.badge || '';
+  document.getElementById('deal-descripcion').value = deal.descripcion || '';
+  document.getElementById('deal-orden').value = deal.orden || '';
+  document.getElementById('deal-activo').checked = !!deal.activo;
+  document.getElementById('modalDealTitle').textContent = 'Editar deal';
+  document.getElementById('modalDeal').classList.add('open');
+};
+
+window.saveDeal = async function() {
+  const id = document.getElementById('deal-id').value;
+  const data = {
+    nombre: document.getElementById('deal-nombre').value.trim(),
+    subtitulo: document.getElementById('deal-subtitulo').value.trim(),
+    logoLabel: document.getElementById('deal-logoLabel').value.trim(),
+    logoColor: document.getElementById('deal-logoColor').value.trim(),
+    link: document.getElementById('deal-link').value.trim(),
+    codigo: document.getElementById('deal-codigo').value.trim(),
+    badge: document.getElementById('deal-badge').value.trim(),
+    descripcion: document.getElementById('deal-descripcion').value.trim(),
+    orden: parseInt(document.getElementById('deal-orden').value) || 1,
+    activo: document.getElementById('deal-activo').checked,
+    updatedAt: serverTimestamp()
+  };
+  if (!data.nombre || !data.link) { notif('Nombre y link son obligatorios', 'error'); return; }
+  try {
+    if (id) { await updateDoc(doc(db, 'cms_deals', id), data); }
+    else { await addDoc(collection(db, 'cms_deals'), {...data, createdAt: serverTimestamp()}); }
+    closeModalDeal();
+    notif('Deal guardado');
+    loadDeals();
+  } catch(err) { notif('Error al guardar', 'error'); console.warn(err); }
+};
+
+window.toggleDeal = async function(id, activo) {
+  try {
+    await updateDoc(doc(db, 'cms_deals', id), {activo, updatedAt: serverTimestamp()});
+    notif(activo ? 'Deal activado' : 'Deal desactivado');
+    loadDeals();
+  } catch(err) { notif('Error', 'error'); }
+};
+
+window.deleteDeal = async function(id) {
+  if (!confirm('¿Eliminar este deal?')) return;
+  try {
+    await deleteDoc(doc(db, 'cms_deals', id));
+    notif('Deal eliminado');
+    loadDeals();
+  } catch(err) { notif('Error', 'error'); }
+};
+
+// ─── CMS CLIENTES ─────────────────────────────────────
+async function loadClientes() {
+  try {
+    const snap = await getDocs(query(collection(db, 'cms_clientes'), orderBy('orden')));
+    const container = document.getElementById('clientesContainer');
+
+    if (snap.empty) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-ico">🏢</div>
+          <div class="empty-state-t">No hay clientes en Firestore</div>
+          <div class="empty-state-s" style="margin-bottom:20px">Carga los clientes actuales como punto de partida</div>
+          <button class="btn-action primary" onclick="seedClientes()">Cargar clientes por defecto →</button>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = '<div class="cms-grid" id="clientesGrid"></div>';
+    const grid = document.getElementById('clientesGrid');
+    snap.forEach(d => {
+      const c = d.data();
+      grid.innerHTML += `
+        <div class="cms-item">
+          <div class="cms-item-header">
+            <div class="cms-item-title">${c.nombre}</div>
+            <span class="status-badge ${c.activo ? 'status-activo' : 'status-inactivo'}">${c.activo ? 'Activo' : 'Inactivo'}</span>
+          </div>
+          <div style="font-size:11px;color:var(--gold);font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;margin-bottom:8px">${c.sector || ''}</div>
+          <div class="cms-item-body">${(c.servicios||[]).join(' · ')}</div>
+          <div style="font-size:11px;color:var(--gray2);margin-bottom:12px">${c.url || ''}</div>
+          <div class="cms-item-actions">
+            <button class="btn-action" onclick="editCliente('${d.id}')">Editar</button>
+            <button class="btn-action ${c.activo ? 'danger' : 'success'}" onclick="toggleCliente('${d.id}', ${!c.activo})">${c.activo ? 'Desactivar' : 'Activar'}</button>
+            <button class="btn-action danger" onclick="deleteCliente('${d.id}')">Eliminar</button>
+          </div>
+        </div>`;
+    });
+  } catch(err) { console.warn(err); }
+}
+
+window.seedClientes = async function() {
+  const defaults = [
+    {orden:1, nombre:'Cogasen', sector:'Sector energético · Corporativo', url:'https://cogasen.com.co/', urlLabel:'cogasen.com.co', imagen:'img/cogasen.jpg', servicios:['Administración TI','Gestión de Sistemas','Desarrollo Web','Hosting','Despliegue','Mantenimiento'], activo:true},
+    {orden:2, nombre:'Back to Bag', sector:'Turismo', url:'https://backtobag.co/es', urlLabel:'backtobag.co', imagen:'img/backtobag.jpg', servicios:['Desarrollo Web','Hosting','Backend','Despliegue'], activo:true},
+    {orden:3, nombre:'Abbalab', sector:'Sector de la Salud', url:'https://abbalabsi.com/', urlLabel:'abbalabsi.com', imagen:'img/abbalab.jpg', servicios:['Infraestructura TI','Seguridad','Gestión de Sistemas','Mantenimiento'], activo:true},
+    {orden:4, nombre:'ACB', sector:'Aprovechamiento de residuos Sólidos', url:'https://acbesp.com/', urlLabel:'acbesp.com', imagen:'img/ACB.jpg', servicios:['Infraestructura TI','Gestión de Sistemas','Mantenimiento'], activo:true},
+    {orden:5, nombre:'Security Global', sector:'Seguridad & Tecnología', url:'https://www.securityglobal.com.co/', urlLabel:'securityglobal.com.co', imagen:'img/securityglobal.jpg', servicios:['Gestión de Sistemas','Mantenimiento','Gestión de licencias de software'], activo:true},
+  ];
+  try {
+    for (const c of defaults) {
+      await addDoc(collection(db, 'cms_clientes'), {...c, createdAt: serverTimestamp()});
+    }
+    notif('Clientes cargados en Firestore');
+    loadClientes();
+  } catch(err) { notif('Error', 'error'); console.warn(err); }
+};
+
+window.openModalCliente = function() {
+  document.getElementById('cli-id').value = '';
+  ['nombre','sector','url','urlLabel','imagen','servicios','orden'].forEach(f => document.getElementById('cli-'+f).value = '');
+  document.getElementById('cli-activo').checked = true;
+  document.getElementById('modalClienteTitle').textContent = 'Nuevo cliente';
+  document.getElementById('modalCliente').classList.add('open');
+};
+window.closeModalCliente = function() { document.getElementById('modalCliente').classList.remove('open'); };
+
+window.editCliente = async function(id) {
+  const snap = await getDoc(doc(db, 'cms_clientes', id));
+  if (!snap.exists()) return;
+  const c = snap.data();
+  document.getElementById('cli-id').value = id;
+  document.getElementById('cli-nombre').value = c.nombre || '';
+  document.getElementById('cli-sector').value = c.sector || '';
+  document.getElementById('cli-url').value = c.url || '';
+  document.getElementById('cli-urlLabel').value = c.urlLabel || '';
+  document.getElementById('cli-imagen').value = c.imagen || '';
+  document.getElementById('cli-servicios').value = (c.servicios || []).join(', ');
+  document.getElementById('cli-orden').value = c.orden || '';
+  document.getElementById('cli-activo').checked = !!c.activo;
+  document.getElementById('modalClienteTitle').textContent = 'Editar cliente';
+  document.getElementById('modalCliente').classList.add('open');
+};
+
+window.saveCliente = async function() {
+  const id = document.getElementById('cli-id').value;
+  const data = {
+    nombre: document.getElementById('cli-nombre').value.trim(),
+    sector: document.getElementById('cli-sector').value.trim(),
+    url: document.getElementById('cli-url').value.trim(),
+    urlLabel: document.getElementById('cli-urlLabel').value.trim(),
+    imagen: document.getElementById('cli-imagen').value.trim(),
+    servicios: document.getElementById('cli-servicios').value.split(',').map(s=>s.trim()).filter(Boolean),
+    orden: parseInt(document.getElementById('cli-orden').value) || 1,
+    activo: document.getElementById('cli-activo').checked,
+    updatedAt: serverTimestamp()
+  };
+  if (!data.nombre) { notif('El nombre es obligatorio', 'error'); return; }
+  try {
+    if (id) { await updateDoc(doc(db, 'cms_clientes', id), data); }
+    else { await addDoc(collection(db, 'cms_clientes'), {...data, createdAt: serverTimestamp()}); }
+    closeModalCliente();
+    notif('Cliente guardado');
+    loadClientes();
+  } catch(err) { notif('Error al guardar', 'error'); console.warn(err); }
+};
+
+window.toggleCliente = async function(id, activo) {
+  try {
+    await updateDoc(doc(db, 'cms_clientes', id), {activo, updatedAt: serverTimestamp()});
+    notif(activo ? 'Cliente activado' : 'Cliente desactivado');
+    loadClientes();
+  } catch(err) { notif('Error', 'error'); }
+};
+
+window.deleteCliente = async function(id) {
+  if (!confirm('¿Eliminar este cliente?')) return;
+  try {
+    await deleteDoc(doc(db, 'cms_clientes', id));
+    notif('Cliente eliminado');
+    loadClientes();
+  } catch(err) { notif('Error', 'error'); }
+};
+
+// ─── CMS MARCAS ───────────────────────────────────────
+async function loadMarcas() {
+  try {
+    const snap = await getDocs(query(collection(db, 'cms_marcas'), orderBy('orden')));
+    const container = document.getElementById('marcasContainer');
+
+    if (snap.empty) {
+      container.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-ico">🎖️</div>
+          <div class="empty-state-t">No hay marcas en Firestore</div>
+          <div class="empty-state-s" style="margin-bottom:20px">Carga las marcas del carrusel como punto de partida</div>
+          <button class="btn-action primary" onclick="seedMarcas()">Cargar marcas por defecto →</button>
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = '<div class="cms-grid" id="marcasGrid"></div>';
+    const grid = document.getElementById('marcasGrid');
+    snap.forEach(d => {
+      const m = d.data();
+      grid.innerHTML += `
+        <div class="cms-item">
+          <div class="cms-item-header">
+            <div class="cms-item-title">${m.nombre}</div>
+            <span class="status-badge ${m.activo ? 'status-activo' : 'status-inactivo'}">${m.activo ? 'Activo' : 'Inactivo'}</span>
+          </div>
+          <div style="font-size:11px;color:var(--gray);margin-bottom:12px">${m.tipo === 'texto' ? '📝 Texto: ' + m.logoTexto : '🖼️ Logo: ' + (m.logoUrl||'').substring(0,50)}</div>
+          <div class="cms-item-actions">
+            <button class="btn-action" onclick="editMarca('${d.id}')">Editar</button>
+            <button class="btn-action ${m.activo ? 'danger' : 'success'}" onclick="toggleMarca('${d.id}', ${!m.activo})">${m.activo ? 'Desactivar' : 'Activar'}</button>
+            <button class="btn-action danger" onclick="deleteMarca('${d.id}')">Eliminar</button>
+          </div>
+        </div>`;
+    });
+  } catch(err) { console.warn(err); }
+}
+
+window.seedMarcas = async function() {
+  const defaults = [
+    {orden:1, nombre:'Amazon', tipo:'logo', logoUrl:'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg', logoTexto:'', color:'', activo:true},
+    {orden:2, nombre:'Motorola', tipo:'logo', logoUrl:'https://upload.wikimedia.org/wikipedia/commons/f/f9/Motorola_new_logo.svg', logoTexto:'', color:'', activo:true},
+    {orden:3, nombre:'Lenovo', tipo:'logo', logoUrl:'https://upload.wikimedia.org/wikipedia/commons/b/b8/Lenovo_logo_2015.svg', logoTexto:'', color:'', activo:true},
+    {orden:4, nombre:'AliExpress', tipo:'logo', logoUrl:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/AliExpress_logo.svg/2560px-AliExpress_logo.svg.png', logoTexto:'', color:'', activo:true},
+    {orden:5, nombre:'Keysfan', tipo:'texto', logoUrl:'', logoTexto:'KEYSFAN', color:'#c4a25a', activo:true},
+    {orden:6, nombre:'GoLogin', tipo:'texto', logoUrl:'', logoTexto:'GoLogin', color:'#4f46e5', activo:true},
+    {orden:7, nombre:'Filmora', tipo:'texto', logoUrl:'', logoTexto:'Filmora', color:'#00adef', activo:true},
+    {orden:8, nombre:'Gamsgo', tipo:'texto', logoUrl:'', logoTexto:'GAMSGO', color:'#1a1a2e', activo:true},
+  ];
+  try {
+    for (const m of defaults) {
+      await addDoc(collection(db, 'cms_marcas'), {...m, createdAt: serverTimestamp()});
+    }
+    notif('Marcas cargadas en Firestore');
+    loadMarcas();
+  } catch(err) { notif('Error', 'error'); console.warn(err); }
+};
+
+window.openModalMarca = function() {
+  document.getElementById('marca-id').value = '';
+  ['nombre','logoUrl','logoTexto','color','orden'].forEach(f => document.getElementById('marca-'+f).value = '');
+  document.getElementById('marca-tipo').value = 'logo';
+  document.getElementById('marca-activo').checked = true;
+  document.getElementById('modalMarcaTitle').textContent = 'Nueva marca';
+  document.getElementById('modalMarca').classList.add('open');
+  updateMarcaTipo();
+};
+window.closeModalMarca = function() { document.getElementById('modalMarca').classList.remove('open'); };
+window.updateMarcaTipo = function() {
+  const tipo = document.getElementById('marca-tipo').value;
+  document.getElementById('marca-logo-group').style.display = tipo === 'logo' ? 'block' : 'none';
+  document.getElementById('marca-texto-group').style.display = tipo === 'texto' ? 'block' : 'none';
+};
+document.getElementById('marca-tipo').addEventListener('change', window.updateMarcaTipo);
+
+window.editMarca = async function(id) {
+  const snap = await getDoc(doc(db, 'cms_marcas', id));
+  if (!snap.exists()) return;
+  const m = snap.data();
+  document.getElementById('marca-id').value = id;
+  document.getElementById('marca-nombre').value = m.nombre || '';
+  document.getElementById('marca-tipo').value = m.tipo || 'logo';
+  document.getElementById('marca-logoUrl').value = m.logoUrl || '';
+  document.getElementById('marca-logoTexto').value = m.logoTexto || '';
+  document.getElementById('marca-color').value = m.color || '';
+  document.getElementById('marca-orden').value = m.orden || '';
+  document.getElementById('marca-activo').checked = !!m.activo;
+  document.getElementById('modalMarcaTitle').textContent = 'Editar marca';
+  document.getElementById('modalMarca').classList.add('open');
+  updateMarcaTipo();
+};
+
+window.saveMarca = async function() {
+  const id = document.getElementById('marca-id').value;
+  const data = {
+    nombre: document.getElementById('marca-nombre').value.trim(),
+    tipo: document.getElementById('marca-tipo').value,
+    logoUrl: document.getElementById('marca-logoUrl').value.trim(),
+    logoTexto: document.getElementById('marca-logoTexto').value.trim(),
+    color: document.getElementById('marca-color').value.trim(),
+    orden: parseInt(document.getElementById('marca-orden').value) || 1,
+    activo: document.getElementById('marca-activo').checked,
+    updatedAt: serverTimestamp()
+  };
+  if (!data.nombre) { notif('El nombre es obligatorio', 'error'); return; }
+  try {
+    if (id) { await updateDoc(doc(db, 'cms_marcas', id), data); }
+    else { await addDoc(collection(db, 'cms_marcas'), {...data, createdAt: serverTimestamp()}); }
+    closeModalMarca();
+    notif('Marca guardada');
+    loadMarcas();
+  } catch(err) { notif('Error al guardar', 'error'); console.warn(err); }
+};
+
+window.toggleMarca = async function(id, activo) {
+  try {
+    await updateDoc(doc(db, 'cms_marcas', id), {activo, updatedAt: serverTimestamp()});
+    notif(activo ? 'Marca activada' : 'Marca desactivada');
+    loadMarcas();
+  } catch(err) { notif('Error', 'error'); }
+};
+
+window.deleteMarca = async function(id) {
+  if (!confirm('¿Eliminar esta marca?')) return;
+  try {
+    await deleteDoc(doc(db, 'cms_marcas', id));
+    notif('Marca eliminada');
+    loadMarcas();
+  } catch(err) { notif('Error', 'error'); }
+};
+
+// ─── COTIZACIONES ─────────────────────────────────────
+let allCotizaciones = [];
+let filterCotEstado = '';
+
+async function loadCotizaciones() {
+  try {
+    const snap = await getDocs(query(collection(db, 'cotizaciones'), orderBy('fecha', 'desc')));
+    allCotizaciones = [];
+    snap.forEach(d => allCotizaciones.push({id: d.id, ...d.data()}));
+    renderCotizaciones(allCotizaciones);
+  } catch(err) { console.warn(err); }
+}
+
+function renderCotizaciones(list) {
+  const tbody = document.getElementById('cotTableBody');
+  document.getElementById('cotCount').textContent = list.length + ' registros';
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--gray)">Sin resultados</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = list.map(c => {
+    const fecha = c.fecha?.toDate ? c.fecha.toDate().toLocaleDateString('es-CO') : (c.fecha ? c.fecha.substring(0,10) : '—');
+    return `<tr>
+      <td><div style="font-weight:400">${c.nombre || '—'}</div>${c.empresa ? '<div style="font-size:11px;color:var(--gray)">'+c.empresa+'</div>' : ''}</td>
+      <td><a href="mailto:${c.email}" style="color:var(--gold);text-decoration:none">${c.email || '—'}</a></td>
+      <td>${c.servicio || '—'}</td>
+      <td style="color:var(--gray);font-size:12px">${c.presupuesto || '—'}</td>
+      <td><span class="status-badge status-${c.estado || 'nuevo'}">${c.estado || 'nuevo'}</span></td>
+      <td style="color:var(--gray);font-size:12px">${fecha}</td>
+      <td>
+        <div style="display:flex;gap:6px">
+          <button class="btn-action" onclick="verCot('${c.id}')">Ver</button>
+          <button class="btn-action success" onclick="cambiarEstadoCot('${c.id}','contactado')">✓ Cot.</button>
+          <button class="btn-action danger" onclick="eliminarCot('${c.id}')">×</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+window.filtrarCot = function(q) {
+  const filtered = allCotizaciones.filter(c =>
+    (c.nombre||'').toLowerCase().includes(q.toLowerCase()) ||
+    (c.email||'').toLowerCase().includes(q.toLowerCase()) ||
+    (c.empresa||'').toLowerCase().includes(q.toLowerCase())
+  ).filter(c => !filterCotEstado || c.estado === filterCotEstado);
+  renderCotizaciones(filtered);
+};
+
+window.filtrarCotEstado = function(estado) {
+  filterCotEstado = estado;
+  const q = document.querySelector('#page-cotizaciones .search-input').value;
+  window.filtrarCot(q);
+};
+
+window.verCot = function(id) {
+  const c = allCotizaciones.find(x => x.id === id);
+  if (!c) return;
+  const panel = document.getElementById('cotDetail');
+  panel.className = 'detail-panel open';
+  panel.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px">Detalle de cotización</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-action success" onclick="cambiarEstadoCot('${id}','contactado')">Marcar contactado</button>
+        <button class="btn-action" onclick="cambiarEstadoCot('${id}','cerrado')">Cerrar</button>
+        <button class="btn-action danger" onclick="eliminarCot('${id}')">Eliminar</button>
+        <button class="btn-action" onclick="document.getElementById('cotDetail').className='detail-panel'">✕</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--border)">
+      ${[
+        ['Nombre', c.nombre], ['Empresa', c.empresa||'—'], ['Email', c.email],
+        ['Servicio', c.servicio], ['Presupuesto', c.presupuesto||'—'], ['Estado', c.estado||'nuevo']
+      ].map(([l,v]) => `<div style="background:var(--bg3);padding:14px 16px;border:none">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px">${l}</div>
+        <div style="font-size:13px;font-weight:300">${v}</div>
+      </div>`).join('')}
+    </div>
+    ${c.descripcion ? `<div style="margin-top:16px;padding:16px;background:var(--bg3)">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px">Descripción del proyecto</div>
+      <div style="font-size:13px;font-weight:300;line-height:1.7;color:var(--gray)">${c.descripcion}</div>
+    </div>` : ''}`;
+};
+
+window.cambiarEstadoCot = async function(id, estado) {
+  try {
+    await updateDoc(doc(db, 'cotizaciones', id), {estado, updatedAt: serverTimestamp()});
+    notif('Estado actualizado a: ' + estado);
+    loadCotizaciones();
+    document.getElementById('cotDetail').className = 'detail-panel';
+  } catch(err) { notif('Error', 'error'); }
+};
+
+window.eliminarCot = async function(id) {
+  if (!confirm('¿Eliminar esta cotización?')) return;
+  try {
+    await deleteDoc(doc(db, 'cotizaciones', id));
+    notif('Cotización eliminada');
+    loadCotizaciones();
+    document.getElementById('cotDetail').className = 'detail-panel';
+  } catch(err) { notif('Error', 'error'); }
+};
+
+// ─── COLABORACIONES ───────────────────────────────────
+let allColabs = [];
+let filterCollabEstado = '';
+
+async function loadColaboraciones() {
+  try {
+    const snap = await getDocs(query(collection(db, 'colaboraciones'), orderBy('fecha', 'desc')));
+    allColabs = [];
+    snap.forEach(d => allColabs.push({id: d.id, ...d.data()}));
+    renderColabs(allColabs);
+  } catch(err) { console.warn(err); }
+}
+
+function renderColabs(list) {
+  const tbody = document.getElementById('collabTableBody');
+  document.getElementById('collabCount').textContent = list.length + ' registros';
+  if (!list.length) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--gray)">Sin resultados</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = list.map(c => {
+    return `<tr>
+      <td><div style="font-weight:400">${c.nombre || '—'}</div><div style="font-size:11px;color:var(--gray)">${c.email||''}</div></td>
+      <td>${c.marca || '—'}</td>
+      <td>${c.tipo || '—'}</td>
+      <td style="font-size:11px;color:var(--gray)">${c.canales || '—'}</td>
+      <td style="font-size:12px;color:var(--gray)">${c.presupuesto || '—'}</td>
+      <td><span class="status-badge status-${c.estado || 'nuevo'}">${c.estado || 'nuevo'}</span></td>
+      <td>
+        <div style="display:flex;gap:6px">
+          <button class="btn-action" onclick="verCollab('${c.id}')">Ver</button>
+          <button class="btn-action success" onclick="cambiarEstadoCollab('${c.id}','contactado')">✓</button>
+          <button class="btn-action danger" onclick="eliminarCollab('${c.id}')">×</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+window.filtrarCollab = function(q) {
+  const filtered = allColabs.filter(c =>
+    (c.nombre||'').toLowerCase().includes(q.toLowerCase()) ||
+    (c.marca||'').toLowerCase().includes(q.toLowerCase()) ||
+    (c.email||'').toLowerCase().includes(q.toLowerCase())
+  ).filter(c => !filterCollabEstado || c.estado === filterCollabEstado);
+  renderColabs(filtered);
+};
+
+window.filtrarCollabEstado = function(estado) {
+  filterCollabEstado = estado;
+  const q = document.querySelector('#page-colaboraciones .search-input').value;
+  window.filtrarCollab(q);
+};
+
+window.verCollab = function(id) {
+  const c = allColabs.find(x => x.id === id);
+  if (!c) return;
+  const panel = document.getElementById('collabDetail');
+  panel.className = 'detail-panel open';
+  panel.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px">Detalle de colaboración</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-action success" onclick="cambiarEstadoCollab('${id}','contactado')">Marcar contactado</button>
+        <button class="btn-action" onclick="cambiarEstadoCollab('${id}','cerrado')">Cerrar</button>
+        <button class="btn-action danger" onclick="eliminarCollab('${id}')">Eliminar</button>
+        <button class="btn-action" onclick="document.getElementById('collabDetail').className='detail-panel'">✕</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--border)">
+      ${[
+        ['Nombre', c.nombre], ['Marca', c.marca||'—'], ['Email', c.email],
+        ['Tipo', c.tipo||'—'], ['Canales', c.canales||'—'], ['Presupuesto', c.presupuesto||'—']
+      ].map(([l,v]) => `<div style="background:var(--bg3);padding:14px 16px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px">${l}</div>
+        <div style="font-size:13px;font-weight:300">${v}</div>
+      </div>`).join('')}
+    </div>
+    ${c.descripcion ? `<div style="margin-top:16px;padding:16px;background:var(--bg3)">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px">Descripción</div>
+      <div style="font-size:13px;font-weight:300;line-height:1.7;color:var(--gray)">${c.descripcion}</div>
+    </div>` : ''}`;
+};
+
+window.cambiarEstadoCollab = async function(id, estado) {
+  try {
+    await updateDoc(doc(db, 'colaboraciones', id), {estado, updatedAt: serverTimestamp()});
+    notif('Estado actualizado: ' + estado);
+    loadColaboraciones();
+    document.getElementById('collabDetail').className = 'detail-panel';
+  } catch(err) { notif('Error', 'error'); }
+};
+
+window.eliminarCollab = async function(id) {
+  if (!confirm('¿Eliminar esta colaboración?')) return;
+  try {
+    await deleteDoc(doc(db, 'colaboraciones', id));
+    notif('Colaboración eliminada');
+    loadColaboraciones();
+    document.getElementById('collabDetail').className = 'detail-panel';
+  } catch(err) { notif('Error', 'error'); }
+};
+
+// ─── KEYBOARD SHORTCUTS ───────────────────────────────
+document.getElementById('loginPass').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') window.doLogin();
+});
+
 </script>
 </body>
 </html>

@@ -1224,7 +1224,10 @@ footer{border-top:1px solid var(--border);padding:26px 0}
 <!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { 
+  getFirestore, collection, addDoc, serverTimestamp,
+  doc, getDoc, getDocs, query, orderBy
+} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDhyVgXxZLxQKatA_xx7nV8kKhIkl6b0xQ",
@@ -1241,7 +1244,168 @@ window._db = db;
 window._collection = collection;
 window._addDoc = addDoc;
 window._serverTimestamp = serverTimestamp;
+
+// ── CMS: Cargar datos dinámicos de Firestore ──────────────────────
+
+async function cargarCMS() {
+  try {
+    // 1. STATS (años experiencia, suscriptores, videos, certificaciones)
+    const configDoc = await getDoc(doc(db, 'cms', 'config'));
+    if (configDoc.exists() && configDoc.data().stats) {
+      const s = configDoc.data().stats;
+      // Stats bar
+      const statNums = document.querySelectorAll('.stat-n');
+      const keys = ['anos','suscriptores','videos','certificaciones'];
+      keys.forEach((k, i) => {
+        if (s[k] && statNums[i]) statNums[i].textContent = s[k];
+      });
+      // Hero bio
+      if (s.suscriptores) {
+        const bioStr = document.querySelector('.hero-bio strong');
+        if (bioStr) bioStr.textContent = s.suscriptores + ' suscriptores';
+      }
+      // Badge foto
+      if (s.suscriptores) {
+        const pbVal = document.querySelector('.photo-badge .pb-val');
+        if (pbVal) pbVal.textContent = s.suscriptores + ' Suscriptores';
+      }
+      // Canal de contenido — suscriptores y videos
+      if (s.suscriptores) {
+        const csNums = document.querySelectorAll('.cs-n');
+        if (csNums[0]) csNums[0].textContent = s.suscriptores;
+        if (csNums[1]) csNums[1].textContent = s.videos || csNums[1].textContent;
+      }
+    }
+
+    // 2. SERVICIOS
+    const svcSnap = await getDocs(query(collection(db, 'cms_servicios'), orderBy('orden')));
+    if (!svcSnap.empty) {
+      const svcGrid = document.querySelector('.svc-grid');
+      if (svcGrid) {
+        svcGrid.innerHTML = '';
+        let idx = 0;
+        svcSnap.forEach(d => {
+          const s = d.data();
+          if (!s.activo) return;
+          idx++;
+          const tags = (s.tags || []).map(t => `<span class="tag">${t}</span>`).join('');
+          svcGrid.innerHTML += `
+            <div class="svc">
+              <div class="svc-num">${String(idx).padStart(2,'0')}</div>
+              <div class="svc-ico">${s.icono || '🔧'}</div>
+              <div class="svc-t">${s.titulo}</div>
+              <div class="svc-d">${s.descripcion}</div>
+              <div class="svc-tags">${tags}</div>
+            </div>`;
+        });
+        // Si no quedó nada activo, volver al hardcoded (no limpiar)
+        if (!idx) { location.reload(); }
+      }
+    }
+
+    // 3. DEALS
+    const dealsSnap = await getDocs(query(collection(db, 'cms_deals'), orderBy('orden')));
+    if (!dealsSnap.empty) {
+      const dealsGrid = document.querySelector('.deals-grid');
+      if (dealsGrid) {
+        dealsGrid.innerHTML = '';
+        let di = 0;
+        dealsSnap.forEach(d => {
+          const deal = d.data();
+          if (!deal.activo) return;
+          const codeId = 'gd' + (di++);
+          const codeHtml = deal.codigo
+            ? `<div class="code-box" style="margin-top:4px">
+                <div><div class="code-lbl">Código</div>
+                <div class="code-val" id="${codeId}">${deal.codigo}</div></div>
+                <button class="copy-btn" onclick="cp('${codeId}',this)">Copiar</button>
+               </div>`
+            : `<span class="deal-badge">${deal.badge || 'Link exclusivo'}</span>`;
+
+          dealsGrid.innerHTML += `
+            <div class="deal">
+              <div class="deal-head">
+                <div class="deal-logo" style="background:${deal.logoColor||'#333'};color:#fff;font-size:11px;letter-spacing:1px">${deal.logoLabel||deal.nombre.substring(0,3).toUpperCase()}</div>
+                <div>
+                  <div class="deal-pname">${deal.nombre}</div>
+                  <div class="deal-psub">${deal.subtitulo||''}</div>
+                </div>
+              </div>
+              <div class="deal-desc">${deal.descripcion}</div>
+              ${codeHtml}
+              <a href="${deal.link}" target="_blank" class="btn-p" style="font-size:11px;padding:10px 20px;margin-top:8px;display:inline-block">Ir a la oferta →</a>
+            </div>`;
+        });
+      }
+    }
+
+    // 4. CLIENTES
+    const cliSnap = await getDocs(query(collection(db, 'cms_clientes'), orderBy('orden')));
+    if (!cliSnap.empty) {
+      const grid = document.querySelector('.clients-grid');
+      if (grid) {
+        grid.innerHTML = '';
+        cliSnap.forEach(d => {
+          const c = d.data();
+          if (!c.activo) return;
+          const pills = (c.servicios||[]).map(s => `<span class="svc-pill2">${s}</span>`).join('');
+          grid.innerHTML += `
+            <div class="client-card">
+              <div class="client-top-label">
+                <span class="client-company-name">${c.nombre}</span>
+                <span class="client-company-tag">${c.sector||''}</span>
+              </div>
+              <div class="frame-live" style="overflow:hidden;height:168px;">
+                <img src="${c.imagen}" alt="${c.nombre}"
+                  style="width:100%;height:100%;object-fit:cover;object-position:top;display:block;">
+              </div>
+              <div class="client-bottom">
+                <div class="client-svc-label">Servicios ejecutados</div>
+                <div class="client-pills">${pills}</div>
+                <a href="${c.url}" target="_blank" class="client-link">↗ ${c.urlLabel||c.url}</a>
+              </div>
+            </div>`;
+        });
+      }
+    }
+
+    // 5. MARCAS (carrusel)
+    const marcasSnap = await getDocs(query(collection(db, 'cms_marcas'), orderBy('orden')));
+    if (!marcasSnap.empty) {
+      const carousel = document.querySelector('.brands-carousel');
+      if (carousel) {
+        const items = [];
+        marcasSnap.forEach(d => {
+          const m = d.data();
+          if (!m.activo) return;
+          if (m.tipo === 'texto') {
+            items.push(`<div class="brand-card" style="background:var(--bg3)">
+              <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:${m.color||'var(--white)'};letter-spacing:2px">${m.logoTexto}</div>
+              <span>${m.nombre}</span>
+            </div>`);
+          } else {
+            items.push(`<div class="brand-card">
+              <img src="${m.logoUrl}" alt="${m.nombre}">
+              <span>${m.nombre}</span>
+            </div>`);
+          }
+        });
+        // Duplicar para el loop infinito
+        carousel.innerHTML = [...items, ...items].join('');
+      }
+    }
+
+  } catch(err) {
+    // Si falla la carga del CMS, la landing muestra datos hardcodeados — sin problema
+    console.warn('[CMS] Error al cargar datos dinámicos:', err);
+  }
+}
+
+// Ejecutar CMS al cargar la página
+cargarCMS();
+
 </script>
+
 
 <script>
 // ACORDEÓN
