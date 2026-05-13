@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — Alexander Aya</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Barlow+Condensed:wght@300;400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -166,6 +168,16 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
 /* DRAG HANDLE */
 .drag-handle{cursor:grab;color:var(--gray2);font-size:16px;padding:0 4px}
 .drag-handle:active{cursor:grabbing}
+
+/* ── CUENTA DE COBRO ── */
+.cc-item-row{display:grid;grid-template-columns:1fr 100px 120px 120px 28px;gap:8px;margin-bottom:10px;align-items:start}
+.cc-item-row .form-input{font-size:12px}
+.cc-item-row textarea.form-input{min-height:70px;resize:vertical}
+@media(max-width:900px){
+  #page-cuentas-cobro [style*="grid-template-columns:1fr 420px"]{grid-template-columns:1fr!important}
+  #cc-preview{display:none}
+  .cc-item-row{grid-template-columns:1fr 1fr 1fr 1fr 28px}
+}
 </style>
 </head>
 <body>
@@ -205,7 +217,7 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
       <div class="nav-item active" onclick="goPage('dashboard')">
         <span class="nav-ico">📊</span> Dashboard
       </div>
-      
+
       <div class="nav-group-label" style="margin-top:12px">CMS — Landing</div>
       <div class="nav-item" onclick="goPage('cms-stats')">
         <span class="nav-ico">📈</span> Stats
@@ -224,6 +236,9 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
       </div>
 
       <div class="nav-group-label" style="margin-top:12px">Formularios</div>
+      <div class="nav-item" onclick="goPage('cuentas-cobro')">
+        <span class="nav-ico">🧾</span> Cuentas de Cobro
+      </div>
       <div class="nav-item" onclick="goPage('cotizaciones')">
         <span class="nav-ico">📋</span> Cotizaciones
       </div>
@@ -352,6 +367,136 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
       <div id="marcasContainer"></div>
     </div>
 
+    <!-- ══════════════════════════════════════════════
+         PÁGINA: CUENTAS DE COBRO
+         ══════════════════════════════════════════════ -->
+    <div class="page" id="page-cuentas-cobro">
+      <div class="page-header">
+        <div class="page-title">Cuentas de Cobro</div>
+        <div class="page-sub">Genera, guarda y descarga cuentas de cobro en PDF — formato Régimen Simplificado, Bogotá Colombia</div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" id="tab-nueva" onclick="switchCCTab('nueva')">Nueva cuenta</div>
+        <div class="tab" id="tab-historial" onclick="switchCCTab('historial')">Historial</div>
+      </div>
+
+      <!-- TAB: NUEVA CUENTA -->
+      <div id="cc-tab-nueva">
+        <div style="display:grid;grid-template-columns:1fr 420px;gap:20px;align-items:start">
+
+          <!-- FORMULARIO -->
+          <div>
+            <div class="form-section">
+              <div class="form-section-title">📋 Datos del cliente / destinatario</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Nombre o razón social</label>
+                  <input class="form-input" type="text" id="cc-cliente-nombre" placeholder="COGASEN S.A.S." oninput="updateCCPreview()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">NIT / CC del cliente</label>
+                  <input class="form-input" type="text" id="cc-cliente-nit" placeholder="900.321.520-0" oninput="updateCCPreview()">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Ciudad</label>
+                  <input class="form-input" type="text" id="cc-ciudad" value="BOGOTÁ" oninput="updateCCPreview()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Fecha</label>
+                  <input class="form-input" type="date" id="cc-fecha" oninput="updateCCPreview()">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">🔢 Número y concepto general</div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">N° de cuenta</label>
+                  <input class="form-input" type="text" id="cc-numero" placeholder="0057" oninput="updateCCPreview()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Concepto general (encabezado)</label>
+                  <input class="form-input" type="text" id="cc-concepto" placeholder="SOPORTE TÉCNICO" oninput="updateCCPreview()">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Forma de pago</label>
+                <input class="form-input" type="text" id="cc-pago" value="TRANSFERENCIA BANCOLOMBIA, CUENTA DE AHORROS N° 04579897533 – NEQUI, DAVIPLATA 3219699676." oninput="updateCCPreview()">
+              </div>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">📦 Ítems / Servicios</div>
+              <div id="cc-items-container"></div>
+              <button class="btn-action" style="margin-top:8px" onclick="addCCItem()">+ Agregar ítem</button>
+            </div>
+
+            <div class="form-section">
+              <div class="form-section-title">📄 Informe Art. 388 (página 2)</div>
+              <div style="padding:12px;background:var(--bg3);border:1px solid var(--border);font-size:12px;color:var(--gray);line-height:1.7;margin-bottom:16px">
+                ℹ️ Esta página se genera automáticamente con los datos de Alexander Aya Aponte (C.C. 1032434200) declarando que no ha contratado ni vinculado dos o más trabajadores. Se incluye siempre en el PDF.
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Día del mes (letras)</label>
+                  <input class="form-input" type="text" id="cc-dia-letras" placeholder="trece (13)" oninput="updateCCPreview()">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Mes</label>
+                  <input class="form-input" type="text" id="cc-mes-letras" placeholder="mayo" oninput="updateCCPreview()">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Año</label>
+                <input class="form-input" type="text" id="cc-año-letras" placeholder="2026" oninput="updateCCPreview()">
+              </div>
+            </div>
+
+            <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap">
+              <button class="btn-action primary" onclick="generarPDF()">⬇ Generar y descargar PDF</button>
+              <button class="btn-action success" onclick="guardarCC()">💾 Guardar en historial</button>
+              <button class="btn-action" onclick="limpiarCC()">↺ Limpiar</button>
+            </div>
+          </div>
+
+          <!-- PREVIEW -->
+          <div style="position:sticky;top:20px">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--gray);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px">Vista previa</div>
+            <div id="cc-preview" style="background:#fff;color:#111;padding:20px;font-family:Arial,sans-serif;font-size:9px;line-height:1.5;border:1px solid var(--border2);min-height:400px;max-height:600px;overflow-y:auto"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TAB: HISTORIAL -->
+      <div id="cc-tab-historial" style="display:none">
+        <div class="filter-row">
+          <input class="search-input" type="text" placeholder="Buscar por cliente, número..." oninput="filtrarCC(this.value)">
+          <span id="ccHistorialCount" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-left:auto"></span>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>N°</th>
+                <th>Cliente</th>
+                <th>Concepto</th>
+                <th>Total</th>
+                <th>Fecha</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="cc-historial-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- /page-cuentas-cobro -->
+
     <!-- COTIZACIONES -->
     <div class="page" id="page-cotizaciones">
       <div class="page-header">
@@ -372,13 +517,7 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
         <table class="data-table">
           <thead>
             <tr>
-              <th>Nombre</th>
-              <th>Email</th>
-              <th>Servicio</th>
-              <th>Presupuesto</th>
-              <th>Estado</th>
-              <th>Fecha</th>
-              <th></th>
+              <th>Nombre</th><th>Email</th><th>Servicio</th><th>Presupuesto</th><th>Estado</th><th>Fecha</th><th></th>
             </tr>
           </thead>
           <tbody id="cotTableBody"></tbody>
@@ -407,13 +546,7 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
         <table class="data-table">
           <thead>
             <tr>
-              <th>Nombre</th>
-              <th>Marca</th>
-              <th>Tipo</th>
-              <th>Canales</th>
-              <th>Presupuesto</th>
-              <th>Estado</th>
-              <th></th>
+              <th>Nombre</th><th>Marca</th><th>Tipo</th><th>Canales</th><th>Presupuesto</th><th>Estado</th><th></th>
             </tr>
           </thead>
           <tbody id="collabTableBody"></tbody>
@@ -425,7 +558,7 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
   </div><!-- /main-content -->
 </div><!-- /admin-wrap -->
 
-<!-- MODAL SERVICIO -->
+<!-- MODALES CMS -->
 <div class="modal-overlay" id="modalServicio">
   <div class="modal">
     <div class="modal-header">
@@ -435,34 +568,13 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
     <div class="modal-body">
       <input type="hidden" id="svc-id">
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Número / Orden</label>
-          <input class="form-input" type="number" id="svc-orden" placeholder="1">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Icono (emoji)</label>
-          <input class="form-input" type="text" id="svc-icono" placeholder="🌐">
-        </div>
+        <div class="form-group"><label class="form-label">Número / Orden</label><input class="form-input" type="number" id="svc-orden" placeholder="1"></div>
+        <div class="form-group"><label class="form-label">Icono (emoji)</label><input class="form-input" type="text" id="svc-icono" placeholder="🌐"></div>
       </div>
-      <div class="form-group" style="margin-bottom:14px">
-        <label class="form-label">Título del servicio</label>
-        <input class="form-input" type="text" id="svc-titulo" placeholder="Desarrollo Web">
-      </div>
-      <div class="form-group" style="margin-bottom:14px">
-        <label class="form-label">Descripción</label>
-        <textarea class="form-textarea" id="svc-descripcion" placeholder="Describe brevemente el servicio..."></textarea>
-      </div>
-      <div class="form-group" style="margin-bottom:14px">
-        <label class="form-label">Tags (separados por coma)</label>
-        <input class="form-input" type="text" id="svc-tags" placeholder="React, JavaScript, HTML/CSS">
-      </div>
-      <div class="toggle-wrap">
-        <label class="toggle">
-          <input type="checkbox" id="svc-activo" checked>
-          <span class="toggle-slider"></span>
-        </label>
-        <span class="toggle-label">Servicio activo (visible en la landing)</span>
-      </div>
+      <div class="form-group" style="margin-bottom:14px"><label class="form-label">Título del servicio</label><input class="form-input" type="text" id="svc-titulo" placeholder="Desarrollo Web"></div>
+      <div class="form-group" style="margin-bottom:14px"><label class="form-label">Descripción</label><textarea class="form-textarea" id="svc-descripcion" placeholder="Describe brevemente el servicio..."></textarea></div>
+      <div class="form-group" style="margin-bottom:14px"><label class="form-label">Tags (separados por coma)</label><input class="form-input" type="text" id="svc-tags" placeholder="React, JavaScript, HTML/CSS"></div>
+      <div class="toggle-wrap"><label class="toggle"><input type="checkbox" id="svc-activo" checked><span class="toggle-slider"></span></label><span class="toggle-label">Servicio activo (visible en la landing)</span></div>
       <div class="form-actions">
         <button class="btn-action primary" onclick="saveServicio()">Guardar servicio →</button>
         <button class="btn-action" onclick="closeModalServicio()">Cancelar</button>
@@ -471,7 +583,6 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
   </div>
 </div>
 
-<!-- MODAL DEAL -->
 <div class="modal-overlay" id="modalDeal">
   <div class="modal">
     <div class="modal-header">
@@ -481,56 +592,21 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
     <div class="modal-body">
       <input type="hidden" id="deal-id">
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Nombre</label>
-          <input class="form-input" type="text" id="deal-nombre" placeholder="Amazon">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Subtítulo</label>
-          <input class="form-input" type="text" id="deal-subtitulo" placeholder="Electrónica & Tech">
-        </div>
+        <div class="form-group"><label class="form-label">Nombre</label><input class="form-input" type="text" id="deal-nombre" placeholder="Amazon"></div>
+        <div class="form-group"><label class="form-label">Subtítulo</label><input class="form-input" type="text" id="deal-subtitulo" placeholder="Electrónica & Tech"></div>
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Etiqueta del logo (3-4 letras)</label>
-          <input class="form-input" type="text" id="deal-logoLabel" placeholder="AMZ">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Color del logo (hex)</label>
-          <input class="form-input" type="text" id="deal-logoColor" placeholder="#ff9900">
-        </div>
+        <div class="form-group"><label class="form-label">Etiqueta del logo (3-4 letras)</label><input class="form-input" type="text" id="deal-logoLabel" placeholder="AMZ"></div>
+        <div class="form-group"><label class="form-label">Color del logo (hex)</label><input class="form-input" type="text" id="deal-logoColor" placeholder="#ff9900"></div>
       </div>
-      <div class="form-group" style="margin-bottom:14px">
-        <label class="form-label">Link de afiliado / URL</label>
-        <input class="form-input" type="text" id="deal-link" placeholder="https://...">
-      </div>
+      <div class="form-group" style="margin-bottom:14px"><label class="form-label">Link de afiliado / URL</label><input class="form-input" type="text" id="deal-link" placeholder="https://..."></div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Código de descuento (opcional)</label>
-          <input class="form-input" type="text" id="deal-codigo" placeholder="ALEXAYA">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Badge (si no hay código)</label>
-          <input class="form-input" type="text" id="deal-badge" placeholder="Link exclusivo">
-        </div>
+        <div class="form-group"><label class="form-label">Código de descuento (opcional)</label><input class="form-input" type="text" id="deal-codigo" placeholder="ALEXAYA"></div>
+        <div class="form-group"><label class="form-label">Badge (si no hay código)</label><input class="form-input" type="text" id="deal-badge" placeholder="Link exclusivo"></div>
       </div>
-      <div class="form-group" style="margin-bottom:14px">
-        <label class="form-label">Descripción</label>
-        <textarea class="form-textarea" id="deal-descripcion" placeholder="Describe el deal..."></textarea>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Orden</label>
-          <input class="form-input" type="number" id="deal-orden" placeholder="1">
-        </div>
-      </div>
-      <div class="toggle-wrap">
-        <label class="toggle">
-          <input type="checkbox" id="deal-activo" checked>
-          <span class="toggle-slider"></span>
-        </label>
-        <span class="toggle-label">Deal activo (visible en la landing)</span>
-      </div>
+      <div class="form-group" style="margin-bottom:14px"><label class="form-label">Descripción</label><textarea class="form-textarea" id="deal-descripcion" placeholder="Describe el deal..."></textarea></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Orden</label><input class="form-input" type="number" id="deal-orden" placeholder="1"></div></div>
+      <div class="toggle-wrap"><label class="toggle"><input type="checkbox" id="deal-activo" checked><span class="toggle-slider"></span></label><span class="toggle-label">Deal activo (visible en la landing)</span></div>
       <div class="form-actions">
         <button class="btn-action primary" onclick="saveDeal()">Guardar deal →</button>
         <button class="btn-action" onclick="closeModalDeal()">Cancelar</button>
@@ -539,7 +615,6 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
   </div>
 </div>
 
-<!-- MODAL CLIENTE -->
 <div class="modal-overlay" id="modalCliente">
   <div class="modal">
     <div class="modal-header">
@@ -549,44 +624,15 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
     <div class="modal-body">
       <input type="hidden" id="cli-id">
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Nombre de la empresa</label>
-          <input class="form-input" type="text" id="cli-nombre" placeholder="Cogasen">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Sector / Categoría</label>
-          <input class="form-input" type="text" id="cli-sector" placeholder="Sector energético · Corporativo">
-        </div>
+        <div class="form-group"><label class="form-label">Nombre de la empresa</label><input class="form-input" type="text" id="cli-nombre" placeholder="Cogasen"></div>
+        <div class="form-group"><label class="form-label">Sector / Categoría</label><input class="form-input" type="text" id="cli-sector" placeholder="Sector energético · Corporativo"></div>
       </div>
-      <div class="form-group" style="margin-bottom:14px">
-        <label class="form-label">URL del sitio web</label>
-        <input class="form-input" type="text" id="cli-url" placeholder="https://cogasen.com.co/">
-      </div>
-      <div class="form-group" style="margin-bottom:14px">
-        <label class="form-label">Texto del link (ej: cogasen.com.co)</label>
-        <input class="form-input" type="text" id="cli-urlLabel" placeholder="cogasen.com.co">
-      </div>
-      <div class="form-group" style="margin-bottom:14px">
-        <label class="form-label">Ruta de imagen (ej: img/cogasen.jpg)</label>
-        <input class="form-input" type="text" id="cli-imagen" placeholder="img/cogasen.jpg">
-      </div>
-      <div class="form-group" style="margin-bottom:14px">
-        <label class="form-label">Servicios ejecutados (separados por coma)</label>
-        <input class="form-input" type="text" id="cli-servicios" placeholder="Desarrollo Web, Hosting, Despliegue">
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Orden</label>
-          <input class="form-input" type="number" id="cli-orden" placeholder="1">
-        </div>
-      </div>
-      <div class="toggle-wrap">
-        <label class="toggle">
-          <input type="checkbox" id="cli-activo" checked>
-          <span class="toggle-slider"></span>
-        </label>
-        <span class="toggle-label">Cliente activo (visible en la landing)</span>
-      </div>
+      <div class="form-group" style="margin-bottom:14px"><label class="form-label">URL del sitio web</label><input class="form-input" type="text" id="cli-url" placeholder="https://cogasen.com.co/"></div>
+      <div class="form-group" style="margin-bottom:14px"><label class="form-label">Texto del link (ej: cogasen.com.co)</label><input class="form-input" type="text" id="cli-urlLabel" placeholder="cogasen.com.co"></div>
+      <div class="form-group" style="margin-bottom:14px"><label class="form-label">Ruta de imagen (ej: img/cogasen.jpg)</label><input class="form-input" type="text" id="cli-imagen" placeholder="img/cogasen.jpg"></div>
+      <div class="form-group" style="margin-bottom:14px"><label class="form-label">Servicios ejecutados (separados por coma)</label><input class="form-input" type="text" id="cli-servicios" placeholder="Desarrollo Web, Hosting, Despliegue"></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Orden</label><input class="form-input" type="number" id="cli-orden" placeholder="1"></div></div>
+      <div class="toggle-wrap"><label class="toggle"><input type="checkbox" id="cli-activo" checked><span class="toggle-slider"></span></label><span class="toggle-label">Cliente activo (visible en la landing)</span></div>
       <div class="form-actions">
         <button class="btn-action primary" onclick="saveCliente()">Guardar cliente →</button>
         <button class="btn-action" onclick="closeModalCliente()">Cancelar</button>
@@ -595,7 +641,6 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
   </div>
 </div>
 
-<!-- MODAL MARCA -->
 <div class="modal-overlay" id="modalMarca">
   <div class="modal">
     <div class="modal-header">
@@ -605,43 +650,21 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
     <div class="modal-body">
       <input type="hidden" id="marca-id">
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Nombre</label>
-          <input class="form-input" type="text" id="marca-nombre" placeholder="Amazon">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Tipo</label>
+        <div class="form-group"><label class="form-label">Nombre</label><input class="form-input" type="text" id="marca-nombre" placeholder="Amazon"></div>
+        <div class="form-group"><label class="form-label">Tipo</label>
           <select class="form-select" id="marca-tipo">
             <option value="logo">Logo (imagen URL)</option>
             <option value="texto">Texto personalizado</option>
           </select>
         </div>
       </div>
-      <div class="form-group" style="margin-bottom:14px" id="marca-logo-group">
-        <label class="form-label">URL del logo</label>
-        <input class="form-input" type="text" id="marca-logoUrl" placeholder="https://upload.wikimedia.org/...">
-      </div>
-      <div class="form-group" style="margin-bottom:14px" id="marca-texto-group">
-        <label class="form-label">Texto del logo</label>
-        <input class="form-input" type="text" id="marca-logoTexto" placeholder="KEYSFAN">
-      </div>
+      <div class="form-group" style="margin-bottom:14px" id="marca-logo-group"><label class="form-label">URL del logo</label><input class="form-input" type="text" id="marca-logoUrl" placeholder="https://upload.wikimedia.org/..."></div>
+      <div class="form-group" style="margin-bottom:14px" id="marca-texto-group"><label class="form-label">Texto del logo</label><input class="form-input" type="text" id="marca-logoTexto" placeholder="KEYSFAN"></div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Color del texto</label>
-          <input class="form-input" type="text" id="marca-color" placeholder="#c4a25a">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Orden</label>
-          <input class="form-input" type="number" id="marca-orden" placeholder="1">
-        </div>
+        <div class="form-group"><label class="form-label">Color del texto</label><input class="form-input" type="text" id="marca-color" placeholder="#c4a25a"></div>
+        <div class="form-group"><label class="form-label">Orden</label><input class="form-input" type="number" id="marca-orden" placeholder="1"></div>
       </div>
-      <div class="toggle-wrap">
-        <label class="toggle">
-          <input type="checkbox" id="marca-activo" checked>
-          <span class="toggle-slider"></span>
-        </label>
-        <span class="toggle-label">Marca activa (visible en el carrusel)</span>
-      </div>
+      <div class="toggle-wrap"><label class="toggle"><input type="checkbox" id="marca-activo" checked><span class="toggle-slider"></span></label><span class="toggle-label">Marca activa (visible en el carrusel)</span></div>
       <div class="form-actions">
         <button class="btn-action primary" onclick="saveMarca()">Guardar marca →</button>
         <button class="btn-action" onclick="closeModalMarca()">Cancelar</button>
@@ -653,12 +676,14 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
 <!-- NOTIFICACIÓN -->
 <div class="notif" id="notif"></div>
 
-<!-- FIREBASE + LÓGICA -->
+<!-- ══════════════════════════════════════════════
+     FIREBASE + TODA LA LÓGICA
+     ══════════════════════════════════════════════ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import {
   getFirestore, collection, addDoc, getDocs, getDoc, setDoc,
-  doc, deleteDoc, updateDoc, query, orderBy, serverTimestamp, where
+  doc, deleteDoc, updateDoc, query, orderBy, serverTimestamp
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -673,7 +698,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// ─── EXPONER FUNCIONES AL SCOPE GLOBAL ────────────────
+// Exponer para el módulo CC
+window._db = db;
+window._collection = collection;
+window._addDoc = addDoc;
+window._serverTimestamp = serverTimestamp;
 
 // ─── AUTENTICACIÓN ───────────────────────────────────
 window.doLogin = function() {
@@ -701,8 +730,6 @@ window.goPage = function(pageId) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + pageId).classList.add('active');
   event.currentTarget.classList.add('active');
-  
-  // Cargar datos al entrar a cada sección
   if (pageId === 'dashboard') loadDashboard();
   if (pageId === 'cms-stats') loadStats();
   if (pageId === 'cms-servicios') loadServicios();
@@ -711,6 +738,7 @@ window.goPage = function(pageId) {
   if (pageId === 'cms-marcas') loadMarcas();
   if (pageId === 'cotizaciones') loadCotizaciones();
   if (pageId === 'colaboraciones') loadColaboraciones();
+  if (pageId === 'cuentas-cobro') { if(typeof initCC==='function') initCC(); }
 };
 
 // ─── TEMA ─────────────────────────────────────────────
@@ -720,12 +748,12 @@ window.toggleTheme = function() {
 };
 
 // ─── NOTIFICACIÓN ─────────────────────────────────────
-function notif(msg, type='success') {
+window.notif = function(msg, type='success') {
   const el = document.getElementById('notif');
   el.textContent = (type==='success'?'✓ ':'✕ ') + msg;
   el.className = 'notif ' + type + ' show';
   setTimeout(() => el.classList.remove('show'), 3500);
-}
+};
 
 // ─── DASHBOARD ────────────────────────────────────────
 async function loadDashboard() {
@@ -734,7 +762,6 @@ async function loadDashboard() {
       getDocs(collection(db, 'cotizaciones')),
       getDocs(collection(db, 'colaboraciones'))
     ]);
-    
     let total = cotSnap.size, nuevas = 0, cerradas = 0;
     const cotRows = [];
     cotSnap.forEach(d => {
@@ -743,42 +770,28 @@ async function loadDashboard() {
       if (data.estado === 'cerrado') cerradas++;
       cotRows.push({id: d.id, ...data});
     });
-
     document.getElementById('ds-total').textContent = total;
     document.getElementById('ds-nuevas').textContent = nuevas;
     document.getElementById('ds-collabs').textContent = collabSnap.size;
     document.getElementById('ds-cerradas').textContent = cerradas;
-
-    // Últimas cotizaciones
     const recentCot = document.getElementById('recentCot');
     recentCot.innerHTML = '';
     cotRows.slice(-5).reverse().forEach(c => {
       recentCot.innerHTML += `<div style="padding:10px 12px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:12px;margin-bottom:1px">
-        <div>
-          <div style="font-weight:400;color:var(--white);margin-bottom:2px">${c.nombre || '—'}</div>
-          <div style="color:var(--gray);font-size:11px">${c.servicio || '—'}</div>
-        </div>
-        <span class="status-badge status-${c.estado || 'nuevo'}">${c.estado || 'nuevo'}</span>
-      </div>`;
+        <div><div style="font-weight:400;color:var(--white);margin-bottom:2px">${c.nombre||'—'}</div><div style="color:var(--gray);font-size:11px">${c.servicio||'—'}</div></div>
+        <span class="status-badge status-${c.estado||'nuevo'}">${c.estado||'nuevo'}</span></div>`;
     });
     if (!cotRows.length) recentCot.innerHTML = '<div style="color:var(--gray);font-size:12px;padding:12px 0">Sin cotizaciones aún</div>';
-
-    // Últimas colaboraciones
     const recentCollab = document.getElementById('recentCollab');
     recentCollab.innerHTML = '';
     const collabRows = [];
     collabSnap.forEach(d => collabRows.push({id: d.id, ...d.data()}));
     collabRows.slice(-5).reverse().forEach(c => {
       recentCollab.innerHTML += `<div style="padding:10px 12px;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;font-size:12px;margin-bottom:1px">
-        <div>
-          <div style="font-weight:400;color:var(--white);margin-bottom:2px">${c.nombre || '—'} ${c.marca ? '· '+c.marca : ''}</div>
-          <div style="color:var(--gray);font-size:11px">${c.tipo || '—'}</div>
-        </div>
-        <span class="status-badge status-${c.estado || 'nuevo'}">${c.estado || 'nuevo'}</span>
-      </div>`;
+        <div><div style="font-weight:400;color:var(--white);margin-bottom:2px">${c.nombre||'—'} ${c.marca?'· '+c.marca:''}</div><div style="color:var(--gray);font-size:11px">${c.tipo||'—'}</div></div>
+        <span class="status-badge status-${c.estado||'nuevo'}">${c.estado||'nuevo'}</span></div>`;
     });
     if (!collabRows.length) recentCollab.innerHTML = '<div style="color:var(--gray);font-size:12px;padding:12px 0">Sin colaboraciones aún</div>';
-
   } catch(err) { console.warn(err); }
 }
 
@@ -793,7 +806,6 @@ window.loadStats = async function() {
       document.getElementById('stat-videos').value = s.videos || '658';
       document.getElementById('stat-certificaciones').value = s.certificaciones || '5+';
     } else {
-      // Valores por defecto
       document.getElementById('stat-anos').value = '10+';
       document.getElementById('stat-suscriptores').value = '9.7K';
       document.getElementById('stat-videos').value = '658';
@@ -813,8 +825,8 @@ window.saveStats = async function() {
       },
       updatedAt: serverTimestamp()
     }, { merge: true });
-    notif('Stats actualizados en la landing');
-  } catch(err) { notif('Error al guardar', 'error'); console.warn(err); }
+    window.notif('Stats actualizados en la landing');
+  } catch(err) { window.notif('Error al guardar', 'error'); console.warn(err); }
 };
 
 // ─── CMS SERVICIOS ────────────────────────────────────
@@ -822,728 +834,411 @@ async function loadServicios() {
   try {
     const snap = await getDocs(query(collection(db, 'cms_servicios'), orderBy('orden')));
     const container = document.getElementById('serviciosContainer');
-    
     if (snap.empty) {
-      // Ofrecer cargar datos por defecto
-      container.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-state-ico">🛠️</div>
-          <div class="empty-state-t">No hay servicios en Firestore</div>
-          <div class="empty-state-s" style="margin-bottom:20px">Carga los servicios actuales de la landing como punto de partida</div>
-          <button class="btn-action primary" onclick="seedServicios()">Cargar servicios por defecto →</button>
-        </div>`;
+      container.innerHTML = `<div class="empty-state"><div class="empty-state-ico">🛠️</div><div class="empty-state-t">No hay servicios en Firestore</div><div class="empty-state-s" style="margin-bottom:20px">Carga los servicios actuales de la landing como punto de partida</div><button class="btn-action primary" onclick="seedServicios()">Cargar servicios por defecto →</button></div>`;
       return;
     }
-
     container.innerHTML = '<div class="cms-grid" id="svcGrid"></div>';
     const grid = document.getElementById('svcGrid');
     snap.forEach(d => {
       const s = d.data();
-      const tags = (s.tags || []).join(', ');
-      grid.innerHTML += `
-        <div class="cms-item" id="svc-item-${d.id}">
-          <div class="cms-item-header">
-            <div class="cms-item-title">${s.icono || '🔧'} ${s.titulo}</div>
-            <span class="status-badge ${s.activo ? 'status-activo' : 'status-inactivo'}">${s.activo ? 'Activo' : 'Inactivo'}</span>
-          </div>
-          <div class="cms-item-body">${s.descripcion || ''}</div>
-          <div style="font-size:11px;color:var(--gray);margin-bottom:14px">${tags}</div>
-          <div class="cms-item-actions">
-            <button class="btn-action" onclick="editServicio('${d.id}')">Editar</button>
-            <button class="btn-action ${s.activo ? 'danger' : 'success'}" onclick="toggleServicio('${d.id}', ${!s.activo})">${s.activo ? 'Desactivar' : 'Activar'}</button>
-            <button class="btn-action danger" onclick="deleteServicio('${d.id}')">Eliminar</button>
-          </div>
-        </div>`;
+      grid.innerHTML += `<div class="cms-item"><div class="cms-item-header"><div class="cms-item-title">${s.icono||'🔧'} ${s.titulo}</div><span class="status-badge ${s.activo?'status-activo':'status-inactivo'}">${s.activo?'Activo':'Inactivo'}</span></div><div class="cms-item-body">${s.descripcion||''}</div><div style="font-size:11px;color:var(--gray);margin-bottom:14px">${(s.tags||[]).join(', ')}</div><div class="cms-item-actions"><button class="btn-action" onclick="editServicio('${d.id}')">Editar</button><button class="btn-action ${s.activo?'danger':'success'}" onclick="toggleServicio('${d.id}',${!s.activo})">${s.activo?'Desactivar':'Activar'}</button><button class="btn-action danger" onclick="deleteServicio('${d.id}')">Eliminar</button></div></div>`;
     });
   } catch(err) { console.warn(err); }
 }
 
-// Datos por defecto
 window.seedServicios = async function() {
   const defaultSvcs = [
-    {orden:1, icono:'🌐', titulo:'Desarrollo Web', descripcion:'Landing pages, apps web y sitios corporativos con React, JavaScript y buenas prácticas de código.', tags:['React','JavaScript','HTML/CSS'], activo:true},
-    {orden:2, icono:'🔌', titulo:'Backend & APIs REST', descripcion:'APIs robustas con Java y Spring Boot. Integración con bases de datos SQL y NoSQL.', tags:['Java','Spring Boot','REST'], activo:true},
-    {orden:3, icono:'🖥️', titulo:'Infraestructura Linux', descripcion:'Administración de servidores Linux y Windows Server. Gestión de usuarios, servicios y seguridad en entornos corporativos.', tags:['Linux','RedHat','Ubuntu'], activo:true},
-    {orden:4, icono:'🐳', titulo:'Docker & DevOps', descripcion:'Despliegue con Docker y Kubernetes. Contenedores, backups y monitoreo de infraestructura.', tags:['Docker','Kubernetes','CI/CD'], activo:true},
-    {orden:5, icono:'☁️', titulo:'Cloud', descripcion:'Soluciones en AWS, Azure, OCI y GCP. Migración, configuración y optimización de recursos cloud.', tags:['AWS','Azure','OCI','GCP'], activo:true},
-    {orden:6, icono:'🔒', titulo:'Seguridad & Redes', descripcion:'Configuración de firewalls, directorio activo, políticas de grupo y control de accesos en entornos empresariales.', tags:['pfSense','Sophos','AD/GPO'], activo:true},
-    {orden:7, icono:'🖥️', titulo:'Ensamble de PCs', descripcion:'Ensamble personalizado de equipos gaming, workstations y servidores. Selección de componentes, optimización y configuración completa según tu presupuesto.', tags:['Gaming','Workstation','Servidores','Componentes'], activo:true},
+    {orden:1,icono:'🌐',titulo:'Desarrollo Web',descripcion:'Landing pages, apps web y sitios corporativos con React, JavaScript y buenas prácticas de código.',tags:['React','JavaScript','HTML/CSS'],activo:true},
+    {orden:2,icono:'🔌',titulo:'Backend & APIs REST',descripcion:'APIs robustas con Java y Spring Boot. Integración con bases de datos SQL y NoSQL.',tags:['Java','Spring Boot','REST'],activo:true},
+    {orden:3,icono:'🖥️',titulo:'Infraestructura Linux',descripcion:'Administración de servidores Linux y Windows Server. Gestión de usuarios, servicios y seguridad en entornos corporativos.',tags:['Linux','RedHat','Ubuntu'],activo:true},
+    {orden:4,icono:'🐳',titulo:'Docker & DevOps',descripcion:'Despliegue con Docker y Kubernetes. Contenedores, backups y monitoreo de infraestructura.',tags:['Docker','Kubernetes','CI/CD'],activo:true},
+    {orden:5,icono:'☁️',titulo:'Cloud',descripcion:'Soluciones en AWS, Azure, OCI y GCP. Migración, configuración y optimización de recursos cloud.',tags:['AWS','Azure','OCI','GCP'],activo:true},
+    {orden:6,icono:'🔒',titulo:'Seguridad & Redes',descripcion:'Configuración de firewalls, directorio activo, políticas de grupo y control de accesos en entornos empresariales.',tags:['pfSense','Sophos','AD/GPO'],activo:true},
+    {orden:7,icono:'🖥️',titulo:'Ensamble de PCs',descripcion:'Ensamble personalizado de equipos gaming, workstations y servidores.',tags:['Gaming','Workstation','Servidores'],activo:true},
   ];
   try {
-    for (const s of defaultSvcs) {
-      await addDoc(collection(db, 'cms_servicios'), {...s, createdAt: serverTimestamp()});
-    }
-    notif('Servicios cargados en Firestore');
+    for (const s of defaultSvcs) await addDoc(collection(db,'cms_servicios'),{...s,createdAt:serverTimestamp()});
+    window.notif('Servicios cargados en Firestore');
     loadServicios();
-  } catch(err) { notif('Error', 'error'); console.warn(err); }
+  } catch(err) { window.notif('Error','error'); }
 };
 
 window.openModalServicio = function() {
-  document.getElementById('svc-id').value = '';
-  document.getElementById('svc-orden').value = '';
-  document.getElementById('svc-icono').value = '';
-  document.getElementById('svc-titulo').value = '';
-  document.getElementById('svc-descripcion').value = '';
-  document.getElementById('svc-tags').value = '';
-  document.getElementById('svc-activo').checked = true;
-  document.getElementById('modalServicioTitle').textContent = 'Nuevo servicio';
+  ['id','orden','icono','titulo','descripcion','tags'].forEach(f=>document.getElementById('svc-'+f).value='');
+  document.getElementById('svc-activo').checked=true;
+  document.getElementById('modalServicioTitle').textContent='Nuevo servicio';
   document.getElementById('modalServicio').classList.add('open');
 };
 window.closeModalServicio = function() { document.getElementById('modalServicio').classList.remove('open'); };
 
 window.editServicio = async function(id) {
-  const snap = await getDoc(doc(db, 'cms_servicios', id));
+  const snap = await getDoc(doc(db,'cms_servicios',id));
   if (!snap.exists()) return;
   const s = snap.data();
-  document.getElementById('svc-id').value = id;
-  document.getElementById('svc-orden').value = s.orden || '';
-  document.getElementById('svc-icono').value = s.icono || '';
-  document.getElementById('svc-titulo').value = s.titulo || '';
-  document.getElementById('svc-descripcion').value = s.descripcion || '';
-  document.getElementById('svc-tags').value = (s.tags || []).join(', ');
-  document.getElementById('svc-activo').checked = !!s.activo;
-  document.getElementById('modalServicioTitle').textContent = 'Editar servicio';
+  document.getElementById('svc-id').value=id;
+  document.getElementById('svc-orden').value=s.orden||'';
+  document.getElementById('svc-icono').value=s.icono||'';
+  document.getElementById('svc-titulo').value=s.titulo||'';
+  document.getElementById('svc-descripcion').value=s.descripcion||'';
+  document.getElementById('svc-tags').value=(s.tags||[]).join(', ');
+  document.getElementById('svc-activo').checked=!!s.activo;
+  document.getElementById('modalServicioTitle').textContent='Editar servicio';
   document.getElementById('modalServicio').classList.add('open');
 };
 
 window.saveServicio = async function() {
-  const id = document.getElementById('svc-id').value;
-  const data = {
-    orden: parseInt(document.getElementById('svc-orden').value) || 1,
-    icono: document.getElementById('svc-icono').value.trim(),
-    titulo: document.getElementById('svc-titulo').value.trim(),
-    descripcion: document.getElementById('svc-descripcion').value.trim(),
-    tags: document.getElementById('svc-tags').value.split(',').map(t=>t.trim()).filter(Boolean),
-    activo: document.getElementById('svc-activo').checked,
-    updatedAt: serverTimestamp()
-  };
-  if (!data.titulo) { notif('El título es obligatorio', 'error'); return; }
-  try {
-    if (id) { await updateDoc(doc(db, 'cms_servicios', id), data); }
-    else { await addDoc(collection(db, 'cms_servicios'), {...data, createdAt: serverTimestamp()}); }
-    closeModalServicio();
-    notif('Servicio guardado');
-    loadServicios();
-  } catch(err) { notif('Error al guardar', 'error'); console.warn(err); }
+  const id=document.getElementById('svc-id').value;
+  const data={orden:parseInt(document.getElementById('svc-orden').value)||1,icono:document.getElementById('svc-icono').value.trim(),titulo:document.getElementById('svc-titulo').value.trim(),descripcion:document.getElementById('svc-descripcion').value.trim(),tags:document.getElementById('svc-tags').value.split(',').map(t=>t.trim()).filter(Boolean),activo:document.getElementById('svc-activo').checked,updatedAt:serverTimestamp()};
+  if (!data.titulo){window.notif('El título es obligatorio','error');return;}
+  try{if(id){await updateDoc(doc(db,'cms_servicios',id),data);}else{await addDoc(collection(db,'cms_servicios'),{...data,createdAt:serverTimestamp()});}closeModalServicio();window.notif('Servicio guardado');loadServicios();}catch(err){window.notif('Error al guardar','error');}
 };
 
-window.toggleServicio = async function(id, activo) {
-  try {
-    await updateDoc(doc(db, 'cms_servicios', id), {activo, updatedAt: serverTimestamp()});
-    notif(activo ? 'Servicio activado' : 'Servicio desactivado');
-    loadServicios();
-  } catch(err) { notif('Error', 'error'); }
+window.toggleServicio = async function(id,activo) {
+  try{await updateDoc(doc(db,'cms_servicios',id),{activo,updatedAt:serverTimestamp()});window.notif(activo?'Servicio activado':'Servicio desactivado');loadServicios();}catch(err){window.notif('Error','error');}
 };
 
 window.deleteServicio = async function(id) {
-  if (!confirm('¿Eliminar este servicio?')) return;
-  try {
-    await deleteDoc(doc(db, 'cms_servicios', id));
-    notif('Servicio eliminado');
-    loadServicios();
-  } catch(err) { notif('Error', 'error'); }
+  if(!confirm('¿Eliminar este servicio?'))return;
+  try{await deleteDoc(doc(db,'cms_servicios',id));window.notif('Servicio eliminado');loadServicios();}catch(err){window.notif('Error','error');}
 };
 
 // ─── CMS DEALS ────────────────────────────────────────
 async function loadDeals() {
   try {
-    const snap = await getDocs(query(collection(db, 'cms_deals'), orderBy('orden')));
+    const snap = await getDocs(query(collection(db,'cms_deals'),orderBy('orden')));
     const container = document.getElementById('dealsContainer');
-
-    if (snap.empty) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-state-ico">🏷️</div>
-          <div class="empty-state-t">No hay deals en Firestore</div>
-          <div class="empty-state-s" style="margin-bottom:20px">Carga los deals actuales como punto de partida</div>
-          <button class="btn-action primary" onclick="seedDeals()">Cargar deals por defecto →</button>
-        </div>`;
-      return;
-    }
-
-    container.innerHTML = '<div class="cms-grid" id="dealsGrid"></div>';
-    const grid = document.getElementById('dealsGrid');
-    snap.forEach(d => {
-      const deal = d.data();
-      grid.innerHTML += `
-        <div class="cms-item">
-          <div class="cms-item-header">
-            <div class="cms-item-title">
-              <span style="background:${deal.logoColor||'#333'};color:#fff;padding:2px 8px;font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px">${deal.logoLabel||'??'}</span>
-              ${deal.nombre}
-            </div>
-            <span class="status-badge ${deal.activo ? 'status-activo' : 'status-inactivo'}">${deal.activo ? 'Activo' : 'Inactivo'}</span>
-          </div>
-          <div class="cms-item-body">${deal.descripcion || ''}</div>
-          ${deal.codigo ? `<div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--gold);margin-bottom:10px">Código: ${deal.codigo}</div>` : ''}
-          <div style="font-size:11px;color:var(--gray2);margin-bottom:12px;word-break:break-all">${deal.link || ''}</div>
-          <div class="cms-item-actions">
-            <button class="btn-action" onclick="editDeal('${d.id}')">Editar</button>
-            <button class="btn-action ${deal.activo ? 'danger' : 'success'}" onclick="toggleDeal('${d.id}', ${!deal.activo})">${deal.activo ? 'Desactivar' : 'Activar'}</button>
-            <button class="btn-action danger" onclick="deleteDeal('${d.id}')">Eliminar</button>
-          </div>
-        </div>`;
-    });
-  } catch(err) { console.warn(err); }
+    if(snap.empty){container.innerHTML=`<div class="empty-state"><div class="empty-state-ico">🏷️</div><div class="empty-state-t">No hay deals en Firestore</div><div class="empty-state-s" style="margin-bottom:20px">Carga los deals actuales como punto de partida</div><button class="btn-action primary" onclick="seedDeals()">Cargar deals por defecto →</button></div>`;return;}
+    container.innerHTML='<div class="cms-grid" id="dealsGrid"></div>';
+    const grid=document.getElementById('dealsGrid');
+    snap.forEach(d=>{const deal=d.data();grid.innerHTML+=`<div class="cms-item"><div class="cms-item-header"><div class="cms-item-title"><span style="background:${deal.logoColor||'#333'};color:#fff;padding:2px 8px;font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px">${deal.logoLabel||'??'}</span> ${deal.nombre}</div><span class="status-badge ${deal.activo?'status-activo':'status-inactivo'}">${deal.activo?'Activo':'Inactivo'}</span></div><div class="cms-item-body">${deal.descripcion||''}</div>${deal.codigo?`<div style="font-family:'Space Mono',monospace;font-size:13px;color:var(--gold);margin-bottom:10px">Código: ${deal.codigo}</div>`:''}<div style="font-size:11px;color:var(--gray2);margin-bottom:12px;word-break:break-all">${deal.link||''}</div><div class="cms-item-actions"><button class="btn-action" onclick="editDeal('${d.id}')">Editar</button><button class="btn-action ${deal.activo?'danger':'success'}" onclick="toggleDeal('${d.id}',${!deal.activo})">${deal.activo?'Desactivar':'Activar'}</button><button class="btn-action danger" onclick="deleteDeal('${d.id}')">Eliminar</button></div></div>`;});
+  } catch(err){console.warn(err);}
 }
 
-window.seedDeals = async function() {
-  const defaultDeals = [
-    {orden:1, nombre:'Amazon', subtitulo:'Electrónica & Tech', logoLabel:'AMZ', logoColor:'#ff9900', link:'https://amzn.to/4mJGzuv', codigo:'', badge:'Link exclusivo', descripcion:'Los mejores productos tech en Amazon seleccionados por Alexander.', activo:true},
-    {orden:2, nombre:'AliExpress', subtitulo:'Gadgets & Accesorios', logoLabel:'ALI', logoColor:'#ff4d00', link:'https://s.click.aliexpress.com/e/_mqlFTO1', codigo:'', badge:'Link exclusivo', descripcion:'Gadgets y accesorios tech a los mejores precios desde AliExpress.', activo:true},
-    {orden:3, nombre:'Gamsgo', subtitulo:'Software & Juegos', logoLabel:'GSG', logoColor:'#1a1a2e', link:'https://www.gamsgo.com/partner/BZ5R8', codigo:'ALEXAYA', badge:'', descripcion:'Licencias de software y juegos digitales al mejor precio.', activo:true},
-    {orden:4, nombre:'Filmora 15', subtitulo:'Editor de video', logoLabel:'FLM', logoColor:'#00adef', link:'https://filmora.pxf.io/c/6239892/2810901/31971', codigo:'', badge:'Oferta especial', descripcion:'El editor de video favorito de creadores. Obtén Filmora 15 con descuento.', activo:true},
-    {orden:5, nombre:'Parallels Desktop', subtitulo:'Mac & Windows', logoLabel:'PAR', logoColor:'#e84c3d', link:'https://prf.hn/l/OJvRMRm/', codigo:'', badge:'Descuento especial', descripcion:'Corre Windows en tu Mac sin reiniciar. La solución preferida por desarrolladores.', activo:true},
-    {orden:6, nombre:'GoLogin', subtitulo:'Navegador antidetect', logoLabel:'GL', logoColor:'#4f46e5', link:'https://bit.ly/gologin_alexander-aya', codigo:'ALXGO', badge:'', descripcion:'Gestión de múltiples cuentas y perfiles de navegador de forma segura y profesional.', activo:true},
-    {orden:7, nombre:'Keysfan', subtitulo:'Licencias Microsoft', logoLabel:'KSF', logoColor:'#f59e0b', link:'https://www.keysfan.com/new-year-2026-alx.html?ksf=saaa19', codigo:'alx50 / alx62', badge:'', descripcion:'Licencias originales de Windows y Office al mejor precio.', activo:true},
-  ];
-  try {
-    for (const d of defaultDeals) {
-      await addDoc(collection(db, 'cms_deals'), {...d, createdAt: serverTimestamp()});
-    }
-    notif('Deals cargados en Firestore');
-    loadDeals();
-  } catch(err) { notif('Error', 'error'); console.warn(err); }
-};
-
-window.openModalDeal = function() {
-  document.getElementById('deal-id').value = '';
-  ['nombre','subtitulo','logoLabel','logoColor','link','codigo','badge','descripcion','orden'].forEach(f => {
-    document.getElementById('deal-'+f).value = '';
-  });
-  document.getElementById('deal-activo').checked = true;
-  document.getElementById('modalDealTitle').textContent = 'Nuevo deal';
-  document.getElementById('modalDeal').classList.add('open');
-};
-window.closeModalDeal = function() { document.getElementById('modalDeal').classList.remove('open'); };
-
-window.editDeal = async function(id) {
-  const snap = await getDoc(doc(db, 'cms_deals', id));
-  if (!snap.exists()) return;
-  const deal = snap.data();
-  document.getElementById('deal-id').value = id;
-  document.getElementById('deal-nombre').value = deal.nombre || '';
-  document.getElementById('deal-subtitulo').value = deal.subtitulo || '';
-  document.getElementById('deal-logoLabel').value = deal.logoLabel || '';
-  document.getElementById('deal-logoColor').value = deal.logoColor || '';
-  document.getElementById('deal-link').value = deal.link || '';
-  document.getElementById('deal-codigo').value = deal.codigo || '';
-  document.getElementById('deal-badge').value = deal.badge || '';
-  document.getElementById('deal-descripcion').value = deal.descripcion || '';
-  document.getElementById('deal-orden').value = deal.orden || '';
-  document.getElementById('deal-activo').checked = !!deal.activo;
-  document.getElementById('modalDealTitle').textContent = 'Editar deal';
-  document.getElementById('modalDeal').classList.add('open');
-};
-
-window.saveDeal = async function() {
-  const id = document.getElementById('deal-id').value;
-  const data = {
-    nombre: document.getElementById('deal-nombre').value.trim(),
-    subtitulo: document.getElementById('deal-subtitulo').value.trim(),
-    logoLabel: document.getElementById('deal-logoLabel').value.trim(),
-    logoColor: document.getElementById('deal-logoColor').value.trim(),
-    link: document.getElementById('deal-link').value.trim(),
-    codigo: document.getElementById('deal-codigo').value.trim(),
-    badge: document.getElementById('deal-badge').value.trim(),
-    descripcion: document.getElementById('deal-descripcion').value.trim(),
-    orden: parseInt(document.getElementById('deal-orden').value) || 1,
-    activo: document.getElementById('deal-activo').checked,
-    updatedAt: serverTimestamp()
-  };
-  if (!data.nombre || !data.link) { notif('Nombre y link son obligatorios', 'error'); return; }
-  try {
-    if (id) { await updateDoc(doc(db, 'cms_deals', id), data); }
-    else { await addDoc(collection(db, 'cms_deals'), {...data, createdAt: serverTimestamp()}); }
-    closeModalDeal();
-    notif('Deal guardado');
-    loadDeals();
-  } catch(err) { notif('Error al guardar', 'error'); console.warn(err); }
-};
-
-window.toggleDeal = async function(id, activo) {
-  try {
-    await updateDoc(doc(db, 'cms_deals', id), {activo, updatedAt: serverTimestamp()});
-    notif(activo ? 'Deal activado' : 'Deal desactivado');
-    loadDeals();
-  } catch(err) { notif('Error', 'error'); }
-};
-
-window.deleteDeal = async function(id) {
-  if (!confirm('¿Eliminar este deal?')) return;
-  try {
-    await deleteDoc(doc(db, 'cms_deals', id));
-    notif('Deal eliminado');
-    loadDeals();
-  } catch(err) { notif('Error', 'error'); }
-};
+window.seedDeals = async function(){const defaultDeals=[{orden:1,nombre:'Amazon',subtitulo:'Electrónica & Tech',logoLabel:'AMZ',logoColor:'#ff9900',link:'https://amzn.to/4mJGzuv',codigo:'',badge:'Link exclusivo',descripcion:'Los mejores productos tech en Amazon seleccionados por Alexander.',activo:true},{orden:2,nombre:'AliExpress',subtitulo:'Gadgets & Accesorios',logoLabel:'ALI',logoColor:'#ff4d00',link:'https://s.click.aliexpress.com/e/_mqlFTO1',codigo:'',badge:'Link exclusivo',descripcion:'Gadgets y accesorios tech a los mejores precios desde AliExpress.',activo:true},{orden:3,nombre:'Gamsgo',subtitulo:'Software & Juegos',logoLabel:'GSG',logoColor:'#1a1a2e',link:'https://www.gamsgo.com/partner/BZ5R8',codigo:'ALEXAYA',badge:'',descripcion:'Licencias de software y juegos digitales al mejor precio.',activo:true},{orden:4,nombre:'Filmora 15',subtitulo:'Editor de video',logoLabel:'FLM',logoColor:'#00adef',link:'https://filmora.pxf.io/c/6239892/2810901/31971',codigo:'',badge:'Oferta especial',descripcion:'El editor de video favorito de creadores.',activo:true},{orden:5,nombre:'Parallels Desktop',subtitulo:'Mac & Windows',logoLabel:'PAR',logoColor:'#e84c3d',link:'https://prf.hn/l/OJvRMRm/',codigo:'',badge:'Descuento especial',descripcion:'Corre Windows en tu Mac sin reiniciar.',activo:true},{orden:6,nombre:'GoLogin',subtitulo:'Navegador antidetect',logoLabel:'GL',logoColor:'#4f46e5',link:'https://bit.ly/gologin_alexander-aya',codigo:'ALXGO',badge:'',descripcion:'Gestión de múltiples cuentas y perfiles de navegador.',activo:true},{orden:7,nombre:'Keysfan',subtitulo:'Licencias Microsoft',logoLabel:'KSF',logoColor:'#f59e0b',link:'https://www.keysfan.com/new-year-2026-alx.html?ksf=saaa19',codigo:'alx50 / alx62',badge:'',descripcion:'Licencias originales de Windows y Office al mejor precio.',activo:true}];try{for(const d of defaultDeals)await addDoc(collection(db,'cms_deals'),{...d,createdAt:serverTimestamp()});window.notif('Deals cargados en Firestore');loadDeals();}catch(err){window.notif('Error','error');}};
+window.openModalDeal=function(){document.getElementById('deal-id').value='';['nombre','subtitulo','logoLabel','logoColor','link','codigo','badge','descripcion','orden'].forEach(f=>document.getElementById('deal-'+f).value='');document.getElementById('deal-activo').checked=true;document.getElementById('modalDealTitle').textContent='Nuevo deal';document.getElementById('modalDeal').classList.add('open');};
+window.closeModalDeal=function(){document.getElementById('modalDeal').classList.remove('open');};
+window.editDeal=async function(id){const snap=await getDoc(doc(db,'cms_deals',id));if(!snap.exists())return;const deal=snap.data();document.getElementById('deal-id').value=id;document.getElementById('deal-nombre').value=deal.nombre||'';document.getElementById('deal-subtitulo').value=deal.subtitulo||'';document.getElementById('deal-logoLabel').value=deal.logoLabel||'';document.getElementById('deal-logoColor').value=deal.logoColor||'';document.getElementById('deal-link').value=deal.link||'';document.getElementById('deal-codigo').value=deal.codigo||'';document.getElementById('deal-badge').value=deal.badge||'';document.getElementById('deal-descripcion').value=deal.descripcion||'';document.getElementById('deal-orden').value=deal.orden||'';document.getElementById('deal-activo').checked=!!deal.activo;document.getElementById('modalDealTitle').textContent='Editar deal';document.getElementById('modalDeal').classList.add('open');};
+window.saveDeal=async function(){const id=document.getElementById('deal-id').value;const data={nombre:document.getElementById('deal-nombre').value.trim(),subtitulo:document.getElementById('deal-subtitulo').value.trim(),logoLabel:document.getElementById('deal-logoLabel').value.trim(),logoColor:document.getElementById('deal-logoColor').value.trim(),link:document.getElementById('deal-link').value.trim(),codigo:document.getElementById('deal-codigo').value.trim(),badge:document.getElementById('deal-badge').value.trim(),descripcion:document.getElementById('deal-descripcion').value.trim(),orden:parseInt(document.getElementById('deal-orden').value)||1,activo:document.getElementById('deal-activo').checked,updatedAt:serverTimestamp()};if(!data.nombre||!data.link){window.notif('Nombre y link son obligatorios','error');return;}try{if(id){await updateDoc(doc(db,'cms_deals',id),data);}else{await addDoc(collection(db,'cms_deals'),{...data,createdAt:serverTimestamp()});}closeModalDeal();window.notif('Deal guardado');loadDeals();}catch(err){window.notif('Error al guardar','error');}};
+window.toggleDeal=async function(id,activo){try{await updateDoc(doc(db,'cms_deals',id),{activo,updatedAt:serverTimestamp()});window.notif(activo?'Deal activado':'Deal desactivado');loadDeals();}catch(err){window.notif('Error','error');}};
+window.deleteDeal=async function(id){if(!confirm('¿Eliminar este deal?'))return;try{await deleteDoc(doc(db,'cms_deals',id));window.notif('Deal eliminado');loadDeals();}catch(err){window.notif('Error','error');}};
 
 // ─── CMS CLIENTES ─────────────────────────────────────
-async function loadClientes() {
-  try {
-    const snap = await getDocs(query(collection(db, 'cms_clientes'), orderBy('orden')));
-    const container = document.getElementById('clientesContainer');
-
-    if (snap.empty) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-state-ico">🏢</div>
-          <div class="empty-state-t">No hay clientes en Firestore</div>
-          <div class="empty-state-s" style="margin-bottom:20px">Carga los clientes actuales como punto de partida</div>
-          <button class="btn-action primary" onclick="seedClientes()">Cargar clientes por defecto →</button>
-        </div>`;
-      return;
-    }
-
-    container.innerHTML = '<div class="cms-grid" id="clientesGrid"></div>';
-    const grid = document.getElementById('clientesGrid');
-    snap.forEach(d => {
-      const c = d.data();
-      grid.innerHTML += `
-        <div class="cms-item">
-          <div class="cms-item-header">
-            <div class="cms-item-title">${c.nombre}</div>
-            <span class="status-badge ${c.activo ? 'status-activo' : 'status-inactivo'}">${c.activo ? 'Activo' : 'Inactivo'}</span>
-          </div>
-          <div style="font-size:11px;color:var(--gold);font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;margin-bottom:8px">${c.sector || ''}</div>
-          <div class="cms-item-body">${(c.servicios||[]).join(' · ')}</div>
-          <div style="font-size:11px;color:var(--gray2);margin-bottom:12px">${c.url || ''}</div>
-          <div class="cms-item-actions">
-            <button class="btn-action" onclick="editCliente('${d.id}')">Editar</button>
-            <button class="btn-action ${c.activo ? 'danger' : 'success'}" onclick="toggleCliente('${d.id}', ${!c.activo})">${c.activo ? 'Desactivar' : 'Activar'}</button>
-            <button class="btn-action danger" onclick="deleteCliente('${d.id}')">Eliminar</button>
-          </div>
-        </div>`;
-    });
-  } catch(err) { console.warn(err); }
-}
-
-window.seedClientes = async function() {
-  const defaults = [
-    {orden:1, nombre:'Cogasen', sector:'Sector energético · Corporativo', url:'https://cogasen.com.co/', urlLabel:'cogasen.com.co', imagen:'img/cogasen.jpg', servicios:['Administración TI','Gestión de Sistemas','Desarrollo Web','Hosting','Despliegue','Mantenimiento'], activo:true},
-    {orden:2, nombre:'Back to Bag', sector:'Turismo', url:'https://backtobag.co/es', urlLabel:'backtobag.co', imagen:'img/backtobag.jpg', servicios:['Desarrollo Web','Hosting','Backend','Despliegue'], activo:true},
-    {orden:3, nombre:'Abbalab', sector:'Sector de la Salud', url:'https://abbalabsi.com/', urlLabel:'abbalabsi.com', imagen:'img/abbalab.jpg', servicios:['Infraestructura TI','Seguridad','Gestión de Sistemas','Mantenimiento'], activo:true},
-    {orden:4, nombre:'ACB', sector:'Aprovechamiento de residuos Sólidos', url:'https://acbesp.com/', urlLabel:'acbesp.com', imagen:'img/ACB.jpg', servicios:['Infraestructura TI','Gestión de Sistemas','Mantenimiento'], activo:true},
-    {orden:5, nombre:'Security Global', sector:'Seguridad & Tecnología', url:'https://www.securityglobal.com.co/', urlLabel:'securityglobal.com.co', imagen:'img/securityglobal.jpg', servicios:['Gestión de Sistemas','Mantenimiento','Gestión de licencias de software'], activo:true},
-  ];
-  try {
-    for (const c of defaults) {
-      await addDoc(collection(db, 'cms_clientes'), {...c, createdAt: serverTimestamp()});
-    }
-    notif('Clientes cargados en Firestore');
-    loadClientes();
-  } catch(err) { notif('Error', 'error'); console.warn(err); }
-};
-
-window.openModalCliente = function() {
-  document.getElementById('cli-id').value = '';
-  ['nombre','sector','url','urlLabel','imagen','servicios','orden'].forEach(f => document.getElementById('cli-'+f).value = '');
-  document.getElementById('cli-activo').checked = true;
-  document.getElementById('modalClienteTitle').textContent = 'Nuevo cliente';
-  document.getElementById('modalCliente').classList.add('open');
-};
-window.closeModalCliente = function() { document.getElementById('modalCliente').classList.remove('open'); };
-
-window.editCliente = async function(id) {
-  const snap = await getDoc(doc(db, 'cms_clientes', id));
-  if (!snap.exists()) return;
-  const c = snap.data();
-  document.getElementById('cli-id').value = id;
-  document.getElementById('cli-nombre').value = c.nombre || '';
-  document.getElementById('cli-sector').value = c.sector || '';
-  document.getElementById('cli-url').value = c.url || '';
-  document.getElementById('cli-urlLabel').value = c.urlLabel || '';
-  document.getElementById('cli-imagen').value = c.imagen || '';
-  document.getElementById('cli-servicios').value = (c.servicios || []).join(', ');
-  document.getElementById('cli-orden').value = c.orden || '';
-  document.getElementById('cli-activo').checked = !!c.activo;
-  document.getElementById('modalClienteTitle').textContent = 'Editar cliente';
-  document.getElementById('modalCliente').classList.add('open');
-};
-
-window.saveCliente = async function() {
-  const id = document.getElementById('cli-id').value;
-  const data = {
-    nombre: document.getElementById('cli-nombre').value.trim(),
-    sector: document.getElementById('cli-sector').value.trim(),
-    url: document.getElementById('cli-url').value.trim(),
-    urlLabel: document.getElementById('cli-urlLabel').value.trim(),
-    imagen: document.getElementById('cli-imagen').value.trim(),
-    servicios: document.getElementById('cli-servicios').value.split(',').map(s=>s.trim()).filter(Boolean),
-    orden: parseInt(document.getElementById('cli-orden').value) || 1,
-    activo: document.getElementById('cli-activo').checked,
-    updatedAt: serverTimestamp()
-  };
-  if (!data.nombre) { notif('El nombre es obligatorio', 'error'); return; }
-  try {
-    if (id) { await updateDoc(doc(db, 'cms_clientes', id), data); }
-    else { await addDoc(collection(db, 'cms_clientes'), {...data, createdAt: serverTimestamp()}); }
-    closeModalCliente();
-    notif('Cliente guardado');
-    loadClientes();
-  } catch(err) { notif('Error al guardar', 'error'); console.warn(err); }
-};
-
-window.toggleCliente = async function(id, activo) {
-  try {
-    await updateDoc(doc(db, 'cms_clientes', id), {activo, updatedAt: serverTimestamp()});
-    notif(activo ? 'Cliente activado' : 'Cliente desactivado');
-    loadClientes();
-  } catch(err) { notif('Error', 'error'); }
-};
-
-window.deleteCliente = async function(id) {
-  if (!confirm('¿Eliminar este cliente?')) return;
-  try {
-    await deleteDoc(doc(db, 'cms_clientes', id));
-    notif('Cliente eliminado');
-    loadClientes();
-  } catch(err) { notif('Error', 'error'); }
-};
+async function loadClientes(){try{const snap=await getDocs(query(collection(db,'cms_clientes'),orderBy('orden')));const container=document.getElementById('clientesContainer');if(snap.empty){container.innerHTML=`<div class="empty-state"><div class="empty-state-ico">🏢</div><div class="empty-state-t">No hay clientes en Firestore</div><div class="empty-state-s" style="margin-bottom:20px">Carga los clientes actuales como punto de partida</div><button class="btn-action primary" onclick="seedClientes()">Cargar clientes por defecto →</button></div>`;return;}container.innerHTML='<div class="cms-grid" id="clientesGrid"></div>';const grid=document.getElementById('clientesGrid');snap.forEach(d=>{const c=d.data();grid.innerHTML+=`<div class="cms-item"><div class="cms-item-header"><div class="cms-item-title">${c.nombre}</div><span class="status-badge ${c.activo?'status-activo':'status-inactivo'}">${c.activo?'Activo':'Inactivo'}</span></div><div style="font-size:11px;color:var(--gold);font-family:'Barlow Condensed',sans-serif;letter-spacing:2px;margin-bottom:8px">${c.sector||''}</div><div class="cms-item-body">${(c.servicios||[]).join(' · ')}</div><div style="font-size:11px;color:var(--gray2);margin-bottom:12px">${c.url||''}</div><div class="cms-item-actions"><button class="btn-action" onclick="editCliente('${d.id}')">Editar</button><button class="btn-action ${c.activo?'danger':'success'}" onclick="toggleCliente('${d.id}',${!c.activo})">${c.activo?'Desactivar':'Activar'}</button><button class="btn-action danger" onclick="deleteCliente('${d.id}')">Eliminar</button></div></div>`;});}catch(err){console.warn(err);}}
+window.seedClientes=async function(){const defaults=[{orden:1,nombre:'Cogasen',sector:'Sector energético · Corporativo',url:'https://cogasen.com.co/',urlLabel:'cogasen.com.co',imagen:'img/cogasen.jpg',servicios:['Administración TI','Gestión de Sistemas','Desarrollo Web','Hosting','Despliegue','Mantenimiento'],activo:true},{orden:2,nombre:'Back to Bag',sector:'Turismo',url:'https://backtobag.co/es',urlLabel:'backtobag.co',imagen:'img/backtobag.jpg',servicios:['Desarrollo Web','Hosting','Backend','Despliegue'],activo:true},{orden:3,nombre:'Abbalab',sector:'Sector de la Salud',url:'https://abbalabsi.com/',urlLabel:'abbalabsi.com',imagen:'img/abbalab.jpg',servicios:['Infraestructura TI','Seguridad','Gestión de Sistemas','Mantenimiento'],activo:true},{orden:4,nombre:'ACB',sector:'Aprovechamiento de residuos Sólidos',url:'https://acbesp.com/',urlLabel:'acbesp.com',imagen:'img/ACB.jpg',servicios:['Infraestructura TI','Gestión de Sistemas','Mantenimiento'],activo:true},{orden:5,nombre:'Security Global',sector:'Seguridad & Tecnología',url:'https://www.securityglobal.com.co/',urlLabel:'securityglobal.com.co',imagen:'img/securityglobal.jpg',servicios:['Gestión de Sistemas','Mantenimiento','Gestión de licencias de software'],activo:true}];try{for(const c of defaults)await addDoc(collection(db,'cms_clientes'),{...c,createdAt:serverTimestamp()});window.notif('Clientes cargados en Firestore');loadClientes();}catch(err){window.notif('Error','error');}};
+window.openModalCliente=function(){document.getElementById('cli-id').value='';['nombre','sector','url','urlLabel','imagen','servicios','orden'].forEach(f=>document.getElementById('cli-'+f).value='');document.getElementById('cli-activo').checked=true;document.getElementById('modalClienteTitle').textContent='Nuevo cliente';document.getElementById('modalCliente').classList.add('open');};
+window.closeModalCliente=function(){document.getElementById('modalCliente').classList.remove('open');};
+window.editCliente=async function(id){const snap=await getDoc(doc(db,'cms_clientes',id));if(!snap.exists())return;const c=snap.data();document.getElementById('cli-id').value=id;document.getElementById('cli-nombre').value=c.nombre||'';document.getElementById('cli-sector').value=c.sector||'';document.getElementById('cli-url').value=c.url||'';document.getElementById('cli-urlLabel').value=c.urlLabel||'';document.getElementById('cli-imagen').value=c.imagen||'';document.getElementById('cli-servicios').value=(c.servicios||[]).join(', ');document.getElementById('cli-orden').value=c.orden||'';document.getElementById('cli-activo').checked=!!c.activo;document.getElementById('modalClienteTitle').textContent='Editar cliente';document.getElementById('modalCliente').classList.add('open');};
+window.saveCliente=async function(){const id=document.getElementById('cli-id').value;const data={nombre:document.getElementById('cli-nombre').value.trim(),sector:document.getElementById('cli-sector').value.trim(),url:document.getElementById('cli-url').value.trim(),urlLabel:document.getElementById('cli-urlLabel').value.trim(),imagen:document.getElementById('cli-imagen').value.trim(),servicios:document.getElementById('cli-servicios').value.split(',').map(s=>s.trim()).filter(Boolean),orden:parseInt(document.getElementById('cli-orden').value)||1,activo:document.getElementById('cli-activo').checked,updatedAt:serverTimestamp()};if(!data.nombre){window.notif('El nombre es obligatorio','error');return;}try{if(id){await updateDoc(doc(db,'cms_clientes',id),data);}else{await addDoc(collection(db,'cms_clientes'),{...data,createdAt:serverTimestamp()});}closeModalCliente();window.notif('Cliente guardado');loadClientes();}catch(err){window.notif('Error al guardar','error');}};
+window.toggleCliente=async function(id,activo){try{await updateDoc(doc(db,'cms_clientes',id),{activo,updatedAt:serverTimestamp()});window.notif(activo?'Cliente activado':'Cliente desactivado');loadClientes();}catch(err){window.notif('Error','error');}};
+window.deleteCliente=async function(id){if(!confirm('¿Eliminar este cliente?'))return;try{await deleteDoc(doc(db,'cms_clientes',id));window.notif('Cliente eliminado');loadClientes();}catch(err){window.notif('Error','error');}};
 
 // ─── CMS MARCAS ───────────────────────────────────────
-async function loadMarcas() {
-  try {
-    const snap = await getDocs(query(collection(db, 'cms_marcas'), orderBy('orden')));
-    const container = document.getElementById('marcasContainer');
-
-    if (snap.empty) {
-      container.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-state-ico">🎖️</div>
-          <div class="empty-state-t">No hay marcas en Firestore</div>
-          <div class="empty-state-s" style="margin-bottom:20px">Carga las marcas del carrusel como punto de partida</div>
-          <button class="btn-action primary" onclick="seedMarcas()">Cargar marcas por defecto →</button>
-        </div>`;
-      return;
-    }
-
-    container.innerHTML = '<div class="cms-grid" id="marcasGrid"></div>';
-    const grid = document.getElementById('marcasGrid');
-    snap.forEach(d => {
-      const m = d.data();
-      grid.innerHTML += `
-        <div class="cms-item">
-          <div class="cms-item-header">
-            <div class="cms-item-title">${m.nombre}</div>
-            <span class="status-badge ${m.activo ? 'status-activo' : 'status-inactivo'}">${m.activo ? 'Activo' : 'Inactivo'}</span>
-          </div>
-          <div style="font-size:11px;color:var(--gray);margin-bottom:12px">${m.tipo === 'texto' ? '📝 Texto: ' + m.logoTexto : '🖼️ Logo: ' + (m.logoUrl||'').substring(0,50)}</div>
-          <div class="cms-item-actions">
-            <button class="btn-action" onclick="editMarca('${d.id}')">Editar</button>
-            <button class="btn-action ${m.activo ? 'danger' : 'success'}" onclick="toggleMarca('${d.id}', ${!m.activo})">${m.activo ? 'Desactivar' : 'Activar'}</button>
-            <button class="btn-action danger" onclick="deleteMarca('${d.id}')">Eliminar</button>
-          </div>
-        </div>`;
-    });
-  } catch(err) { console.warn(err); }
-}
-
-window.seedMarcas = async function() {
-  const defaults = [
-    {orden:1, nombre:'Amazon', tipo:'logo', logoUrl:'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg', logoTexto:'', color:'', activo:true},
-    {orden:2, nombre:'Motorola', tipo:'logo', logoUrl:'https://upload.wikimedia.org/wikipedia/commons/f/f9/Motorola_new_logo.svg', logoTexto:'', color:'', activo:true},
-    {orden:3, nombre:'Lenovo', tipo:'logo', logoUrl:'https://upload.wikimedia.org/wikipedia/commons/b/b8/Lenovo_logo_2015.svg', logoTexto:'', color:'', activo:true},
-    {orden:4, nombre:'AliExpress', tipo:'logo', logoUrl:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/AliExpress_logo.svg/2560px-AliExpress_logo.svg.png', logoTexto:'', color:'', activo:true},
-    {orden:5, nombre:'Keysfan', tipo:'texto', logoUrl:'', logoTexto:'KEYSFAN', color:'#c4a25a', activo:true},
-    {orden:6, nombre:'GoLogin', tipo:'texto', logoUrl:'', logoTexto:'GoLogin', color:'#4f46e5', activo:true},
-    {orden:7, nombre:'Filmora', tipo:'texto', logoUrl:'', logoTexto:'Filmora', color:'#00adef', activo:true},
-    {orden:8, nombre:'Gamsgo', tipo:'texto', logoUrl:'', logoTexto:'GAMSGO', color:'#1a1a2e', activo:true},
-  ];
-  try {
-    for (const m of defaults) {
-      await addDoc(collection(db, 'cms_marcas'), {...m, createdAt: serverTimestamp()});
-    }
-    notif('Marcas cargadas en Firestore');
-    loadMarcas();
-  } catch(err) { notif('Error', 'error'); console.warn(err); }
-};
-
-window.openModalMarca = function() {
-  document.getElementById('marca-id').value = '';
-  ['nombre','logoUrl','logoTexto','color','orden'].forEach(f => document.getElementById('marca-'+f).value = '');
-  document.getElementById('marca-tipo').value = 'logo';
-  document.getElementById('marca-activo').checked = true;
-  document.getElementById('modalMarcaTitle').textContent = 'Nueva marca';
-  document.getElementById('modalMarca').classList.add('open');
-  updateMarcaTipo();
-};
-window.closeModalMarca = function() { document.getElementById('modalMarca').classList.remove('open'); };
-window.updateMarcaTipo = function() {
-  const tipo = document.getElementById('marca-tipo').value;
-  document.getElementById('marca-logo-group').style.display = tipo === 'logo' ? 'block' : 'none';
-  document.getElementById('marca-texto-group').style.display = tipo === 'texto' ? 'block' : 'none';
-};
-document.getElementById('marca-tipo').addEventListener('change', window.updateMarcaTipo);
-
-window.editMarca = async function(id) {
-  const snap = await getDoc(doc(db, 'cms_marcas', id));
-  if (!snap.exists()) return;
-  const m = snap.data();
-  document.getElementById('marca-id').value = id;
-  document.getElementById('marca-nombre').value = m.nombre || '';
-  document.getElementById('marca-tipo').value = m.tipo || 'logo';
-  document.getElementById('marca-logoUrl').value = m.logoUrl || '';
-  document.getElementById('marca-logoTexto').value = m.logoTexto || '';
-  document.getElementById('marca-color').value = m.color || '';
-  document.getElementById('marca-orden').value = m.orden || '';
-  document.getElementById('marca-activo').checked = !!m.activo;
-  document.getElementById('modalMarcaTitle').textContent = 'Editar marca';
-  document.getElementById('modalMarca').classList.add('open');
-  updateMarcaTipo();
-};
-
-window.saveMarca = async function() {
-  const id = document.getElementById('marca-id').value;
-  const data = {
-    nombre: document.getElementById('marca-nombre').value.trim(),
-    tipo: document.getElementById('marca-tipo').value,
-    logoUrl: document.getElementById('marca-logoUrl').value.trim(),
-    logoTexto: document.getElementById('marca-logoTexto').value.trim(),
-    color: document.getElementById('marca-color').value.trim(),
-    orden: parseInt(document.getElementById('marca-orden').value) || 1,
-    activo: document.getElementById('marca-activo').checked,
-    updatedAt: serverTimestamp()
-  };
-  if (!data.nombre) { notif('El nombre es obligatorio', 'error'); return; }
-  try {
-    if (id) { await updateDoc(doc(db, 'cms_marcas', id), data); }
-    else { await addDoc(collection(db, 'cms_marcas'), {...data, createdAt: serverTimestamp()}); }
-    closeModalMarca();
-    notif('Marca guardada');
-    loadMarcas();
-  } catch(err) { notif('Error al guardar', 'error'); console.warn(err); }
-};
-
-window.toggleMarca = async function(id, activo) {
-  try {
-    await updateDoc(doc(db, 'cms_marcas', id), {activo, updatedAt: serverTimestamp()});
-    notif(activo ? 'Marca activada' : 'Marca desactivada');
-    loadMarcas();
-  } catch(err) { notif('Error', 'error'); }
-};
-
-window.deleteMarca = async function(id) {
-  if (!confirm('¿Eliminar esta marca?')) return;
-  try {
-    await deleteDoc(doc(db, 'cms_marcas', id));
-    notif('Marca eliminada');
-    loadMarcas();
-  } catch(err) { notif('Error', 'error'); }
-};
+async function loadMarcas(){try{const snap=await getDocs(query(collection(db,'cms_marcas'),orderBy('orden')));const container=document.getElementById('marcasContainer');if(snap.empty){container.innerHTML=`<div class="empty-state"><div class="empty-state-ico">🎖️</div><div class="empty-state-t">No hay marcas en Firestore</div><div class="empty-state-s" style="margin-bottom:20px">Carga las marcas del carrusel como punto de partida</div><button class="btn-action primary" onclick="seedMarcas()">Cargar marcas por defecto →</button></div>`;return;}container.innerHTML='<div class="cms-grid" id="marcasGrid"></div>';const grid=document.getElementById('marcasGrid');snap.forEach(d=>{const m=d.data();grid.innerHTML+=`<div class="cms-item"><div class="cms-item-header"><div class="cms-item-title">${m.nombre}</div><span class="status-badge ${m.activo?'status-activo':'status-inactivo'}">${m.activo?'Activo':'Inactivo'}</span></div><div style="font-size:11px;color:var(--gray);margin-bottom:12px">${m.tipo==='texto'?'📝 Texto: '+m.logoTexto:'🖼️ Logo: '+(m.logoUrl||'').substring(0,50)}</div><div class="cms-item-actions"><button class="btn-action" onclick="editMarca('${d.id}')">Editar</button><button class="btn-action ${m.activo?'danger':'success'}" onclick="toggleMarca('${d.id}',${!m.activo})">${m.activo?'Desactivar':'Activar'}</button><button class="btn-action danger" onclick="deleteMarca('${d.id}')">Eliminar</button></div></div>`;});}catch(err){console.warn(err);}}
+window.seedMarcas=async function(){const defaults=[{orden:1,nombre:'Amazon',tipo:'logo',logoUrl:'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg',logoTexto:'',color:'',activo:true},{orden:2,nombre:'Motorola',tipo:'logo',logoUrl:'https://upload.wikimedia.org/wikipedia/commons/f/f9/Motorola_new_logo.svg',logoTexto:'',color:'',activo:true},{orden:3,nombre:'Lenovo',tipo:'logo',logoUrl:'https://upload.wikimedia.org/wikipedia/commons/b/b8/Lenovo_logo_2015.svg',logoTexto:'',color:'',activo:true},{orden:4,nombre:'AliExpress',tipo:'logo',logoUrl:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/AliExpress_logo.svg/2560px-AliExpress_logo.svg.png',logoTexto:'',color:'',activo:true},{orden:5,nombre:'Keysfan',tipo:'texto',logoUrl:'',logoTexto:'KEYSFAN',color:'#c4a25a',activo:true},{orden:6,nombre:'GoLogin',tipo:'texto',logoUrl:'',logoTexto:'GoLogin',color:'#4f46e5',activo:true},{orden:7,nombre:'Filmora',tipo:'texto',logoUrl:'',logoTexto:'Filmora',color:'#00adef',activo:true},{orden:8,nombre:'Gamsgo',tipo:'texto',logoUrl:'',logoTexto:'GAMSGO',color:'#1a1a2e',activo:true}];try{for(const m of defaults)await addDoc(collection(db,'cms_marcas'),{...m,createdAt:serverTimestamp()});window.notif('Marcas cargadas en Firestore');loadMarcas();}catch(err){window.notif('Error','error');}};
+window.openModalMarca=function(){document.getElementById('marca-id').value='';['nombre','logoUrl','logoTexto','color','orden'].forEach(f=>document.getElementById('marca-'+f).value='');document.getElementById('marca-tipo').value='logo';document.getElementById('marca-activo').checked=true;document.getElementById('modalMarcaTitle').textContent='Nueva marca';document.getElementById('modalMarca').classList.add('open');updateMarcaTipo();};
+window.closeModalMarca=function(){document.getElementById('modalMarca').classList.remove('open');};
+window.updateMarcaTipo=function(){const tipo=document.getElementById('marca-tipo').value;document.getElementById('marca-logo-group').style.display=tipo==='logo'?'block':'none';document.getElementById('marca-texto-group').style.display=tipo==='texto'?'block':'none';};
+document.getElementById('marca-tipo').addEventListener('change',window.updateMarcaTipo);
+window.editMarca=async function(id){const snap=await getDoc(doc(db,'cms_marcas',id));if(!snap.exists())return;const m=snap.data();document.getElementById('marca-id').value=id;document.getElementById('marca-nombre').value=m.nombre||'';document.getElementById('marca-tipo').value=m.tipo||'logo';document.getElementById('marca-logoUrl').value=m.logoUrl||'';document.getElementById('marca-logoTexto').value=m.logoTexto||'';document.getElementById('marca-color').value=m.color||'';document.getElementById('marca-orden').value=m.orden||'';document.getElementById('marca-activo').checked=!!m.activo;document.getElementById('modalMarcaTitle').textContent='Editar marca';document.getElementById('modalMarca').classList.add('open');updateMarcaTipo();};
+window.saveMarca=async function(){const id=document.getElementById('marca-id').value;const data={nombre:document.getElementById('marca-nombre').value.trim(),tipo:document.getElementById('marca-tipo').value,logoUrl:document.getElementById('marca-logoUrl').value.trim(),logoTexto:document.getElementById('marca-logoTexto').value.trim(),color:document.getElementById('marca-color').value.trim(),orden:parseInt(document.getElementById('marca-orden').value)||1,activo:document.getElementById('marca-activo').checked,updatedAt:serverTimestamp()};if(!data.nombre){window.notif('El nombre es obligatorio','error');return;}try{if(id){await updateDoc(doc(db,'cms_marcas',id),data);}else{await addDoc(collection(db,'cms_marcas'),{...data,createdAt:serverTimestamp()});}closeModalMarca();window.notif('Marca guardada');loadMarcas();}catch(err){window.notif('Error al guardar','error');}};
+window.toggleMarca=async function(id,activo){try{await updateDoc(doc(db,'cms_marcas',id),{activo,updatedAt:serverTimestamp()});window.notif(activo?'Marca activada':'Marca desactivada');loadMarcas();}catch(err){window.notif('Error','error');}};
+window.deleteMarca=async function(id){if(!confirm('¿Eliminar esta marca?'))return;try{await deleteDoc(doc(db,'cms_marcas',id));window.notif('Marca eliminada');loadMarcas();}catch(err){window.notif('Error','error');}};
 
 // ─── COTIZACIONES ─────────────────────────────────────
-let allCotizaciones = [];
-let filterCotEstado = '';
-
-async function loadCotizaciones() {
-  try {
-    const snap = await getDocs(query(collection(db, 'cotizaciones'), orderBy('fecha', 'desc')));
-    allCotizaciones = [];
-    snap.forEach(d => allCotizaciones.push({id: d.id, ...d.data()}));
-    renderCotizaciones(allCotizaciones);
-  } catch(err) { console.warn(err); }
-}
-
-function renderCotizaciones(list) {
-  const tbody = document.getElementById('cotTableBody');
-  document.getElementById('cotCount').textContent = list.length + ' registros';
-  if (!list.length) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--gray)">Sin resultados</td></tr>`;
-    return;
-  }
-  tbody.innerHTML = list.map(c => {
-    const fecha = c.fecha?.toDate ? c.fecha.toDate().toLocaleDateString('es-CO') : (c.fecha ? c.fecha.substring(0,10) : '—');
-    return `<tr>
-      <td><div style="font-weight:400">${c.nombre || '—'}</div>${c.empresa ? '<div style="font-size:11px;color:var(--gray)">'+c.empresa+'</div>' : ''}</td>
-      <td><a href="mailto:${c.email}" style="color:var(--gold);text-decoration:none">${c.email || '—'}</a></td>
-      <td>${c.servicio || '—'}</td>
-      <td style="color:var(--gray);font-size:12px">${c.presupuesto || '—'}</td>
-      <td><span class="status-badge status-${c.estado || 'nuevo'}">${c.estado || 'nuevo'}</span></td>
-      <td style="color:var(--gray);font-size:12px">${fecha}</td>
-      <td>
-        <div style="display:flex;gap:6px">
-          <button class="btn-action" onclick="verCot('${c.id}')">Ver</button>
-          <button class="btn-action success" onclick="cambiarEstadoCot('${c.id}','contactado')">✓ Cot.</button>
-          <button class="btn-action danger" onclick="eliminarCot('${c.id}')">×</button>
-        </div>
-      </td>
-    </tr>`;
-  }).join('');
-}
-
-window.filtrarCot = function(q) {
-  const filtered = allCotizaciones.filter(c =>
-    (c.nombre||'').toLowerCase().includes(q.toLowerCase()) ||
-    (c.email||'').toLowerCase().includes(q.toLowerCase()) ||
-    (c.empresa||'').toLowerCase().includes(q.toLowerCase())
-  ).filter(c => !filterCotEstado || c.estado === filterCotEstado);
-  renderCotizaciones(filtered);
-};
-
-window.filtrarCotEstado = function(estado) {
-  filterCotEstado = estado;
-  const q = document.querySelector('#page-cotizaciones .search-input').value;
-  window.filtrarCot(q);
-};
-
-window.verCot = function(id) {
-  const c = allCotizaciones.find(x => x.id === id);
-  if (!c) return;
-  const panel = document.getElementById('cotDetail');
-  panel.className = 'detail-panel open';
-  panel.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px">Detalle de cotización</div>
-      <div style="display:flex;gap:8px">
-        <button class="btn-action success" onclick="cambiarEstadoCot('${id}','contactado')">Marcar contactado</button>
-        <button class="btn-action" onclick="cambiarEstadoCot('${id}','cerrado')">Cerrar</button>
-        <button class="btn-action danger" onclick="eliminarCot('${id}')">Eliminar</button>
-        <button class="btn-action" onclick="document.getElementById('cotDetail').className='detail-panel'">✕</button>
-      </div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--border)">
-      ${[
-        ['Nombre', c.nombre], ['Empresa', c.empresa||'—'], ['Email', c.email],
-        ['Servicio', c.servicio], ['Presupuesto', c.presupuesto||'—'], ['Estado', c.estado||'nuevo']
-      ].map(([l,v]) => `<div style="background:var(--bg3);padding:14px 16px;border:none">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px">${l}</div>
-        <div style="font-size:13px;font-weight:300">${v}</div>
-      </div>`).join('')}
-    </div>
-    ${c.descripcion ? `<div style="margin-top:16px;padding:16px;background:var(--bg3)">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px">Descripción del proyecto</div>
-      <div style="font-size:13px;font-weight:300;line-height:1.7;color:var(--gray)">${c.descripcion}</div>
-    </div>` : ''}`;
-};
-
-window.cambiarEstadoCot = async function(id, estado) {
-  try {
-    await updateDoc(doc(db, 'cotizaciones', id), {estado, updatedAt: serverTimestamp()});
-    notif('Estado actualizado a: ' + estado);
-    loadCotizaciones();
-    document.getElementById('cotDetail').className = 'detail-panel';
-  } catch(err) { notif('Error', 'error'); }
-};
-
-window.eliminarCot = async function(id) {
-  if (!confirm('¿Eliminar esta cotización?')) return;
-  try {
-    await deleteDoc(doc(db, 'cotizaciones', id));
-    notif('Cotización eliminada');
-    loadCotizaciones();
-    document.getElementById('cotDetail').className = 'detail-panel';
-  } catch(err) { notif('Error', 'error'); }
-};
+let allCotizaciones=[], filterCotEstado='';
+async function loadCotizaciones(){try{const snap=await getDocs(query(collection(db,'cotizaciones'),orderBy('fecha','desc')));allCotizaciones=[];snap.forEach(d=>allCotizaciones.push({id:d.id,...d.data()}));renderCotizaciones(allCotizaciones);}catch(err){console.warn(err);}}
+function renderCotizaciones(list){const tbody=document.getElementById('cotTableBody');document.getElementById('cotCount').textContent=list.length+' registros';if(!list.length){tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--gray)">Sin resultados</td></tr>`;return;}tbody.innerHTML=list.map(c=>{const fecha=c.fecha?.toDate?c.fecha.toDate().toLocaleDateString('es-CO'):(c.fecha?c.fecha.substring(0,10):'—');return`<tr><td><div style="font-weight:400">${c.nombre||'—'}</div>${c.empresa?'<div style="font-size:11px;color:var(--gray)">'+c.empresa+'</div>':''}</td><td><a href="mailto:${c.email}" style="color:var(--gold);text-decoration:none">${c.email||'—'}</a></td><td>${c.servicio||'—'}</td><td style="color:var(--gray);font-size:12px">${c.presupuesto||'—'}</td><td><span class="status-badge status-${c.estado||'nuevo'}">${c.estado||'nuevo'}</span></td><td style="color:var(--gray);font-size:12px">${fecha}</td><td><div style="display:flex;gap:6px"><button class="btn-action" onclick="verCot('${c.id}')">Ver</button><button class="btn-action success" onclick="cambiarEstadoCot('${c.id}','contactado')">✓ Cot.</button><button class="btn-action danger" onclick="eliminarCot('${c.id}')">×</button></div></td></tr>`;}).join('');}
+window.filtrarCot=function(q){const filtered=allCotizaciones.filter(c=>(c.nombre||'').toLowerCase().includes(q.toLowerCase())||(c.email||'').toLowerCase().includes(q.toLowerCase())||(c.empresa||'').toLowerCase().includes(q.toLowerCase())).filter(c=>!filterCotEstado||c.estado===filterCotEstado);renderCotizaciones(filtered);};
+window.filtrarCotEstado=function(estado){filterCotEstado=estado;const q=document.querySelector('#page-cotizaciones .search-input').value;window.filtrarCot(q);};
+window.verCot=function(id){const c=allCotizaciones.find(x=>x.id===id);if(!c)return;const panel=document.getElementById('cotDetail');panel.className='detail-panel open';panel.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px">Detalle de cotización</div><div style="display:flex;gap:8px"><button class="btn-action success" onclick="cambiarEstadoCot('${id}','contactado')">Marcar contactado</button><button class="btn-action" onclick="cambiarEstadoCot('${id}','cerrado')">Cerrar</button><button class="btn-action danger" onclick="eliminarCot('${id}')">Eliminar</button><button class="btn-action" onclick="document.getElementById('cotDetail').className='detail-panel'">✕</button></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--border)">${[['Nombre',c.nombre],['Empresa',c.empresa||'—'],['Email',c.email],['Servicio',c.servicio],['Presupuesto',c.presupuesto||'—'],['Estado',c.estado||'nuevo']].map(([l,v])=>`<div style="background:var(--bg3);padding:14px 16px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px">${l}</div><div style="font-size:13px;font-weight:300">${v}</div></div>`).join('')}</div>${c.descripcion?`<div style="margin-top:16px;padding:16px;background:var(--bg3)"><div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px">Descripción del proyecto</div><div style="font-size:13px;font-weight:300;line-height:1.7;color:var(--gray)">${c.descripcion}</div></div>`:''}`;};
+window.cambiarEstadoCot=async function(id,estado){try{await updateDoc(doc(db,'cotizaciones',id),{estado,updatedAt:serverTimestamp()});window.notif('Estado actualizado a: '+estado);loadCotizaciones();document.getElementById('cotDetail').className='detail-panel';}catch(err){window.notif('Error','error');}};
+window.eliminarCot=async function(id){if(!confirm('¿Eliminar esta cotización?'))return;try{await deleteDoc(doc(db,'cotizaciones',id));window.notif('Cotización eliminada');loadCotizaciones();document.getElementById('cotDetail').className='detail-panel';}catch(err){window.notif('Error','error');}};
 
 // ─── COLABORACIONES ───────────────────────────────────
-let allColabs = [];
-let filterCollabEstado = '';
+let allColabs=[], filterCollabEstado='';
+async function loadColaboraciones(){try{const snap=await getDocs(query(collection(db,'colaboraciones'),orderBy('fecha','desc')));allColabs=[];snap.forEach(d=>allColabs.push({id:d.id,...d.data()}));renderColabs(allColabs);}catch(err){console.warn(err);}}
+function renderColabs(list){const tbody=document.getElementById('collabTableBody');document.getElementById('collabCount').textContent=list.length+' registros';if(!list.length){tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--gray)">Sin resultados</td></tr>`;return;}tbody.innerHTML=list.map(c=>`<tr><td><div style="font-weight:400">${c.nombre||'—'}</div><div style="font-size:11px;color:var(--gray)">${c.email||''}</div></td><td>${c.marca||'—'}</td><td>${c.tipo||'—'}</td><td style="font-size:11px;color:var(--gray)">${c.canales||'—'}</td><td style="font-size:12px;color:var(--gray)">${c.presupuesto||'—'}</td><td><span class="status-badge status-${c.estado||'nuevo'}">${c.estado||'nuevo'}</span></td><td><div style="display:flex;gap:6px"><button class="btn-action" onclick="verCollab('${c.id}')">Ver</button><button class="btn-action success" onclick="cambiarEstadoCollab('${c.id}','contactado')">✓</button><button class="btn-action danger" onclick="eliminarCollab('${c.id}')">×</button></div></td></tr>`).join('');}
+window.filtrarCollab=function(q){const filtered=allColabs.filter(c=>(c.nombre||'').toLowerCase().includes(q.toLowerCase())||(c.marca||'').toLowerCase().includes(q.toLowerCase())||(c.email||'').toLowerCase().includes(q.toLowerCase())).filter(c=>!filterCollabEstado||c.estado===filterCollabEstado);renderColabs(filtered);};
+window.filtrarCollabEstado=function(estado){filterCollabEstado=estado;const q=document.querySelector('#page-colaboraciones .search-input').value;window.filtrarCollab(q);};
+window.verCollab=function(id){const c=allColabs.find(x=>x.id===id);if(!c)return;const panel=document.getElementById('collabDetail');panel.className='detail-panel open';panel.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px">Detalle de colaboración</div><div style="display:flex;gap:8px"><button class="btn-action success" onclick="cambiarEstadoCollab('${id}','contactado')">Marcar contactado</button><button class="btn-action" onclick="cambiarEstadoCollab('${id}','cerrado')">Cerrar</button><button class="btn-action danger" onclick="eliminarCollab('${id}')">Eliminar</button><button class="btn-action" onclick="document.getElementById('collabDetail').className='detail-panel'">✕</button></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--border)">${[['Nombre',c.nombre],['Marca',c.marca||'—'],['Email',c.email],['Tipo',c.tipo||'—'],['Canales',c.canales||'—'],['Presupuesto',c.presupuesto||'—']].map(([l,v])=>`<div style="background:var(--bg3);padding:14px 16px"><div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px">${l}</div><div style="font-size:13px;font-weight:300">${v}</div></div>`).join('')}</div>${c.descripcion?`<div style="margin-top:16px;padding:16px;background:var(--bg3)"><div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px">Descripción</div><div style="font-size:13px;font-weight:300;line-height:1.7;color:var(--gray)">${c.descripcion}</div></div>`:''}`;};
+window.cambiarEstadoCollab=async function(id,estado){try{await updateDoc(doc(db,'colaboraciones',id),{estado,updatedAt:serverTimestamp()});window.notif('Estado actualizado: '+estado);loadColaboraciones();document.getElementById('collabDetail').className='detail-panel';}catch(err){window.notif('Error','error');}};
+window.eliminarCollab=async function(id){if(!confirm('¿Eliminar esta colaboración?'))return;try{await deleteDoc(doc(db,'colaboraciones',id));window.notif('Colaboración eliminada');loadColaboraciones();document.getElementById('collabDetail').className='detail-panel';}catch(err){window.notif('Error','error');}};
 
-async function loadColaboraciones() {
-  try {
-    const snap = await getDocs(query(collection(db, 'colaboraciones'), orderBy('fecha', 'desc')));
-    allColabs = [];
-    snap.forEach(d => allColabs.push({id: d.id, ...d.data()}));
-    renderColabs(allColabs);
-  } catch(err) { console.warn(err); }
+// Keyboard
+document.getElementById('loginPass').addEventListener('keydown',function(e){if(e.key==='Enter')window.doLogin();});
+</script>
+
+<!-- ══════════════════════════════════════════════
+     MÓDULO CUENTAS DE COBRO (script normal, fuera del module)
+     ══════════════════════════════════════════════ -->
+<script>
+const CC_PRESTADOR = {
+  nombre:  'ALEXANDER AYA APONTE',
+  nit:     '1.032.434.200 – 7',
+  cargo:   'Ingeniero de Sistemas',
+  cc:      '1032434200',
+  dir:     'Carrera 72G # 39-26',
+  tel:     '3219699676 – 3005813',
+  email:   'alexanderayaaponte@gmail.com',
+  regimen: 'SOMOS REGIMEN SIMPLIFICADO - NO RESPONSABLE DE IVA - NO OBLIGADO A FACTURAR ELECTRÓNICAMENTE',
+  garantia:'Garantía correspondiente a la compra o servicio, no se aceptan cambios ni se realizan devoluciones de dinero. Para efectos de garantía se necesita copia de la cuenta de cobro y la mercancía con todos sus accesorios y empaque originales, no cubre daños ocasionados por alto voltaje, golpes, deterioro, virus, mala manipulación o por levantar los sellos de seguridad.',
+  banco:   'TRANSFERENCIA BANCOLOMBIA, CUENTA DE AHORROS N° 04579897533 – NEQUI, DAVIPLATA 3219699676.',
+};
+
+let ccItems = [];
+let ccHistorial = [];
+
+function initCC() {
+  try { ccHistorial = JSON.parse(localStorage.getItem('cc_historial') || '[]'); } catch(e){ ccHistorial=[]; }
+  const hoy = new Date();
+  document.getElementById('cc-fecha').value = hoy.toISOString().split('T')[0];
+  const dias = ['','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve','diez','once','doce','trece','catorce','quince','dieciséis','diecisiete','dieciocho','diecinueve','veinte','veintiuno','veintidós','veintitrés','veinticuatro','veinticinco','veintiséis','veintisiete','veintiocho','veintinueve','treinta','treinta y uno'];
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  document.getElementById('cc-dia-letras').value = dias[hoy.getDate()] + ' (' + hoy.getDate() + ')';
+  document.getElementById('cc-mes-letras').value = meses[hoy.getMonth()];
+  document.getElementById('cc-año-letras').value = hoy.getFullYear();
+  if (!ccItems.length) ccItems = [{desc:'', cant:1, vUnit:0, vTotal:0}];
+  renderCCItems();
+  updateCCPreview();
 }
 
-function renderColabs(list) {
-  const tbody = document.getElementById('collabTableBody');
-  document.getElementById('collabCount').textContent = list.length + ' registros';
-  if (!list.length) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--gray)">Sin resultados</td></tr>`;
-    return;
-  }
-  tbody.innerHTML = list.map(c => {
-    return `<tr>
-      <td><div style="font-weight:400">${c.nombre || '—'}</div><div style="font-size:11px;color:var(--gray)">${c.email||''}</div></td>
-      <td>${c.marca || '—'}</td>
-      <td>${c.tipo || '—'}</td>
-      <td style="font-size:11px;color:var(--gray)">${c.canales || '—'}</td>
-      <td style="font-size:12px;color:var(--gray)">${c.presupuesto || '—'}</td>
-      <td><span class="status-badge status-${c.estado || 'nuevo'}">${c.estado || 'nuevo'}</span></td>
-      <td>
-        <div style="display:flex;gap:6px">
-          <button class="btn-action" onclick="verCollab('${c.id}')">Ver</button>
-          <button class="btn-action success" onclick="cambiarEstadoCollab('${c.id}','contactado')">✓</button>
-          <button class="btn-action danger" onclick="eliminarCollab('${c.id}')">×</button>
-        </div>
-      </td>
-    </tr>`;
-  }).join('');
+window.switchCCTab = function(tab) {
+  document.getElementById('cc-tab-nueva').style.display    = tab==='nueva'    ? 'block':'none';
+  document.getElementById('cc-tab-historial').style.display = tab==='historial'? 'block':'none';
+  document.getElementById('tab-nueva').classList.toggle('active',    tab==='nueva');
+  document.getElementById('tab-historial').classList.toggle('active', tab==='historial');
+  if (tab==='historial') renderCCHistorial(ccHistorial);
+};
+
+window.addCCItem = function() { ccItems.push({desc:'',cant:1,vUnit:0,vTotal:0}); renderCCItems(); updateCCPreview(); };
+window.removeCCItem = function(i) { if(ccItems.length===1)return; ccItems.splice(i,1); renderCCItems(); updateCCPreview(); };
+window.updateCCItemField = function(i,field,val) {
+  ccItems[i][field] = field==='desc' ? val : (parseFloat(val)||0);
+  if(field==='cant'||field==='vUnit') ccItems[i].vTotal = ccItems[i].cant * ccItems[i].vUnit;
+  if(field==='vTotal') ccItems[i].vUnit = ccItems[i].cant ? ccItems[i].vTotal/ccItems[i].cant : 0;
+  if(field==='cant'||field==='vUnit'){ const el=document.getElementById('cc-item-vtotal-'+i); if(el) el.value=ccItems[i].vTotal.toLocaleString('es-CO'); }
+  updateCCPreview();
+};
+
+function renderCCItems() {
+  const cont = document.getElementById('cc-items-container');
+  cont.innerHTML = '';
+  ccItems.forEach((item, i) => {
+    cont.innerHTML += `<div class="cc-item-row">
+      <div class="form-group">${i===0?'<label class="form-label">Descripción</label>':''}<textarea class="form-input" placeholder="Descripción del servicio..." oninput="updateCCItemField(${i},'desc',this.value)">${item.desc}</textarea></div>
+      <div class="form-group">${i===0?'<label class="form-label">Cant.</label>':''}<input class="form-input" type="number" min="1" value="${item.cant}" oninput="updateCCItemField(${i},'cant',this.value)"></div>
+      <div class="form-group">${i===0?'<label class="form-label">V. Unitario $</label>':''}<input class="form-input" type="number" min="0" value="${item.vUnit}" oninput="updateCCItemField(${i},'vUnit',this.value)"></div>
+      <div class="form-group">${i===0?'<label class="form-label">V. Total $</label>':''}<input class="form-input" type="number" id="cc-item-vtotal-${i}" value="${item.vTotal}" oninput="updateCCItemField(${i},'vTotal',this.value)"></div>
+      <div class="form-group">${i===0?'<label class="form-label" style="visibility:hidden">X</label>':''}<button class="btn-action danger" style="padding:6px 8px;font-size:14px" onclick="removeCCItem(${i})" title="Eliminar">×</button></div>
+    </div>`;
+  });
 }
 
-window.filtrarCollab = function(q) {
-  const filtered = allColabs.filter(c =>
-    (c.nombre||'').toLowerCase().includes(q.toLowerCase()) ||
-    (c.marca||'').toLowerCase().includes(q.toLowerCase()) ||
-    (c.email||'').toLowerCase().includes(q.toLowerCase())
-  ).filter(c => !filterCollabEstado || c.estado === filterCollabEstado);
-  renderColabs(filtered);
-};
+function getCCTotal() { return ccItems.reduce((s,it)=>s+(it.vTotal||0),0); }
+function fmtPesos(n) { return '$ '+Math.round(n).toLocaleString('es-CO'); }
 
-window.filtrarCollabEstado = function(estado) {
-  filterCollabEstado = estado;
-  const q = document.querySelector('#page-colaboraciones .search-input').value;
-  window.filtrarCollab(q);
-};
+function numALetras(n) {
+  const u=['','UN','DOS','TRES','CUATRO','CINCO','SEIS','SIETE','OCHO','NUEVE','DIEZ','ONCE','DOCE','TRECE','CATORCE','QUINCE','DIECISÉIS','DIECISIETE','DIECIOCHO','DIECINUEVE'];
+  const d=['','DIEZ','VEINTE','TREINTA','CUARENTA','CINCUENTA','SESENTA','SETENTA','OCHENTA','NOVENTA'];
+  const c=['','CIENTO','DOSCIENTOS','TRESCIENTOS','CUATROCIENTOS','QUINIENTOS','SEISCIENTOS','SETECIENTOS','OCHOCIENTOS','NOVECIENTOS'];
+  n=Math.round(n);
+  if(n===0)return'CERO';if(n===100)return'CIEN';if(n<20)return u[n];
+  if(n<100){const dv=Math.floor(n/10),uv=n%10;return d[dv]+(uv?' Y '+u[uv]:'');}
+  if(n<1000){const cv=Math.floor(n/100),r=n%100;return c[cv]+(r?' '+numALetras(r):'');}
+  if(n<1000000){const m=Math.floor(n/1000),r=n%1000;const miles=m===1?'MIL':numALetras(m)+' MIL';return miles+(r?' '+numALetras(r):'');}
+  const M=Math.floor(n/1000000),r=n%1000000;const millon=M===1?'UN MILLÓN':numALetras(M)+' MILLONES';return millon+(r?' '+numALetras(r):'');
+}
 
-window.verCollab = function(id) {
-  const c = allColabs.find(x => x.id === id);
-  if (!c) return;
-  const panel = document.getElementById('collabDetail');
-  panel.className = 'detail-panel open';
-  panel.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px">Detalle de colaboración</div>
-      <div style="display:flex;gap:8px">
-        <button class="btn-action success" onclick="cambiarEstadoCollab('${id}','contactado')">Marcar contactado</button>
-        <button class="btn-action" onclick="cambiarEstadoCollab('${id}','cerrado')">Cerrar</button>
-        <button class="btn-action danger" onclick="eliminarCollab('${id}')">Eliminar</button>
-        <button class="btn-action" onclick="document.getElementById('collabDetail').className='detail-panel'">✕</button>
-      </div>
+function getCCData() {
+  return {
+    numero:        document.getElementById('cc-numero').value.trim()||'0001',
+    clienteNombre: document.getElementById('cc-cliente-nombre').value.trim(),
+    clienteNit:    document.getElementById('cc-cliente-nit').value.trim(),
+    ciudad:        document.getElementById('cc-ciudad').value.trim()||'BOGOTÁ',
+    fecha:         document.getElementById('cc-fecha').value,
+    concepto:      document.getElementById('cc-concepto').value.trim(),
+    pago:          document.getElementById('cc-pago').value.trim(),
+    diaLetras:     document.getElementById('cc-dia-letras').value.trim(),
+    mesLetras:     document.getElementById('cc-mes-letras').value.trim(),
+    añoLetras:     document.getElementById('cc-año-letras').value.trim(),
+    items:         JSON.parse(JSON.stringify(ccItems)),
+    total:         getCCTotal(),
+  };
+}
+
+function formatFecha(dateStr) {
+  if(!dateStr)return'';
+  const [y,m,d]=dateStr.split('-');
+  const meses=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  return parseInt(d)+' de '+meses[parseInt(m)-1]+' '+y;
+}
+
+window.updateCCPreview = function() {
+  const d=getCCData(); const total=getCCTotal(); const gold='#c4a25a';
+  let itemsHTML=d.items.map((it,i)=>`<tr style="border-bottom:1px solid #eee"><td style="padding:5px 4px;text-align:center;color:#666">${i+1}</td><td style="padding:5px 4px;font-size:8px;color:#333">${it.desc||'—'}</td><td style="padding:5px 4px;text-align:center">${it.cant}</td><td style="padding:5px 4px;text-align:right">${fmtPesos(it.vUnit)}</td><td style="padding:5px 4px;text-align:right;font-weight:bold">${fmtPesos(it.vTotal)}</td></tr>`).join('');
+  document.getElementById('cc-preview').innerHTML=`<div style="font-family:Arial,sans-serif;font-size:9px;color:#111;max-width:400px">
+    <div style="text-align:right;margin-bottom:10px;border-bottom:2px solid ${gold};padding-bottom:6px">
+      <div style="font-size:11px;font-weight:bold">${CC_PRESTADOR.nombre}</div>
+      <div style="color:#555">NIT. ${CC_PRESTADOR.nit}</div>
+      <div style="color:${gold};font-weight:bold;font-size:10px">CUENTA DE COBRO N° <span style="color:#c0392b">${d.numero}</span></div>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--border)">
-      ${[
-        ['Nombre', c.nombre], ['Marca', c.marca||'—'], ['Email', c.email],
-        ['Tipo', c.tipo||'—'], ['Canales', c.canales||'—'], ['Presupuesto', c.presupuesto||'—']
-      ].map(([l,v]) => `<div style="background:var(--bg3);padding:14px 16px">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:4px">${l}</div>
-        <div style="font-size:13px;font-weight:300">${v}</div>
-      </div>`).join('')}
-    </div>
-    ${c.descripcion ? `<div style="margin-top:16px;padding:16px;background:var(--bg3)">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:9px;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px">Descripción</div>
-      <div style="font-size:13px;font-weight:300;line-height:1.7;color:var(--gray)">${c.descripcion}</div>
-    </div>` : ''}`;
+    <div style="text-align:center;font-size:7px;font-weight:bold;border:1px solid #ccc;padding:4px;margin-bottom:6px;background:#f9f9f9">${CC_PRESTADOR.regimen}</div>
+    <div style="font-size:6.5px;color:#666;margin-bottom:6px">${CC_PRESTADOR.garantia}</div>
+    <div style="font-size:7px;color:#555;margin-bottom:6px;border-bottom:1px solid #eee;padding-bottom:4px">Dir. ${CC_PRESTADOR.dir} · TEL: ${CC_PRESTADOR.tel} · ${CC_PRESTADOR.email}</div>
+    <div style="font-weight:bold;margin-bottom:3px">${d.ciudad} ${formatFecha(d.fecha)}</div>
+    <div style="font-weight:bold;font-size:10px;margin-bottom:2px">${d.clienteNombre||'—'}</div>
+    <div style="color:#555;margin-bottom:2px">NIT. ${d.clienteNit||'—'}</div>
+    <div style="color:${gold};font-weight:bold;margin-bottom:6px">${d.concepto}</div>
+    <div style="font-size:7px;margin-bottom:6px"><b>FORMA DE PAGO:</b> ${d.pago}</div>
+    <div style="font-size:7.5px;font-weight:bold;margin-bottom:8px;text-transform:uppercase">SE REALIZA COBRO DE LA SUMA DE ${numALetras(total)} PESOS M/CTE.</div>
+    <table style="width:100%;border-collapse:collapse;font-size:8px;margin-bottom:6px">
+      <thead><tr style="background:${gold};color:#fff"><th style="padding:4px;text-align:center;width:18px">ITEM</th><th style="padding:4px;text-align:left">PRODUCTO/SERVICIO</th><th style="padding:4px;text-align:center;width:25px">CANT.</th><th style="padding:4px;text-align:right;width:60px">V.UNID</th><th style="padding:4px;text-align:right;width:60px">V.TOTAL</th></tr></thead>
+      <tbody>${itemsHTML}</tbody>
+      <tfoot><tr style="background:#f5f5f5;font-weight:bold"><td colspan="4" style="padding:5px 4px;text-align:right">TOTAL</td><td style="padding:5px 4px;text-align:right;color:${gold};font-size:10px">${fmtPesos(total)}</td></tr></tfoot>
+    </table>
+  </div>`;
 };
 
-window.cambiarEstadoCollab = async function(id, estado) {
-  try {
-    await updateDoc(doc(db, 'colaboraciones', id), {estado, updatedAt: serverTimestamp()});
-    notif('Estado actualizado: ' + estado);
-    loadColaboraciones();
-    document.getElementById('collabDetail').className = 'detail-panel';
-  } catch(err) { notif('Error', 'error'); }
+window.generarPDF = function() {
+  if (typeof window.jspdf === 'undefined') { alert('La librería jsPDF no está cargada. Verifica la conexión a internet.'); return; }
+  const { jsPDF } = window.jspdf;
+  const d=getCCData(); const total=getCCTotal();
+  const gold=[196,162,90], negro=[17,17,17], gris=[100,100,100];
+  const doc=new jsPDF({unit:'mm',format:'letter',orientation:'portrait'});
+  const W=doc.internal.pageSize.getWidth(); const M=18;
+
+  // ── P1 Encabezado ──
+  doc.setDrawColor(...gold); doc.setLineWidth(0.6);
+  doc.triangle(M,8,M+10,8,M+5,16,'S');
+  doc.setLineWidth(0.3); doc.line(M+1.5,13,M+8.5,13);
+  doc.setFont('helvetica','bold'); doc.setFontSize(13); doc.setTextColor(...negro);
+  doc.text(CC_PRESTADOR.nombre,W-M,10,{align:'right'});
+  doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(...gris);
+  doc.text('NIT. '+CC_PRESTADOR.nit,W-M,14.5,{align:'right'});
+  doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(...gold);
+  doc.text('CUENTA DE COBRO N° ',W-M-30,19,{align:'right'});
+  doc.setTextColor(192,57,43); doc.text(d.numero,W-M,19,{align:'right'});
+  doc.setDrawColor(...gold); doc.setLineWidth(0.8); doc.line(M,22,W-M,22);
+
+  let y=27;
+  doc.setFillColor(245,245,245); doc.rect(M,y,W-2*M,6,'F');
+  doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(...negro);
+  doc.text(CC_PRESTADOR.regimen,W/2,y+3.8,{align:'center',maxWidth:W-2*M-4});
+  y+=8;
+  doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(...gris);
+  const gL=doc.splitTextToSize(CC_PRESTADOR.garantia,W-2*M);
+  doc.text(gL,M,y); y+=gL.length*3.2;
+  doc.setDrawColor(220,220,220); doc.setLineWidth(0.2); doc.line(M,y,W-M,y); y+=4;
+  doc.setFontSize(7); doc.text(`Dirección. ${CC_PRESTADOR.dir}   TEL: ${CC_PRESTADOR.tel}   E-MAIL: ${CC_PRESTADOR.email}`,M,y);
+
+  y+=7; doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...negro);
+  doc.text(`${d.ciudad} ${formatFecha(d.fecha).toUpperCase()}`,M,y);
+  y+=6; doc.setFontSize(10); doc.text(d.clienteNombre||'—',M,y);
+  y+=5; doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...gris);
+  doc.text('NIT. '+(d.clienteNit||'—'),M,y);
+  y+=6; doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...gold);
+  doc.text(d.concepto,M,y);
+  y+=6; doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(...negro);
+  doc.text('FORMA DE PAGO:',M,y);
+  doc.setFont('helvetica','normal');
+  const pL=doc.splitTextToSize(d.pago,W-2*M-35); doc.text(pL,M+30,y); y+=pL.length*3.8+2;
+  doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(...negro);
+  const tLet=`SE REALIZA COBRO DE LA SUMA DE ${numALetras(total)} PESOS M/CTE.`;
+  const tL=doc.splitTextToSize(tLet,W-2*M); doc.text(tL,M,y); y+=tL.length*4+4;
+
+  doc.autoTable({
+    startY:y, margin:{left:M,right:M},
+    head:[['ITEM','PRODUCTO/SERVICIO','CANT.','V.UNID','V.TOTAL']],
+    body:d.items.map((it,idx)=>[String(idx+1),it.desc||'',String(it.cant),fmtPesos(it.vUnit),fmtPesos(it.vTotal)]),
+    foot:[['','','','TOTAL',fmtPesos(total)]],
+    headStyles:{fillColor:gold,textColor:[255,255,255],fontStyle:'bold',fontSize:8,halign:'center'},
+    bodyStyles:{fontSize:8,textColor:negro},
+    footStyles:{fillColor:[240,240,240],fontStyle:'bold',fontSize:9,textColor:gold},
+    columnStyles:{0:{halign:'center',cellWidth:12},1:{halign:'left',cellWidth:'auto'},2:{halign:'center',cellWidth:15},3:{halign:'right',cellWidth:32},4:{halign:'right',cellWidth:32}},
+    alternateRowStyles:{fillColor:[250,250,250]},theme:'grid',
+  });
+
+  // ── P2: Art. 388 ──
+  doc.addPage();
+  const W2=doc.internal.pageSize.getWidth();
+  doc.setDrawColor(...gold); doc.setLineWidth(0.6);
+  doc.triangle(M,8,M+10,8,M+5,16,'S'); doc.setLineWidth(0.3); doc.line(M+1.5,13,M+8.5,13);
+  doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...negro);
+  doc.text(CC_PRESTADOR.nombre,W2-M,10,{align:'right'});
+  doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...gris);
+  doc.text('NIT. '+CC_PRESTADOR.nit,W2-M,14.5,{align:'right'});
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...gold);
+  doc.text('CUENTA DE COBRO N° ',W2-M-28,19,{align:'right'});
+  doc.setTextColor(192,57,43); doc.text(d.numero,W2-M,19,{align:'right'});
+  doc.setDrawColor(...gold); doc.setLineWidth(0.8); doc.line(M,22,W2-M,22);
+
+  let y2=32;
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...negro);
+  doc.text('INFORME DE NO CONTRATAR O VINCULAR DOS O MAS TRABAJADORES ASOCIADOS A LA ACTIVIDAD',M,y2);
+  y2+=12;
+  const informe=`Yo, Alexander Aya Aponte, identificado con el número de cédula No. 1032434200 de Bogotá, informo para efectos de lo establecido en el artículo 388 del Estatuto Tributario que en la actualidad NO he contratado ni vinculado dos o más personas para la prestación del servicio contratado en su empresa.`;
+  doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...negro);
+  const iL=doc.splitTextToSize(informe,W2-2*M); doc.text(iL,M,y2); y2+=iL.length*5.5+10;
+  doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+  doc.text(`Como constancia se firma a los (${d.diaLetras}) días del mes de `,M,y2);
+  doc.setFont('helvetica','bold');
+  const preT=`Como constancia se firma a los (${d.diaLetras}) días del mes de `;
+  const preLen=doc.getTextWidth(preT);
+  doc.text(d.mesLetras,M+preLen,y2);
+  doc.setLineWidth(0.3); doc.line(M+preLen,y2+0.8,M+preLen+doc.getTextWidth(d.mesLetras),y2+0.8);
+  doc.setFont('helvetica','normal'); doc.text(` de ${d.añoLetras}.`,M+preLen+doc.getTextWidth(d.mesLetras),y2);
+  y2+=40; doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...negro);
+  doc.text('Atentamente,',M,y2);
+  y2+=28; doc.setDrawColor(...negro); doc.setLineWidth(0.3); doc.line(M,y2,M+55,y2);
+  y2+=5; doc.setFont('helvetica','bold'); doc.text(`C.C.${CC_PRESTADOR.cc}`,M,y2);
+  y2+=5; doc.setFont('helvetica','normal'); doc.setTextColor(...gris); doc.text(CC_PRESTADOR.cargo,M,y2);
+  const pH=doc.internal.pageSize.getHeight();
+  doc.setDrawColor(220,220,220); doc.setLineWidth(0.2); doc.line(M,pH-22,W2-M,pH-22);
+  doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(...negro);
+  doc.text(CC_PRESTADOR.regimen,M,pH-17);
+  doc.setFont('helvetica','normal');
+  const garL=doc.splitTextToSize(CC_PRESTADOR.garantia,W2-2*M); doc.text(garL,M,pH-13);
+  doc.setTextColor(...gold);
+  doc.text(`Dirección. ${CC_PRESTADOR.dir}   TEL: ${CC_PRESTADOR.tel}   E-MAIL: ${CC_PRESTADOR.email}`,M,pH-5);
+
+  const filename=`CC_${d.numero}_${(d.clienteNombre||'cliente').replace(/\s+/g,'_')}_${(d.fecha||'').replace(/-/g,'')}.pdf`;
+  doc.save(filename);
 };
 
-window.eliminarCollab = async function(id) {
-  if (!confirm('¿Eliminar esta colaboración?')) return;
-  try {
-    await deleteDoc(doc(db, 'colaboraciones', id));
-    notif('Colaboración eliminada');
-    loadColaboraciones();
-    document.getElementById('collabDetail').className = 'detail-panel';
-  } catch(err) { notif('Error', 'error'); }
+window.guardarCC = async function() {
+  const d=getCCData();
+  if(!d.clienteNombre||!d.numero){window.notif?window.notif('Completa al menos cliente y número','error'):alert('Completa al menos cliente y número');return;}
+  const registro={id:Date.now(),numero:d.numero,cliente:d.clienteNombre,nit:d.clienteNit,concepto:d.concepto,total:getCCTotal(),fecha:d.fecha,data:d,createdAt:new Date().toISOString()};
+  try{if(window._db&&window._addDoc&&window._collection){await window._addDoc(window._collection(window._db,'cuentas_cobro'),{...registro,data:JSON.stringify(registro.data)});}}catch(e){}
+  ccHistorial.unshift(registro);
+  localStorage.setItem('cc_historial',JSON.stringify(ccHistorial.slice(0,100)));
+  window.notif?window.notif('Cuenta de cobro guardada en historial'):alert('¡Guardada!');
 };
 
-// ─── KEYBOARD SHORTCUTS ───────────────────────────────
-document.getElementById('loginPass').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') window.doLogin();
-});
+function renderCCHistorial(list) {
+  document.getElementById('ccHistorialCount').textContent=list.length+' registros';
+  const tbody=document.getElementById('cc-historial-body');
+  if(!list.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--gray)">Sin cuentas guardadas aún</td></tr>';return;}
+  tbody.innerHTML=list.map(r=>`<tr>
+    <td style="font-family:'Space Mono',monospace;color:var(--gold)">${r.numero}</td>
+    <td>${r.cliente}<br><span style="font-size:11px;color:var(--gray)">${r.nit||''}</span></td>
+    <td>${r.concepto||'—'}</td>
+    <td style="font-weight:500;color:var(--white)">${fmtPesos(r.total)}</td>
+    <td style="color:var(--gray);font-size:12px">${r.fecha||''}</td>
+    <td><div style="display:flex;gap:6px">
+      <button class="btn-action" onclick="cargarCC(${r.id})">Cargar</button>
+      <button class="btn-action primary" onclick="reimprimirCC(${r.id})">PDF</button>
+      <button class="btn-action danger" onclick="eliminarCC(${r.id})">×</button>
+    </div></td>
+  </tr>`).join('');
+}
 
+window.filtrarCC = function(q){const f=ccHistorial.filter(r=>(r.cliente||'').toLowerCase().includes(q.toLowerCase())||(r.numero||'').includes(q)||(r.concepto||'').toLowerCase().includes(q.toLowerCase()));renderCCHistorial(f);};
+window.cargarCC = function(id){const r=ccHistorial.find(x=>x.id===id);if(!r||!r.data)return;const d=r.data;document.getElementById('cc-numero').value=d.numero||'';document.getElementById('cc-cliente-nombre').value=d.clienteNombre||'';document.getElementById('cc-cliente-nit').value=d.clienteNit||'';document.getElementById('cc-ciudad').value=d.ciudad||'BOGOTÁ';document.getElementById('cc-fecha').value=d.fecha||'';document.getElementById('cc-concepto').value=d.concepto||'';document.getElementById('cc-pago').value=d.pago||CC_PRESTADOR.banco;document.getElementById('cc-dia-letras').value=d.diaLetras||'';document.getElementById('cc-mes-letras').value=d.mesLetras||'';document.getElementById('cc-año-letras').value=d.añoLetras||'';ccItems=d.items||[{desc:'',cant:1,vUnit:0,vTotal:0}];renderCCItems();updateCCPreview();switchCCTab('nueva');};
+window.reimprimirCC = function(id){const r=ccHistorial.find(x=>x.id===id);if(!r)return;cargarCC(id);setTimeout(generarPDF,200);};
+window.eliminarCC = function(id){if(!confirm('¿Eliminar esta cuenta del historial?'))return;ccHistorial=ccHistorial.filter(x=>x.id!==id);localStorage.setItem('cc_historial',JSON.stringify(ccHistorial));renderCCHistorial(ccHistorial);window.notif&&window.notif('Cuenta eliminada del historial');};
+window.limpiarCC = function(){if(!confirm('¿Limpiar el formulario?'))return;document.getElementById('cc-numero').value='';document.getElementById('cc-cliente-nombre').value='';document.getElementById('cc-cliente-nit').value='';document.getElementById('cc-concepto').value='';ccItems=[{desc:'',cant:1,vUnit:0,vTotal:0}];renderCCItems();updateCCPreview();};
 </script>
 </body>
 </html>

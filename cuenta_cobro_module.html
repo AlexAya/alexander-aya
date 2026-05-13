@@ -1,0 +1,819 @@
+<!-- ============================================================
+     MÓDULO: CUENTA DE COBRO
+     Insertar en admin.html en dos partes:
+     1. El <script> del CDN: justo antes del </head>
+     2. El nav-item: dentro de .sidebar-nav (sección "CMS — Landing")
+     3. La página: dentro de .main-content, antes del cierre </div>
+     4. Los modales y lógica JS: al final del body, antes de </body>
+     ============================================================ -->
+
+<!-- ══════════════════════════════════════════════
+     PARTE 1 — SCRIPTS CDN (pegar antes de </head>)
+     ══════════════════════════════════════════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+
+<!-- ══════════════════════════════════════════════
+     PARTE 2 — NAV ITEM (pegar en el sidebar, sección "Formularios")
+     ══════════════════════════════════════════════ -->
+<div class="nav-item" onclick="goPage('cuentas-cobro')">
+  <span class="nav-ico">🧾</span> Cuentas de Cobro
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     PARTE 3 — PÁGINA (pegar dentro de .main-content)
+     ══════════════════════════════════════════════ -->
+<div class="page" id="page-cuentas-cobro">
+  <div class="page-header">
+    <div class="page-title">Cuentas de Cobro</div>
+    <div class="page-sub">Genera, guarda y descarga cuentas de cobro en PDF — formato Régimen Simplificado, Bogotá Colombia</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" id="tab-nueva" onclick="switchCCTab('nueva')">Nueva cuenta</div>
+    <div class="tab" id="tab-historial" onclick="switchCCTab('historial')">Historial</div>
+  </div>
+
+  <!-- TAB: NUEVA CUENTA -->
+  <div id="cc-tab-nueva">
+
+    <!-- PREVIEW en tiempo real -->
+    <div style="display:grid;grid-template-columns:1fr 420px;gap:20px;align-items:start">
+
+      <!-- FORMULARIO -->
+      <div>
+        <div class="form-section">
+          <div class="form-section-title">📋 Datos del cliente / destinatario</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Nombre o razón social</label>
+              <input class="form-input" type="text" id="cc-cliente-nombre" placeholder="COGASEN S.A.S." oninput="updateCCPreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">NIT / CC del cliente</label>
+              <input class="form-input" type="text" id="cc-cliente-nit" placeholder="900.321.520-0" oninput="updateCCPreview()">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Ciudad</label>
+              <input class="form-input" type="text" id="cc-ciudad" value="BOGOTÁ" oninput="updateCCPreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Fecha</label>
+              <input class="form-input" type="date" id="cc-fecha" oninput="updateCCPreview()">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">🔢 Número y concepto general</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">N° de cuenta</label>
+              <input class="form-input" type="text" id="cc-numero" placeholder="0057" oninput="updateCCPreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Concepto general (encabezado)</label>
+              <input class="form-input" type="text" id="cc-concepto" placeholder="SOPORTE TÉCNICO" oninput="updateCCPreview()">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Forma de pago</label>
+            <input class="form-input" type="text" id="cc-pago" value="TRANSFERENCIA BANCOLOMBIA, CUENTA DE AHORROS N° 04579897533 – NEQUI, DAVIPLATA 3219699676." oninput="updateCCPreview()">
+          </div>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">📦 Ítems / Servicios</div>
+          <div id="cc-items-container"></div>
+          <button class="btn-action" style="margin-top:8px" onclick="addCCItem()">+ Agregar ítem</button>
+        </div>
+
+        <div class="form-section">
+          <div class="form-section-title">📄 Informe Art. 388 (página 2)</div>
+          <div style="padding:12px;background:var(--bg3);border:1px solid var(--border);font-size:12px;color:var(--gray);line-height:1.7;margin-bottom:16px">
+            ℹ️ Esta página se genera automáticamente con los datos de Alexander Aya Aponte (C.C. 1032434200) declarando que no ha contratado ni vinculado dos o más trabajadores. Se incluye siempre en el PDF.
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Día del mes (letras)</label>
+              <input class="form-input" type="text" id="cc-dia-letras" placeholder="trece (13)" oninput="updateCCPreview()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mes</label>
+              <input class="form-input" type="text" id="cc-mes-letras" placeholder="mayo" oninput="updateCCPreview()">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Año</label>
+            <input class="form-input" type="text" id="cc-año-letras" placeholder="2026" oninput="updateCCPreview()">
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;margin-top:4px">
+          <button class="btn-action primary" onclick="generarPDF()">⬇ Generar y descargar PDF</button>
+          <button class="btn-action success" onclick="guardarCC()">💾 Guardar en historial</button>
+          <button class="btn-action" onclick="limpiarCC()">↺ Limpiar</button>
+        </div>
+      </div>
+
+      <!-- PREVIEW -->
+      <div style="position:sticky;top:20px">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:10px;color:var(--gray);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px">Vista previa</div>
+        <div id="cc-preview" style="background:#fff;color:#111;padding:20px;font-family:Arial,sans-serif;font-size:9px;line-height:1.5;border:1px solid var(--border2);min-height:400px;max-height:600px;overflow-y:auto"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TAB: HISTORIAL -->
+  <div id="cc-tab-historial" style="display:none">
+    <div class="filter-row">
+      <input class="search-input" type="text" placeholder="Buscar por cliente, número..." oninput="filtrarCC(this.value)">
+      <span id="ccHistorialCount" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--gray);letter-spacing:2px;text-transform:uppercase;margin-left:auto"></span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>N°</th>
+            <th>Cliente</th>
+            <th>Concepto</th>
+            <th>Total</th>
+            <th>Fecha</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="cc-historial-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<!-- /page-cuentas-cobro -->
+
+
+<!-- ══════════════════════════════════════════════
+     PARTE 4 — ESTILOS ADICIONALES (pegar en el <style> existente)
+     ══════════════════════════════════════════════ -->
+<style id="cc-extra-styles">
+.cc-item-row{display:grid;grid-template-columns:1fr 100px 120px 120px 28px;gap:8px;margin-bottom:10px;align-items:start}
+.cc-item-row .form-input{font-size:12px}
+.cc-item-row textarea.form-input{min-height:70px;resize:vertical}
+@media(max-width:900px){
+  #page-cuentas-cobro [style*="grid-template-columns:1fr 420px"]{grid-template-columns:1fr!important}
+  #cc-preview{display:none}
+  .cc-item-row{grid-template-columns:1fr 1fr 1fr 1fr 28px}
+}
+</style>
+
+
+<!-- ══════════════════════════════════════════════
+     PARTE 5 — JAVASCRIPT (pegar dentro del <script type="module"> existente,
+     al final, justo antes del cierre de la función/módulo)
+     ══════════════════════════════════════════════ -->
+<script>
+// ────────────────────────────────────────────────────────────
+//  MÓDULO CUENTAS DE COBRO
+// ────────────────────────────────────────────────────────────
+
+// Datos fijos del prestador (Alexander Aya Aponte)
+const CC_PRESTADOR = {
+  nombre:    'ALEXANDER AYA APONTE',
+  nit:       '1.032.434.200 – 7',
+  cargo:     'Ingeniero de Sistemas',
+  cc:        '1032434200',
+  dir:       'Carrera 72G # 39-26',
+  tel:       '3219699676 – 3005813',
+  email:     'alexanderayaaponte@gmail.com',
+  regimen:   'SOMOS REGIMEN SIMPLIFICADO - NO RESPONSABLE DE IVA - NO OBLIGADO A FACTURAR ELECTRÓNICAMENTE',
+  garantia:  'Garantía correspondiente a la compra o servicio, no se aceptan cambios ni se realizan devoluciones de dinero. Para efectos de garantía se necesita copia de la cuenta de cobro y la mercancía con todos sus accesorios y empaque originales, no cubre daños ocasionados por alto voltaje, golpes, deterioro, virus, mala manipulación o por levantar los sellos de seguridad.',
+  banco:     'TRANSFERENCIA BANCOLOMBIA, CUENTA DE AHORROS N° 04579897533 – NEQUI, DAVIPLATA 3219699676.',
+  gold:      '#c4a25a',
+};
+
+let ccItems = [];           // [{desc, cant, vUnit, vTotal}]
+let ccHistorial = [];       // guardado en localStorage
+let ccEditId = null;
+
+// ── Inicialización ────────────────────────────────────────────
+function initCC() {
+  // Cargar historial de localStorage
+  try { ccHistorial = JSON.parse(localStorage.getItem('cc_historial') || '[]'); } catch(e){ ccHistorial=[]; }
+  
+  // Fecha de hoy
+  const hoy = new Date();
+  document.getElementById('cc-fecha').value = hoy.toISOString().split('T')[0];
+  
+  // Día y mes en letras
+  const dias = ['','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve','diez',
+    'once','doce','trece','catorce','quince','dieciséis','diecisiete','dieciocho','diecinueve','veinte',
+    'veintiuno','veintidós','veintitrés','veinticuatro','veinticinco','veintiséis','veintisiete',
+    'veintiocho','veintinueve','treinta','treinta y uno'];
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  document.getElementById('cc-dia-letras').value = dias[hoy.getDate()] + ' (' + hoy.getDate() + ')';
+  document.getElementById('cc-mes-letras').value = meses[hoy.getMonth()];
+  document.getElementById('cc-año-letras').value = hoy.getFullYear();
+  
+  // Ítem inicial
+  if (!ccItems.length) ccItems = [{desc:'', cant:1, vUnit:0, vTotal:0}];
+  renderCCItems();
+  updateCCPreview();
+}
+
+// ── Tab switch ────────────────────────────────────────────────
+window.switchCCTab = function(tab) {
+  document.getElementById('cc-tab-nueva').style.display    = tab === 'nueva'    ? 'block' : 'none';
+  document.getElementById('cc-tab-historial').style.display = tab === 'historial' ? 'block' : 'none';
+  document.getElementById('tab-nueva').classList.toggle('active',    tab === 'nueva');
+  document.getElementById('tab-historial').classList.toggle('active', tab === 'historial');
+  if (tab === 'historial') renderCCHistorial(ccHistorial);
+};
+
+// ── Items ─────────────────────────────────────────────────────
+window.addCCItem = function() {
+  ccItems.push({desc:'', cant:1, vUnit:0, vTotal:0});
+  renderCCItems();
+  updateCCPreview();
+};
+
+window.removeCCItem = function(i) {
+  if (ccItems.length === 1) return;
+  ccItems.splice(i, 1);
+  renderCCItems();
+  updateCCPreview();
+};
+
+window.updateCCItemField = function(i, field, val) {
+  ccItems[i][field] = field === 'desc' ? val : (parseFloat(val) || 0);
+  if (field === 'cant' || field === 'vUnit') {
+    ccItems[i].vTotal = ccItems[i].cant * ccItems[i].vUnit;
+  }
+  if (field === 'vTotal') {
+    ccItems[i].vUnit = ccItems[i].cant ? ccItems[i].vTotal / ccItems[i].cant : 0;
+  }
+  // Actualizar el campo vTotal en el input si cambió cant o vUnit
+  if (field === 'cant' || field === 'vUnit') {
+    const el = document.getElementById('cc-item-vtotal-' + i);
+    if (el) el.value = ccItems[i].vTotal.toLocaleString('es-CO');
+  }
+  updateCCPreview();
+};
+
+function renderCCItems() {
+  const cont = document.getElementById('cc-items-container');
+  cont.innerHTML = '';
+  ccItems.forEach((item, i) => {
+    cont.innerHTML += `
+      <div class="cc-item-row" id="cc-item-row-${i}">
+        <div class="form-group">
+          ${i === 0 ? '<label class="form-label">Descripción</label>' : ''}
+          <textarea class="form-input" placeholder="Descripción del servicio..." oninput="updateCCItemField(${i},'desc',this.value)">${item.desc}</textarea>
+        </div>
+        <div class="form-group">
+          ${i === 0 ? '<label class="form-label">Cant.</label>' : ''}
+          <input class="form-input" type="number" min="1" value="${item.cant}" oninput="updateCCItemField(${i},'cant',this.value)">
+        </div>
+        <div class="form-group">
+          ${i === 0 ? '<label class="form-label">V. Unitario $</label>' : ''}
+          <input class="form-input" type="number" min="0" value="${item.vUnit}" oninput="updateCCItemField(${i},'vUnit',this.value)">
+        </div>
+        <div class="form-group">
+          ${i === 0 ? '<label class="form-label">V. Total $</label>' : ''}
+          <input class="form-input" type="number" id="cc-item-vtotal-${i}" value="${item.vTotal}" oninput="updateCCItemField(${i},'vTotal',this.value)">
+        </div>
+        <div class="form-group">
+          ${i === 0 ? '<label class="form-label" style="visibility:hidden">X</label>' : ''}
+          <button class="btn-action danger" style="padding:6px 8px;font-size:14px" onclick="removeCCItem(${i})" title="Eliminar ítem">×</button>
+        </div>
+      </div>`;
+  });
+}
+
+// ── Helpers ───────────────────────────────────────────────────
+function getCCTotal() {
+  return ccItems.reduce((s, it) => s + (it.vTotal || 0), 0);
+}
+
+function fmtPesos(n) {
+  return '$ ' + Math.round(n).toLocaleString('es-CO');
+}
+
+// Convierte número a letras (hasta 999.999.999)
+function numALetras(n) {
+  const unidades = ['','UN','DOS','TRES','CUATRO','CINCO','SEIS','SIETE','OCHO','NUEVE','DIEZ','ONCE','DOCE','TRECE','CATORCE','QUINCE','DIECISÉIS','DIECISIETE','DIECIOCHO','DIECINUEVE'];
+  const decenas  = ['','DIEZ','VEINTE','TREINTA','CUARENTA','CINCUENTA','SESENTA','SETENTA','OCHENTA','NOVENTA'];
+  const centenas = ['','CIENTO','DOSCIENTOS','TRESCIENTOS','CUATROCIENTOS','QUINIENTOS','SEISCIENTOS','SETECIENTOS','OCHOCIENTOS','NOVECIENTOS'];
+  n = Math.round(n);
+  if (n === 0) return 'CERO';
+  if (n === 100) return 'CIEN';
+  if (n < 20) return unidades[n];
+  if (n < 100) {
+    const d = Math.floor(n / 10), u = n % 10;
+    return decenas[d] + (u ? ' Y ' + unidades[u] : '');
+  }
+  if (n < 1000) {
+    const c = Math.floor(n / 100), r = n % 100;
+    return centenas[c] + (r ? ' ' + numALetras(r) : '');
+  }
+  if (n < 1000000) {
+    const m = Math.floor(n / 1000), r = n % 1000;
+    const miles = m === 1 ? 'MIL' : numALetras(m) + ' MIL';
+    return miles + (r ? ' ' + numALetras(r) : '');
+  }
+  const M = Math.floor(n / 1000000), r = n % 1000000;
+  const millon = M === 1 ? 'UN MILLÓN' : numALetras(M) + ' MILLONES';
+  return millon + (r ? ' ' + numALetras(r) : '');
+}
+
+function getCCData() {
+  return {
+    numero:       document.getElementById('cc-numero').value.trim() || '0001',
+    clienteNombre:document.getElementById('cc-cliente-nombre').value.trim(),
+    clienteNit:   document.getElementById('cc-cliente-nit').value.trim(),
+    ciudad:       document.getElementById('cc-ciudad').value.trim() || 'BOGOTÁ',
+    fecha:        document.getElementById('cc-fecha').value,
+    concepto:     document.getElementById('cc-concepto').value.trim(),
+    pago:         document.getElementById('cc-pago').value.trim(),
+    diaLetras:    document.getElementById('cc-dia-letras').value.trim(),
+    mesLetras:    document.getElementById('cc-mes-letras').value.trim(),
+    añoLetras:    document.getElementById('cc-año-letras').value.trim(),
+    items:        JSON.parse(JSON.stringify(ccItems)),
+    total:        getCCTotal(),
+  };
+}
+
+function formatFecha(dateStr) {
+  if (!dateStr) return '';
+  const [y, m, d] = dateStr.split('-');
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  return parseInt(d) + ' de ' + meses[parseInt(m)-1] + ' ' + y;
+}
+
+// ── Preview HTML ──────────────────────────────────────────────
+window.updateCCPreview = function() {
+  const d = getCCData();
+  const total = getCCTotal();
+  const gold = '#c4a25a';
+
+  let itemsHTML = d.items.map((it, i) => `
+    <tr style="border-bottom:1px solid #eee">
+      <td style="padding:6px 4px;text-align:center;color:#666">${i+1}</td>
+      <td style="padding:6px 4px;font-size:8px;color:#333">${it.desc || '—'}</td>
+      <td style="padding:6px 4px;text-align:center">${it.cant}</td>
+      <td style="padding:6px 4px;text-align:right">${fmtPesos(it.vUnit)}</td>
+      <td style="padding:6px 4px;text-align:right;font-weight:bold">${fmtPesos(it.vTotal)}</td>
+    </tr>`).join('');
+
+  document.getElementById('cc-preview').innerHTML = `
+    <div style="font-family:Arial,sans-serif;font-size:9px;color:#111;max-width:400px">
+
+      <!-- ENCABEZADO -->
+      <div style="text-align:right;margin-bottom:12px;border-bottom:2px solid ${gold};padding-bottom:8px">
+        <div style="font-size:11px;font-weight:bold;letter-spacing:1px">${CC_PRESTADOR.nombre}</div>
+        <div style="color:#555">NIT. ${CC_PRESTADOR.nit}</div>
+        <div style="color:${gold};font-weight:bold;font-size:10px">CUENTA DE COBRO N° <span style="color:#c0392b">${d.numero}</span></div>
+      </div>
+
+      <!-- RÉGIMEN -->
+      <div style="text-align:center;font-size:7.5px;font-weight:bold;border:1px solid #ccc;padding:4px;margin-bottom:8px;background:#f9f9f9">
+        ${CC_PRESTADOR.regimen}
+      </div>
+
+      <!-- GARANTÍA -->
+      <div style="font-size:7px;color:#666;margin-bottom:8px;text-align:justify">${CC_PRESTADOR.garantia}</div>
+
+      <!-- DIRECCIÓN -->
+      <div style="font-size:7.5px;color:#555;margin-bottom:8px;border-bottom:1px solid #eee;padding-bottom:6px">
+        Dirección. ${CC_PRESTADOR.dir} &nbsp;TEL: ${CC_PRESTADOR.tel} &nbsp;E-MAIL: ${CC_PRESTADOR.email}
+      </div>
+
+      <!-- FECHA Y CLIENTE -->
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <div style="font-weight:bold">${d.ciudad} ${formatFecha(d.fecha)}</div>
+      </div>
+      <div style="margin-bottom:4px;font-weight:bold">${d.clienteNombre || '—'}</div>
+      <div style="margin-bottom:4px;color:#555">NIT. ${d.clienteNit || '—'}</div>
+      <div style="margin-bottom:8px;color:${gold};font-weight:bold;font-size:9px">${d.concepto}</div>
+
+      <!-- FORMA DE PAGO -->
+      <div style="font-size:7.5px;color:#333;margin-bottom:8px">
+        <span style="font-weight:bold">FORMA DE PAGO:</span> ${d.pago}
+      </div>
+
+      <!-- TOTAL EN LETRAS -->
+      <div style="font-size:8px;font-weight:bold;margin-bottom:8px;text-transform:uppercase">
+        SE REALIZA COBRO DE LA SUMA DE ${numALetras(total)} PESOS M/CTE.
+      </div>
+
+      <!-- TABLA ITEMS -->
+      <table style="width:100%;border-collapse:collapse;font-size:8px;margin-bottom:8px">
+        <thead>
+          <tr style="background:${gold};color:#fff">
+            <th style="padding:5px 4px;text-align:center;width:20px">ITEM</th>
+            <th style="padding:5px 4px;text-align:left">PRODUCTO/SERVICIO</th>
+            <th style="padding:5px 4px;text-align:center;width:28px">CANT.</th>
+            <th style="padding:5px 4px;text-align:right;width:65px">V.UNID</th>
+            <th style="padding:5px 4px;text-align:right;width:65px">V.TOTAL</th>
+          </tr>
+        </thead>
+        <tbody>${itemsHTML}</tbody>
+        <tfoot>
+          <tr style="background:#f5f5f5;font-weight:bold">
+            <td colspan="4" style="padding:6px 4px;text-align:right">TOTAL</td>
+            <td style="padding:6px 4px;text-align:right;color:${gold};font-size:10px">${fmtPesos(total)}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>`;
+};
+
+// ── Generar PDF (jsPDF + AutoTable) ──────────────────────────
+window.generarPDF = function() {
+  if (typeof window.jspdf === 'undefined') {
+    alert('La librería jsPDF no está cargada. Verifica la conexión a internet e intenta de nuevo.');
+    return;
+  }
+  const { jsPDF } = window.jspdf;
+  const d = getCCData();
+  const total = getCCTotal();
+  const gold = [196, 162, 90];     // RGB del gold del sitio
+  const negro = [17, 17, 17];
+  const gris  = [100, 100, 100];
+
+  // ── PÁGINA 1: CUENTA DE COBRO ──
+  const doc = new jsPDF({ unit: 'mm', format: 'letter', orientation: 'portrait' });
+  const W = doc.internal.pageSize.getWidth();  // ~215.9 mm
+  const M = 18; // margen
+
+  // ---------- Encabezado ----------
+  // Triángulo decorativo (logo)
+  doc.setDrawColor(...gold);
+  doc.setLineWidth(0.6);
+  doc.triangle(M, 8, M+10, 8, M+5, 16, 'S');
+  doc.setLineWidth(0.3);
+  doc.line(M+1.5, 13, M+8.5, 13);
+
+  // Nombre y NIT (derecha)
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.setTextColor(...negro);
+  doc.text(CC_PRESTADOR.nombre, W - M, 10, { align: 'right' });
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(...gris);
+  doc.text('NIT. ' + CC_PRESTADOR.nit, W - M, 14.5, { align: 'right' });
+
+  // N° cuenta (color rojo como en el original)
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(10);
+  doc.setTextColor(...gold);
+  doc.text('CUENTA DE COBRO N° ', W - M - 30, 19, { align: 'right' });
+  doc.setTextColor(192, 57, 43); // rojo
+  doc.text(d.numero, W - M, 19, { align: 'right' });
+
+  // Línea dorada bajo encabezado
+  doc.setDrawColor(...gold);
+  doc.setLineWidth(0.8);
+  doc.line(M, 22, W - M, 22);
+
+  // ---------- Régimen simplificado ----------
+  let y = 27;
+  doc.setFillColor(245, 245, 245);
+  doc.rect(M, y, W - 2*M, 6, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(6.5);
+  doc.setTextColor(...negro);
+  doc.text(CC_PRESTADOR.regimen, W/2, y + 3.8, { align: 'center', maxWidth: W - 2*M - 4 });
+
+  // ---------- Garantía ----------
+  y += 8;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(6);
+  doc.setTextColor(...gris);
+  const garantiaLines = doc.splitTextToSize(CC_PRESTADOR.garantia, W - 2*M);
+  doc.text(garantiaLines, M, y);
+  y += garantiaLines.length * 3.2;
+
+  // ---------- Dirección ----------
+  doc.setDrawColor(220, 220, 220);
+  doc.setLineWidth(0.2);
+  doc.line(M, y, W - M, y);
+  y += 4;
+  doc.setFontSize(7);
+  doc.setTextColor(...gris);
+  doc.text(`Dirección. ${CC_PRESTADOR.dir}   TEL: ${CC_PRESTADOR.tel}   E-MAIL: ${CC_PRESTADOR.email}`, M, y);
+
+  // ---------- Ciudad, fecha y cliente ----------
+  y += 7;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(...negro);
+  doc.text(`${d.ciudad} ${formatFecha(d.fecha).toUpperCase()}`, M, y);
+
+  y += 6;
+  doc.setFontSize(10);
+  doc.text(d.clienteNombre || '—', M, y);
+  y += 5;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8.5);
+  doc.setTextColor(...gris);
+  doc.text('NIT. ' + (d.clienteNit || '—'), M, y);
+
+  y += 6;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(...gold);
+  doc.text(d.concepto, M, y);
+
+  // ---------- Forma de pago ----------
+  y += 6;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(7.5);
+  doc.setTextColor(...negro);
+  doc.text('FORMA DE PAGO:', M, y);
+  doc.setFont('helvetica', 'normal');
+  const pagoLines = doc.splitTextToSize(d.pago, W - 2*M - 35);
+  doc.text(pagoLines, M + 30, y);
+  y += pagoLines.length * 3.8 + 2;
+
+  // ---------- Total en letras ----------
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8);
+  doc.setTextColor(...negro);
+  const totalLetras = `SE REALIZA COBRO DE LA SUMA DE ${numALetras(total)} PESOS M/CTE.`;
+  const letrasLines = doc.splitTextToSize(totalLetras, W - 2*M);
+  doc.text(letrasLines, M, y);
+  y += letrasLines.length * 4 + 4;
+
+  // ---------- Tabla de ítems ----------
+  const tableBody = d.items.map((it, idx) => [
+    String(idx + 1),
+    it.desc || '',
+    String(it.cant),
+    fmtPesos(it.vUnit),
+    fmtPesos(it.vTotal),
+  ]);
+
+  doc.autoTable({
+    startY: y,
+    margin: { left: M, right: M },
+    head: [['ITEM', 'PRODUCTO/SERVICIO', 'CANT.', 'V.UNID', 'V.TOTAL']],
+    body: tableBody,
+    foot: [['', '', '', 'TOTAL', fmtPesos(total)]],
+    headStyles: {
+      fillColor: gold,
+      textColor: [255,255,255],
+      fontStyle: 'bold',
+      fontSize: 8,
+      halign: 'center',
+    },
+    bodyStyles: { fontSize: 8, textColor: negro },
+    footStyles: { fillColor: [240,240,240], fontStyle: 'bold', fontSize: 9, textColor: gold },
+    columnStyles: {
+      0: { halign: 'center', cellWidth: 12 },
+      1: { halign: 'left', cellWidth: 'auto' },
+      2: { halign: 'center', cellWidth: 15 },
+      3: { halign: 'right', cellWidth: 32 },
+      4: { halign: 'right', cellWidth: 32 },
+    },
+    alternateRowStyles: { fillColor: [250, 250, 250] },
+    theme: 'grid',
+  });
+
+  // ── PÁGINA 2: INFORME ART. 388 ──
+  doc.addPage();
+  const W2 = doc.internal.pageSize.getWidth();
+
+  // Encabezado p2 (igual que p1 pero más compacto)
+  doc.setDrawColor(...gold);
+  doc.setLineWidth(0.6);
+  doc.triangle(M, 8, M+10, 8, M+5, 16, 'S');
+  doc.setLineWidth(0.3);
+  doc.line(M+1.5, 13, M+8.5, 13);
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(11);
+  doc.setTextColor(...negro);
+  doc.text(CC_PRESTADOR.nombre, W2 - M, 10, { align: 'right' });
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8.5);
+  doc.setTextColor(...gris);
+  doc.text('NIT. ' + CC_PRESTADOR.nit, W2 - M, 14.5, { align: 'right' });
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(...gold);
+  doc.text('CUENTA DE COBRO N° ', W2 - M - 28, 19, { align: 'right' });
+  doc.setTextColor(192, 57, 43);
+  doc.text(d.numero, W2 - M, 19, { align: 'right' });
+
+  doc.setDrawColor(...gold);
+  doc.setLineWidth(0.8);
+  doc.line(M, 22, W2 - M, 22);
+
+  // Título del informe
+  let y2 = 32;
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(...negro);
+  doc.text('INFORME DE NO CONTRATAR O VINCULAR DOS O MAS TRABAJADORES ASOCIADOS A LA ACTIVIDAD', M, y2);
+
+  // Cuerpo del informe
+  y2 += 12;
+  const informe = `Yo, Alexander Aya Aponte, identificado con el número de cédula No. 1032434200 de Bogotá, informo para efectos de lo establecido en el artículo 388 del Estatuto Tributario que en la actualidad NO he contratado ni vinculado dos o más personas para la prestación del servicio contratado en su empresa.`;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9.5);
+  doc.setTextColor(...negro);
+  const informeLines = doc.splitTextToSize(informe, W2 - 2*M);
+  doc.text(informeLines, M, y2);
+  y2 += informeLines.length * 5.5 + 10;
+
+  // Fecha de firma
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9.5);
+  doc.text(`Como constancia se firma a los (${d.diaLetras}) días del mes de `, M, y2);
+  doc.setFont('helvetica', 'bold');
+  // mes subrayado
+  const preLen = doc.getTextWidth(`Como constancia se firma a los (${d.diaLetras}) días del mes de `);
+  doc.text(d.mesLetras, M + preLen, y2);
+  doc.setLineWidth(0.3);
+  doc.line(M + preLen, y2 + 0.8, M + preLen + doc.getTextWidth(d.mesLetras), y2 + 0.8);
+  doc.setFont('helvetica', 'normal');
+  doc.text(` de ${d.añoLetras}.`, M + preLen + doc.getTextWidth(d.mesLetras), y2);
+
+  // Espacio para firma
+  y2 += 40;
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(...negro);
+  doc.text('Atentamente,', M, y2);
+
+  y2 += 28;
+  doc.setDrawColor(...negro);
+  doc.setLineWidth(0.3);
+  doc.line(M, y2, M + 55, y2); // línea de firma
+
+  y2 += 5;
+  doc.setFont('helvetica', 'bold');
+  doc.text(`C.C.${CC_PRESTADOR.cc}`, M, y2);
+  y2 += 5;
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(...gris);
+  doc.text(CC_PRESTADOR.cargo, M, y2);
+
+  // Pie de página p2
+  const pageH = doc.internal.pageSize.getHeight();
+  doc.setDrawColor(220,220,220);
+  doc.setLineWidth(0.2);
+  doc.line(M, pageH - 22, W2 - M, pageH - 22);
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(6.5);
+  doc.setTextColor(...negro);
+  doc.text(CC_PRESTADOR.regimen, M, pageH - 17);
+  doc.setFont('helvetica', 'normal');
+  const garLines = doc.splitTextToSize(CC_PRESTADOR.garantia, W2 - 2*M);
+  doc.text(garLines, M, pageH - 13);
+  doc.setTextColor(...gold);
+  doc.text(`Dirección. ${CC_PRESTADOR.dir}   TEL: ${CC_PRESTADOR.tel}   E-MAIL: ${CC_PRESTADOR.email}`, M, pageH - 5);
+
+  // ── Descargar ──
+  const filename = `CC_${d.numero}_${(d.clienteNombre || 'cliente').replace(/\s+/g,'_')}_${(d.fecha || '').replace(/-/g,'')}.pdf`;
+  doc.save(filename);
+};
+
+// ── Guardar en historial (localStorage) ──────────────────────
+window.guardarCC = async function() {
+  const d = getCCData();
+  if (!d.clienteNombre || !d.numero) {
+    if (typeof notif === 'function') notif('Completa al menos cliente y número', 'error');
+    else alert('Completa al menos cliente y número');
+    return;
+  }
+  
+  const registro = {
+    id:       Date.now(),
+    numero:   d.numero,
+    cliente:  d.clienteNombre,
+    nit:      d.clienteNit,
+    concepto: d.concepto,
+    total:    getCCTotal(),
+    fecha:    d.fecha,
+    data:     d,
+    createdAt: new Date().toISOString()
+  };
+
+  // También intentar guardar en Firestore si está disponible
+  try {
+    if (window._db && window._addDoc && window._collection) {
+      await window._addDoc(window._collection(window._db, 'cuentas_cobro'), {
+        ...registro,
+        data: JSON.stringify(registro.data),
+      });
+    }
+  } catch(e) { /* Firestore no disponible, solo local */ }
+
+  ccHistorial.unshift(registro);
+  localStorage.setItem('cc_historial', JSON.stringify(ccHistorial.slice(0, 100)));
+  if (typeof notif === 'function') notif('Cuenta de cobro guardada en historial');
+  else alert('¡Guardada!');
+};
+
+// ── Historial ─────────────────────────────────────────────────
+function renderCCHistorial(list) {
+  document.getElementById('ccHistorialCount').textContent = list.length + ' registros';
+  const tbody = document.getElementById('cc-historial-body');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--gray)">Sin cuentas guardadas aún</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(r => `
+    <tr>
+      <td style="font-family:\'Space Mono\',monospace;color:var(--gold)">${r.numero}</td>
+      <td>${r.cliente}<br><span style="font-size:11px;color:var(--gray)">${r.nit || ''}</span></td>
+      <td>${r.concepto || '—'}</td>
+      <td style="font-weight:500;color:var(--white)">${fmtPesos(r.total)}</td>
+      <td style="color:var(--gray);font-size:12px">${r.fecha || ''}</td>
+      <td>
+        <div style="display:flex;gap:6px">
+          <button class="btn-action" onclick="cargarCC(${r.id})">Cargar</button>
+          <button class="btn-action primary" onclick="reimprimirCC(${r.id})">PDF</button>
+          <button class="btn-action danger" onclick="eliminarCC(${r.id})">×</button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+window.filtrarCC = function(q) {
+  const f = ccHistorial.filter(r =>
+    (r.cliente||'').toLowerCase().includes(q.toLowerCase()) ||
+    (r.numero||'').includes(q) ||
+    (r.concepto||'').toLowerCase().includes(q.toLowerCase())
+  );
+  renderCCHistorial(f);
+};
+
+window.cargarCC = function(id) {
+  const r = ccHistorial.find(x => x.id === id);
+  if (!r || !r.data) return;
+  const d = r.data;
+  document.getElementById('cc-numero').value        = d.numero || '';
+  document.getElementById('cc-cliente-nombre').value = d.clienteNombre || '';
+  document.getElementById('cc-cliente-nit').value    = d.clienteNit || '';
+  document.getElementById('cc-ciudad').value         = d.ciudad || 'BOGOTÁ';
+  document.getElementById('cc-fecha').value          = d.fecha || '';
+  document.getElementById('cc-concepto').value       = d.concepto || '';
+  document.getElementById('cc-pago').value           = d.pago || CC_PRESTADOR.banco;
+  document.getElementById('cc-dia-letras').value     = d.diaLetras || '';
+  document.getElementById('cc-mes-letras').value     = d.mesLetras || '';
+  document.getElementById('cc-año-letras').value     = d.añoLetras || '';
+  ccItems = d.items || [{desc:'', cant:1, vUnit:0, vTotal:0}];
+  renderCCItems();
+  updateCCPreview();
+  switchCCTab('nueva');
+};
+
+window.reimprimirCC = function(id) {
+  const r = ccHistorial.find(x => x.id === id);
+  if (!r) return;
+  cargarCC(id);
+  setTimeout(generarPDF, 200);
+};
+
+window.eliminarCC = function(id) {
+  if (!confirm('¿Eliminar esta cuenta del historial?')) return;
+  ccHistorial = ccHistorial.filter(x => x.id !== id);
+  localStorage.setItem('cc_historial', JSON.stringify(ccHistorial));
+  renderCCHistorial(ccHistorial);
+  if (typeof notif === 'function') notif('Cuenta eliminada del historial');
+};
+
+window.limpiarCC = function() {
+  if (!confirm('¿Limpiar el formulario?')) return;
+  document.getElementById('cc-numero').value         = '';
+  document.getElementById('cc-cliente-nombre').value = '';
+  document.getElementById('cc-cliente-nit').value    = '';
+  document.getElementById('cc-concepto').value       = '';
+  ccItems = [{desc:'', cant:1, vUnit:0, vTotal:0}];
+  renderCCItems();
+  updateCCPreview();
+};
+
+// ── Auto-inicializar cuando se entre a la página ──────────────
+// Interceptar goPage para inicializar CC al primera vez
+const _origGoPage = window.goPage;
+window.goPage = function(pageId) {
+  _origGoPage && _origGoPage(pageId);
+  if (pageId === 'cuentas-cobro') {
+    initCC();
+  }
+};
+// También inicializar si ya está activo
+if (document.getElementById('page-cuentas-cobro') &&
+    document.getElementById('page-cuentas-cobro').classList.contains('active')) {
+  initCC();
+}
+</script>
