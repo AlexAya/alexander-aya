@@ -436,10 +436,25 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
             </div>
 
             <div class="form-section">
-              <div class="form-section-title">📄 Informe Art. 388 (página 2)</div>
-              <div style="padding:12px;background:var(--bg3);border:1px solid var(--border);font-size:12px;color:var(--gray);line-height:1.7;margin-bottom:16px">
-                ℹ️ Esta página se genera automáticamente con los datos de Alexander Aya Aponte (C.C. 1032434200) declarando que no ha contratado ni vinculado dos o más trabajadores. Se incluye siempre en el PDF.
+              <div class="form-section-title">⚙️ Opciones del documento</div>
+              <div class="toggle-wrap">
+                <label class="toggle">
+                  <input type="checkbox" id="cc-incluir-garantia" checked onchange="updateCCPreview()">
+                  <span class="toggle-slider"></span>
+                </label>
+                <span class="toggle-label">Incluir texto de garantía al pie del documento</span>
               </div>
+              <div class="toggle-wrap">
+                <label class="toggle">
+                  <input type="checkbox" id="cc-incluir-hoja2" checked onchange="updateCCPreview()">
+                  <span class="toggle-slider"></span>
+                </label>
+                <span class="toggle-label">Incluir Hoja 2 — Informe Art. 388 (no contratar trabajadores)</span>
+              </div>
+            </div>
+
+            <div class="form-section" id="cc-hoja2-fields">
+              <div class="form-section-title">📄 Informe Art. 388 (página 2)</div>
               <div class="form-row">
                 <div class="form-group">
                   <label class="form-label">Día del mes (letras)</label>
@@ -1052,18 +1067,20 @@ function numALetras(n) {
 
 function getCCData() {
   return {
-    numero:        document.getElementById('cc-numero').value.trim()||'0001',
-    clienteNombre: document.getElementById('cc-cliente-nombre').value.trim(),
-    clienteNit:    document.getElementById('cc-cliente-nit').value.trim(),
-    ciudad:        document.getElementById('cc-ciudad').value.trim()||'BOGOTÁ',
-    fecha:         document.getElementById('cc-fecha').value,
-    concepto:      document.getElementById('cc-concepto').value.trim(),
-    pago:          document.getElementById('cc-pago').value.trim(),
-    diaLetras:     document.getElementById('cc-dia-letras').value.trim(),
-    mesLetras:     document.getElementById('cc-mes-letras').value.trim(),
-    añoLetras:     document.getElementById('cc-año-letras').value.trim(),
-    items:         JSON.parse(JSON.stringify(ccItems)),
-    total:         getCCTotal(),
+    numero:          document.getElementById('cc-numero').value.trim()||'0001',
+    clienteNombre:   document.getElementById('cc-cliente-nombre').value.trim(),
+    clienteNit:      document.getElementById('cc-cliente-nit').value.trim(),
+    ciudad:          document.getElementById('cc-ciudad').value.trim()||'BOGOTÁ',
+    fecha:           document.getElementById('cc-fecha').value,
+    concepto:        document.getElementById('cc-concepto').value.trim(),
+    pago:            document.getElementById('cc-pago').value.trim(),
+    diaLetras:       document.getElementById('cc-dia-letras').value.trim(),
+    mesLetras:       document.getElementById('cc-mes-letras').value.trim(),
+    añoLetras:       document.getElementById('cc-año-letras').value.trim(),
+    inclGarantia:    document.getElementById('cc-incluir-garantia').checked,
+    inclHoja2:       document.getElementById('cc-incluir-hoja2').checked,
+    items:           JSON.parse(JSON.stringify(ccItems)),
+    total:           getCCTotal(),
   };
 }
 
@@ -1075,28 +1092,41 @@ function formatFecha(dateStr) {
 }
 
 window.updateCCPreview = function() {
+  // Mostrar/ocultar campos de hoja 2 según toggle
+  const inclHoja2 = document.getElementById('cc-incluir-hoja2').checked;
+  const h2fields = document.getElementById('cc-hoja2-fields');
+  if(h2fields) h2fields.style.display = inclHoja2 ? 'block' : 'none';
+
   const d=getCCData(); const total=getCCTotal(); const gold='#c4a25a';
+  const inclGarantia = document.getElementById('cc-incluir-garantia').checked;
+
   let itemsHTML=d.items.map((it,i)=>`<tr style="border-bottom:1px solid #eee"><td style="padding:5px 4px;text-align:center;color:#666">${i+1}</td><td style="padding:5px 4px;font-size:8px;color:#333">${it.desc||'—'}</td><td style="padding:5px 4px;text-align:center">${it.cant}</td><td style="padding:5px 4px;text-align:right">${fmtPesos(it.vUnit)}</td><td style="padding:5px 4px;text-align:right;font-weight:bold">${fmtPesos(it.vTotal)}</td></tr>`).join('');
+
+  const pieHTML = `
+    <div style="margin-top:12px;border-top:1px solid #ddd;padding-top:6px">
+      <div style="font-size:6px;font-weight:bold;color:#333;margin-bottom:2px">${CC_PRESTADOR.regimen}</div>
+      ${inclGarantia ? `<div style="font-size:5.5px;color:#777;line-height:1.4;margin-bottom:3px">${CC_PRESTADOR.garantia}</div>` : ''}
+      <div style="font-size:5.5px;color:#888">Dirección. ${CC_PRESTADOR.dir} · TEL: ${CC_PRESTADOR.tel} · ${CC_PRESTADOR.email}</div>
+    </div>`;
+
   document.getElementById('cc-preview').innerHTML=`<div style="font-family:Arial,sans-serif;font-size:9px;color:#111;max-width:400px">
-    <div style="text-align:right;margin-bottom:10px;border-bottom:2px solid ${gold};padding-bottom:6px">
+    <div style="text-align:right;margin-bottom:8px;border-bottom:2px solid ${gold};padding-bottom:5px">
       <div style="font-size:11px;font-weight:bold">${CC_PRESTADOR.nombre}</div>
-      <div style="color:#555">NIT. ${CC_PRESTADOR.nit}</div>
-      <div style="color:${gold};font-weight:bold;font-size:10px">CUENTA DE COBRO N° <span style="color:#c0392b">${d.numero}</span></div>
+      <div style="color:#555;font-size:8px">NIT. ${CC_PRESTADOR.nit}</div>
+      <div style="color:${gold};font-weight:bold;font-size:9px">CUENTA DE COBRO N° <span style="color:#c0392b">${d.numero}</span></div>
     </div>
-    <div style="text-align:center;font-size:7px;font-weight:bold;border:1px solid #ccc;padding:4px;margin-bottom:6px;background:#f9f9f9">${CC_PRESTADOR.regimen}</div>
-    <div style="font-size:6.5px;color:#666;margin-bottom:6px">${CC_PRESTADOR.garantia}</div>
-    <div style="font-size:7px;color:#555;margin-bottom:6px;border-bottom:1px solid #eee;padding-bottom:4px">Dir. ${CC_PRESTADOR.dir} · TEL: ${CC_PRESTADOR.tel} · ${CC_PRESTADOR.email}</div>
-    <div style="font-weight:bold;margin-bottom:3px">${d.ciudad} ${formatFecha(d.fecha)}</div>
-    <div style="font-weight:bold;font-size:10px;margin-bottom:2px">${d.clienteNombre||'—'}</div>
-    <div style="color:#555;margin-bottom:2px">NIT. ${d.clienteNit||'—'}</div>
-    <div style="color:${gold};font-weight:bold;margin-bottom:6px">${d.concepto}</div>
-    <div style="font-size:7px;margin-bottom:6px"><b>FORMA DE PAGO:</b> ${d.pago}</div>
-    <div style="font-size:7.5px;font-weight:bold;margin-bottom:8px;text-transform:uppercase">SE REALIZA COBRO DE LA SUMA DE ${numALetras(total)} PESOS M/CTE.</div>
-    <table style="width:100%;border-collapse:collapse;font-size:8px;margin-bottom:6px">
+    <div style="font-weight:bold;margin-bottom:2px;font-size:9px">${d.ciudad} ${formatFecha(d.fecha)}</div>    <div style="font-weight:bold;font-size:10px;margin-bottom:1px">${d.clienteNombre||'—'}</div>
+    <div style="color:#555;margin-bottom:2px;font-size:8px">NIT. ${d.clienteNit||'—'}</div>
+    <div style="color:${gold};font-weight:bold;margin-bottom:5px;font-size:9px">${d.concepto}</div>
+    <div style="font-size:7px;margin-bottom:5px"><b>FORMA DE PAGO:</b> ${d.pago}</div>
+    <div style="font-size:7.5px;font-weight:bold;margin-bottom:7px;text-transform:uppercase">SE REALIZA COBRO DE LA SUMA DE ${numALetras(total)} PESOS M/CTE.</div>
+    <table style="width:100%;border-collapse:collapse;font-size:8px;margin-bottom:4px">
       <thead><tr style="background:${gold};color:#fff"><th style="padding:4px;text-align:center;width:18px">ITEM</th><th style="padding:4px;text-align:left">PRODUCTO/SERVICIO</th><th style="padding:4px;text-align:center;width:25px">CANT.</th><th style="padding:4px;text-align:right;width:60px">V.UNID</th><th style="padding:4px;text-align:right;width:60px">V.TOTAL</th></tr></thead>
       <tbody>${itemsHTML}</tbody>
       <tfoot><tr style="background:#f5f5f5;font-weight:bold"><td colspan="4" style="padding:5px 4px;text-align:right">TOTAL</td><td style="padding:5px 4px;text-align:right;color:${gold};font-size:10px">${fmtPesos(total)}</td></tr></tfoot>
     </table>
+    ${pieHTML}
+    ${inclHoja2 ? `<div style="margin-top:8px;padding:6px;background:#f0f0f0;font-size:6px;color:#555;border-left:2px solid ${gold}">📄 Hoja 2 — Informe Art. 388 incluida en el PDF</div>` : ''}
   </div>`;
 };
 
@@ -1105,10 +1135,19 @@ window.generarPDF = function() {
   const { jsPDF } = window.jspdf;
   const d=getCCData(); const total=getCCTotal();
   const gold=[196,162,90], negro=[17,17,17], gris=[100,100,100];
-  const doc=new jsPDF({unit:'mm',format:'letter',orientation:'portrait'});
-  const W=doc.internal.pageSize.getWidth(); const M=18;
+  const inclGarantia = document.getElementById('cc-incluir-garantia').checked;
+  const inclHoja2    = document.getElementById('cc-incluir-hoja2').checked;
 
-  // ── P1 Encabezado ──
+  const doc=new jsPDF({unit:'mm',format:'letter',orientation:'portrait'});
+  const W=doc.internal.pageSize.getWidth();
+  const pH=doc.internal.pageSize.getHeight();
+  const M=18;
+
+  // ── Calcular espacio del pie de página p1 ──
+  // Régimen (1 línea ~4mm) + dirección (1 línea ~4mm) + garantía si aplica (~8mm) + margen
+  const pieH = inclGarantia ? 20 : 12;
+
+  // ── P1: Encabezado ──
   doc.setDrawColor(...gold); doc.setLineWidth(0.6);
   doc.triangle(M,8,M+10,8,M+5,16,'S');
   doc.setLineWidth(0.3); doc.line(M+1.5,13,M+8.5,13);
@@ -1121,17 +1160,13 @@ window.generarPDF = function() {
   doc.setTextColor(192,57,43); doc.text(d.numero,W-M,19,{align:'right'});
   doc.setDrawColor(...gold); doc.setLineWidth(0.8); doc.line(M,22,W-M,22);
 
-  let y=27;
-  doc.setFillColor(245,245,245); doc.rect(M,y,W-2*M,6,'F');
-  doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(...negro);
-  doc.text(CC_PRESTADOR.regimen,W/2,y+3.8,{align:'center',maxWidth:W-2*M-4});
-  y+=8;
-  doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(...gris);
-  const gL=doc.splitTextToSize(CC_PRESTADOR.garantia,W-2*M);
-  doc.text(gL,M,y); y+=gL.length*3.2;
+  // Dirección (régimen va solo al pie)
+  let y=26;
   doc.setDrawColor(220,220,220); doc.setLineWidth(0.2); doc.line(M,y,W-M,y); y+=4;
-  doc.setFontSize(7); doc.text(`Dirección. ${CC_PRESTADOR.dir}   TEL: ${CC_PRESTADOR.tel}   E-MAIL: ${CC_PRESTADOR.email}`,M,y);
+  doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(...gris);
+  doc.text(`Dirección. ${CC_PRESTADOR.dir}   TEL: ${CC_PRESTADOR.tel}   E-MAIL: ${CC_PRESTADOR.email}`,M,y);
 
+  // Ciudad, cliente, concepto
   y+=7; doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...negro);
   doc.text(`${d.ciudad} ${formatFecha(d.fecha).toUpperCase()}`,M,y);
   y+=6; doc.setFontSize(10); doc.text(d.clienteNombre||'—',M,y);
@@ -1139,16 +1174,22 @@ window.generarPDF = function() {
   doc.text('NIT. '+(d.clienteNit||'—'),M,y);
   y+=6; doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...gold);
   doc.text(d.concepto,M,y);
+
+  // Forma de pago
   y+=6; doc.setFont('helvetica','bold'); doc.setFontSize(7.5); doc.setTextColor(...negro);
   doc.text('FORMA DE PAGO:',M,y);
   doc.setFont('helvetica','normal');
   const pL=doc.splitTextToSize(d.pago,W-2*M-35); doc.text(pL,M+30,y); y+=pL.length*3.8+2;
+
+  // Total en letras
   doc.setFont('helvetica','bold'); doc.setFontSize(8); doc.setTextColor(...negro);
   const tLet=`SE REALIZA COBRO DE LA SUMA DE ${numALetras(total)} PESOS M/CTE.`;
   const tL=doc.splitTextToSize(tLet,W-2*M); doc.text(tL,M,y); y+=tL.length*4+4;
 
+  // Tabla
   doc.autoTable({
     startY:y, margin:{left:M,right:M},
+    tableWidth: W-2*M,
     head:[['ITEM','PRODUCTO/SERVICIO','CANT.','V.UNID','V.TOTAL']],
     body:d.items.map((it,idx)=>[String(idx+1),it.desc||'',String(it.cant),fmtPesos(it.vUnit),fmtPesos(it.vTotal)]),
     foot:[['','','','TOTAL',fmtPesos(total)]],
@@ -1157,50 +1198,76 @@ window.generarPDF = function() {
     footStyles:{fillColor:[240,240,240],fontStyle:'bold',fontSize:9,textColor:gold},
     columnStyles:{0:{halign:'center',cellWidth:12},1:{halign:'left',cellWidth:'auto'},2:{halign:'center',cellWidth:15},3:{halign:'right',cellWidth:32},4:{halign:'right',cellWidth:32}},
     alternateRowStyles:{fillColor:[250,250,250]},theme:'grid',
+    // Dejar espacio para el pie
+    pageBreak:'auto',
+    showFoot:'lastPage',
   });
 
-  // ── P2: Art. 388 ──
-  doc.addPage();
-  const W2=doc.internal.pageSize.getWidth();
-  doc.setDrawColor(...gold); doc.setLineWidth(0.6);
-  doc.triangle(M,8,M+10,8,M+5,16,'S'); doc.setLineWidth(0.3); doc.line(M+1.5,13,M+8.5,13);
-  doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...negro);
-  doc.text(CC_PRESTADOR.nombre,W2-M,10,{align:'right'});
-  doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...gris);
-  doc.text('NIT. '+CC_PRESTADOR.nit,W2-M,14.5,{align:'right'});
-  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...gold);
-  doc.text('CUENTA DE COBRO N° ',W2-M-28,19,{align:'right'});
-  doc.setTextColor(192,57,43); doc.text(d.numero,W2-M,19,{align:'right'});
-  doc.setDrawColor(...gold); doc.setLineWidth(0.8); doc.line(M,22,W2-M,22);
+  // ── Pie de página P1 (garantía + dirección al fondo) ──
+  doc.setDrawColor(220,220,220); doc.setLineWidth(0.2);
+  doc.line(M, pH-pieH, W-M, pH-pieH);
 
-  let y2=32;
-  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...negro);
-  doc.text('INFORME DE NO CONTRATAR O VINCULAR DOS O MAS TRABAJADORES ASOCIADOS A LA ACTIVIDAD',M,y2);
-  y2+=12;
-  const informe=`Yo, Alexander Aya Aponte, identificado con el número de cédula No. 1032434200 de Bogotá, informo para efectos de lo establecido en el artículo 388 del Estatuto Tributario que en la actualidad NO he contratado ni vinculado dos o más personas para la prestación del servicio contratado en su empresa.`;
-  doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...negro);
-  const iL=doc.splitTextToSize(informe,W2-2*M); doc.text(iL,M,y2); y2+=iL.length*5.5+10;
-  doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
-  doc.text(`Como constancia se firma a los (${d.diaLetras}) días del mes de `,M,y2);
-  doc.setFont('helvetica','bold');
-  const preT=`Como constancia se firma a los (${d.diaLetras}) días del mes de `;
-  const preLen=doc.getTextWidth(preT);
-  doc.text(d.mesLetras,M+preLen,y2);
-  doc.setLineWidth(0.3); doc.line(M+preLen,y2+0.8,M+preLen+doc.getTextWidth(d.mesLetras),y2+0.8);
-  doc.setFont('helvetica','normal'); doc.text(` de ${d.añoLetras}.`,M+preLen+doc.getTextWidth(d.mesLetras),y2);
-  y2+=40; doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...negro);
-  doc.text('Atentamente,',M,y2);
-  y2+=28; doc.setDrawColor(...negro); doc.setLineWidth(0.3); doc.line(M,y2,M+55,y2);
-  y2+=5; doc.setFont('helvetica','bold'); doc.text(`C.C.${CC_PRESTADOR.cc}`,M,y2);
-  y2+=5; doc.setFont('helvetica','normal'); doc.setTextColor(...gris); doc.text(CC_PRESTADOR.cargo,M,y2);
-  const pH=doc.internal.pageSize.getHeight();
-  doc.setDrawColor(220,220,220); doc.setLineWidth(0.2); doc.line(M,pH-22,W2-M,pH-22);
-  doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(...negro);
-  doc.text(CC_PRESTADOR.regimen,M,pH-17);
-  doc.setFont('helvetica','normal');
-  const garL=doc.splitTextToSize(CC_PRESTADOR.garantia,W2-2*M); doc.text(garL,M,pH-13);
-  doc.setTextColor(...gold);
-  doc.text(`Dirección. ${CC_PRESTADOR.dir}   TEL: ${CC_PRESTADOR.tel}   E-MAIL: ${CC_PRESTADOR.email}`,M,pH-5);
+  doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.setTextColor(...negro);
+  doc.text(CC_PRESTADOR.regimen, M, pH-pieH+4);
+
+  if (inclGarantia) {
+    doc.setFont('helvetica','normal'); doc.setFontSize(5.5); doc.setTextColor(...gris);
+    const garLines=doc.splitTextToSize(CC_PRESTADOR.garantia, W-2*M);
+    doc.text(garLines, M, pH-pieH+8);
+  }
+
+  doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(...gold);
+  doc.text(`Dirección. ${CC_PRESTADOR.dir}   TEL: ${CC_PRESTADOR.tel}   E-MAIL: ${CC_PRESTADOR.email}`, M, pH-4);
+
+  // ── P2: Art. 388 (solo si está activado) ──
+  if (inclHoja2) {
+    doc.addPage();
+    const W2=doc.internal.pageSize.getWidth();
+    const pH2=doc.internal.pageSize.getHeight();
+
+    doc.setDrawColor(...gold); doc.setLineWidth(0.6);
+    doc.triangle(M,8,M+10,8,M+5,16,'S'); doc.setLineWidth(0.3); doc.line(M+1.5,13,M+8.5,13);
+    doc.setFont('helvetica','bold'); doc.setFontSize(11); doc.setTextColor(...negro);
+    doc.text(CC_PRESTADOR.nombre,W2-M,10,{align:'right'});
+    doc.setFont('helvetica','normal'); doc.setFontSize(8.5); doc.setTextColor(...gris);
+    doc.text('NIT. '+CC_PRESTADOR.nit,W2-M,14.5,{align:'right'});
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...gold);
+    doc.text('CUENTA DE COBRO N° ',W2-M-28,19,{align:'right'});
+    doc.setTextColor(192,57,43); doc.text(d.numero,W2-M,19,{align:'right'});
+    doc.setDrawColor(...gold); doc.setLineWidth(0.8); doc.line(M,22,W2-M,22);
+
+    let y2=32;
+    doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(...negro);
+    doc.text('INFORME DE NO CONTRATAR O VINCULAR DOS O MAS TRABAJADORES ASOCIADOS A LA ACTIVIDAD',M,y2);
+    y2+=12;
+    const informe=`Yo, Alexander Aya Aponte, identificado con el número de cédula No. 1032434200 de Bogotá, informo para efectos de lo establecido en el artículo 388 del Estatuto Tributario que en la actualidad NO he contratado ni vinculado dos o más personas para la prestación del servicio contratado en su empresa.`;
+    doc.setFont('helvetica','normal'); doc.setFontSize(9.5); doc.setTextColor(...negro);
+    const iL=doc.splitTextToSize(informe,W2-2*M); doc.text(iL,M,y2); y2+=iL.length*5.5+10;
+    doc.setFont('helvetica','normal'); doc.setFontSize(9.5);
+    const preT=`Como constancia se firma a los (${d.diaLetras}) días del mes de `;
+    doc.text(preT,M,y2);
+    doc.setFont('helvetica','bold');
+    const preLen=doc.getTextWidth(preT);
+    doc.text(d.mesLetras,M+preLen,y2);
+    doc.setLineWidth(0.3); doc.line(M+preLen,y2+0.8,M+preLen+doc.getTextWidth(d.mesLetras),y2+0.8);
+    doc.setFont('helvetica','normal'); doc.text(` de ${d.añoLetras}.`,M+preLen+doc.getTextWidth(d.mesLetras),y2);
+    y2+=40; doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(...negro);
+    doc.text('Atentamente,',M,y2);
+    y2+=28; doc.setDrawColor(...negro); doc.setLineWidth(0.3); doc.line(M,y2,M+55,y2);
+    y2+=5; doc.setFont('helvetica','bold'); doc.text(`C.C.${CC_PRESTADOR.cc}`,M,y2);
+    y2+=5; doc.setFont('helvetica','normal'); doc.setTextColor(...gris); doc.text(CC_PRESTADOR.cargo,M,y2);
+
+    // Pie p2
+    doc.setDrawColor(220,220,220); doc.setLineWidth(0.2); doc.line(M,pH2-pieH,W2-M,pH2-pieH);
+    doc.setFont('helvetica','bold'); doc.setFontSize(6); doc.setTextColor(...negro);
+    doc.text(CC_PRESTADOR.regimen,M,pH2-pieH+4);
+    if (inclGarantia) {
+      doc.setFont('helvetica','normal'); doc.setFontSize(5.5); doc.setTextColor(...gris);
+      const garL2=doc.splitTextToSize(CC_PRESTADOR.garantia,W2-2*M); doc.text(garL2,M,pH2-pieH+8);
+    }
+    doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(...gold);
+    doc.text(`Dirección. ${CC_PRESTADOR.dir}   TEL: ${CC_PRESTADOR.tel}   E-MAIL: ${CC_PRESTADOR.email}`,M,pH2-4);
+  }
 
   const filename=`CC_${d.numero}_${(d.clienteNombre||'cliente').replace(/\s+/g,'_')}_${(d.fecha||'').replace(/-/g,'')}.pdf`;
   doc.save(filename);
@@ -1235,7 +1302,7 @@ function renderCCHistorial(list) {
 }
 
 window.filtrarCC = function(q){const f=ccHistorial.filter(r=>(r.cliente||'').toLowerCase().includes(q.toLowerCase())||(r.numero||'').includes(q)||(r.concepto||'').toLowerCase().includes(q.toLowerCase()));renderCCHistorial(f);};
-window.cargarCC = function(id){const r=ccHistorial.find(x=>x.id===id);if(!r||!r.data)return;const d=r.data;document.getElementById('cc-numero').value=d.numero||'';document.getElementById('cc-cliente-nombre').value=d.clienteNombre||'';document.getElementById('cc-cliente-nit').value=d.clienteNit||'';document.getElementById('cc-ciudad').value=d.ciudad||'BOGOTÁ';document.getElementById('cc-fecha').value=d.fecha||'';document.getElementById('cc-concepto').value=d.concepto||'';document.getElementById('cc-pago').value=d.pago||CC_PRESTADOR.banco;document.getElementById('cc-dia-letras').value=d.diaLetras||'';document.getElementById('cc-mes-letras').value=d.mesLetras||'';document.getElementById('cc-año-letras').value=d.añoLetras||'';ccItems=d.items||[{desc:'',cant:1,vUnit:0,vTotal:0}];renderCCItems();updateCCPreview();switchCCTab('nueva');};
+window.cargarCC = function(id){const r=ccHistorial.find(x=>x.id===id);if(!r||!r.data)return;const d=r.data;document.getElementById('cc-numero').value=d.numero||'';document.getElementById('cc-cliente-nombre').value=d.clienteNombre||'';document.getElementById('cc-cliente-nit').value=d.clienteNit||'';document.getElementById('cc-ciudad').value=d.ciudad||'BOGOTÁ';document.getElementById('cc-fecha').value=d.fecha||'';document.getElementById('cc-concepto').value=d.concepto||'';document.getElementById('cc-pago').value=d.pago||CC_PRESTADOR.banco;document.getElementById('cc-dia-letras').value=d.diaLetras||'';document.getElementById('cc-mes-letras').value=d.mesLetras||'';document.getElementById('cc-año-letras').value=d.añoLetras||'';document.getElementById('cc-incluir-garantia').checked=d.inclGarantia!==false;document.getElementById('cc-incluir-hoja2').checked=d.inclHoja2!==false;ccItems=d.items||[{desc:'',cant:1,vUnit:0,vTotal:0}];renderCCItems();updateCCPreview();switchCCTab('nueva');};
 window.reimprimirCC = function(id){const r=ccHistorial.find(x=>x.id===id);if(!r)return;cargarCC(id);setTimeout(generarPDF,200);};
 window.eliminarCC = function(id){if(!confirm('¿Eliminar esta cuenta del historial?'))return;ccHistorial=ccHistorial.filter(x=>x.id!==id);localStorage.setItem('cc_historial',JSON.stringify(ccHistorial));renderCCHistorial(ccHistorial);window.notif&&window.notif('Cuenta eliminada del historial');};
 window.limpiarCC = function(){if(!confirm('¿Limpiar el formulario?'))return;document.getElementById('cc-numero').value='';document.getElementById('cc-cliente-nombre').value='';document.getElementById('cc-cliente-nit').value='';document.getElementById('cc-concepto').value='';ccItems=[{desc:'',cant:1,vUnit:0,vTotal:0}];renderCCItems();updateCCPreview();};
