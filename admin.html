@@ -12,7 +12,7 @@
 :root{
   --bg:#080808;--bg2:#0f0f0f;--bg3:#161616;--bg4:#1c1c1c;
   --white:#efefef;--gray:#888;--gray2:#444;--gray3:#252525;
-  --gold:#c4a25a;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
+  --gold:#D08C6E;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
   --green:#4a4;--red:#e05574;--blue:#4f8ef7;
 }
 body{background:var(--bg);color:var(--white);font-family:"Barlow",sans-serif;font-weight:300;min-height:100vh}
@@ -27,7 +27,7 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
 .login-input{background:var(--bg3);border:1px solid var(--gray3);color:var(--white);padding:14px 16px;font-family:"Barlow",sans-serif;font-size:14px;font-weight:300;outline:none;width:100%;transition:border-color .2s;margin-bottom:12px}
 .login-input:focus{border-color:var(--gold)}
 .login-btn{background:var(--gold);color:#000;border:none;padding:14px;font-family:"Barlow Condensed",sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;width:100%;transition:all .2s}
-.login-btn:hover{background:#d4b26a}
+.login-btn:hover{background:#DCA088}
 .login-err{font-size:12px;color:var(--red);margin-top:8px;text-align:center;display:none}
 
 /* ADMIN LAYOUT */
@@ -39,7 +39,7 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
 .nav-group-label{font-family:"Barlow Condensed",sans-serif;font-size:9px;color:var(--gray);letter-spacing:3px;text-transform:uppercase;padding:8px 20px 4px}
 .nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;font-family:"Barlow Condensed",sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--gray);cursor:pointer;transition:all .2s;border-left:2px solid transparent}
 .nav-item:hover{color:var(--white);background:rgba(255,255,255,0.03)}
-.nav-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(196,162,90,0.06)}
+.nav-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(208,140,110,0.06)}
 .nav-item .nav-ico{font-size:14px;width:18px;text-align:center}
 .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:8px}
 .sidebar-footer a,.sidebar-footer button{font-family:"Barlow Condensed",sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gray);text-decoration:none;background:transparent;border:none;cursor:pointer;transition:color .2s;text-align:left;padding:0}
@@ -78,7 +78,7 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
 .btn-action:hover{color:var(--white);border-color:var(--gray)}
 .btn-action.danger:hover{color:var(--red);border-color:var(--red)}
 .btn-action.primary{background:var(--gold);color:#000;border-color:var(--gold)}
-.btn-action.primary:hover{background:#d4b26a}
+.btn-action.primary:hover{background:#DCA088}
 .btn-action.success{border-color:var(--green);color:var(--green)}
 .btn-action.success:hover{background:rgba(74,170,74,0.1)}
 
@@ -207,8 +207,8 @@ body.light{--bg:#f4f4f0;--bg2:#eaeae5;--bg3:#e0e0da;--bg4:#d8d8d2;--white:#111;-
   <div class="sidebar">
     <div class="sidebar-logo">
       <svg width="20" height="20" viewBox="0 0 100 100" fill="none">
-        <polygon points="50,4 96,92 4,92" fill="none" stroke="#c4a25a" stroke-width="5" stroke-linejoin="miter"/>
-        <line x1="27" y1="66" x2="73" y2="66" stroke="#c4a25a" stroke-width="4"/>
+        <polygon points="50,4 96,92 4,92" fill="none" stroke="#D08C6E" stroke-width="5" stroke-linejoin="miter"/>
+        <line x1="27" y1="66" x2="73" y2="66" stroke="#D08C6E" stroke-width="4"/>
       </svg>
       <span class="sidebar-logo-text">Admin</span>
     </div>
@@ -829,9 +829,9 @@ BANCOLOMBIA, CUENTA DE AHORROS N° 04579897533
         </div>
       </div>
       <div class="form-group" style="margin-bottom:14px" id="marca-logo-group"><label class="form-label">URL del logo</label><input class="form-input" type="text" id="marca-logoUrl" placeholder="https://upload.wikimedia.org/..."></div>
-      <div class="form-group" style="margin-bottom:14px" id="marca-texto-group"><label class="form-label">Texto del logo</label><input class="form-input" type="text" id="marca-logoTexto" placeholder="KEYSFAN"></div>
+      <div class="form-group" style="margin-bottom:14px" id="marca-texto-group"><label class="form-label">Texto del logo</label><input class="form-input" type="text" id="marca-logoTexto" placeholder="OPPO"></div>
       <div class="form-row">
-        <div class="form-group"><label class="form-label">Color del texto</label><input class="form-input" type="text" id="marca-color" placeholder="#c4a25a"></div>
+        <div class="form-group"><label class="form-label">Color del texto</label><input class="form-input" type="text" id="marca-color" placeholder="#D08C6E"></div>
         <div class="form-group"><label class="form-label">Orden</label><input class="form-input" type="number" id="marca-orden" placeholder="1"></div>
       </div>
       <div class="toggle-wrap"><label class="toggle"><input type="checkbox" id="marca-activo" checked><span class="toggle-slider"></span></label><span class="toggle-label">Marca activa (visible en el carrusel)</span></div>
@@ -1086,7 +1086,7 @@ async function loadDeals() {
   } catch(err){console.warn(err);}
 }
 
-window.seedDeals = async function(){const defaultDeals=[{orden:1,nombre:'Amazon',subtitulo:'Electrónica & Tech',logoLabel:'AMZ',logoColor:'#ff9900',link:'https://amzn.to/4mJGzuv',codigo:'',badge:'Link exclusivo',descripcion:'Los mejores productos tech en Amazon seleccionados por Alexander.',activo:true},{orden:2,nombre:'AliExpress',subtitulo:'Gadgets & Accesorios',logoLabel:'ALI',logoColor:'#ff4d00',link:'https://s.click.aliexpress.com/e/_mqlFTO1',codigo:'',badge:'Link exclusivo',descripcion:'Gadgets y accesorios tech a los mejores precios desde AliExpress.',activo:true},{orden:3,nombre:'Gamsgo',subtitulo:'Software & Juegos',logoLabel:'GSG',logoColor:'#1a1a2e',link:'https://www.gamsgo.com/partner/BZ5R8',codigo:'ALEXAYA',badge:'',descripcion:'Licencias de software y juegos digitales al mejor precio.',activo:true},{orden:4,nombre:'Filmora 15',subtitulo:'Editor de video',logoLabel:'FLM',logoColor:'#00adef',link:'https://filmora.pxf.io/c/6239892/2810901/31971',codigo:'',badge:'Oferta especial',descripcion:'El editor de video favorito de creadores.',activo:true},{orden:5,nombre:'Parallels Desktop',subtitulo:'Mac & Windows',logoLabel:'PAR',logoColor:'#e84c3d',link:'https://prf.hn/l/OJvRMRm/',codigo:'',badge:'Descuento especial',descripcion:'Corre Windows en tu Mac sin reiniciar.',activo:true},{orden:6,nombre:'GoLogin',subtitulo:'Navegador antidetect',logoLabel:'GL',logoColor:'#4f46e5',link:'https://bit.ly/gologin_alexander-aya',codigo:'ALXGO',badge:'',descripcion:'Gestión de múltiples cuentas y perfiles de navegador.',activo:true},{orden:7,nombre:'Keysfan',subtitulo:'Licencias Microsoft',logoLabel:'KSF',logoColor:'#f59e0b',link:'https://www.keysfan.com/new-year-2026-alx.html?ksf=saaa19',codigo:'alx50 / alx62',badge:'',descripcion:'Licencias originales de Windows y Office al mejor precio.',activo:true}];try{for(const d of defaultDeals)await addDoc(collection(db,'cms_deals'),{...d,createdAt:serverTimestamp()});window.notif('Deals cargados en Firestore');loadDeals();}catch(err){window.notif('Error','error');}};
+window.seedDeals = async function(){const defaultDeals=[{orden:1,nombre:'Amazon',subtitulo:'Electrónica & Tech',logoLabel:'AMZ',logoColor:'#ff9900',link:'https://amzn.to/4mJGzuv',codigo:'',badge:'Link exclusivo',descripcion:'Los mejores productos tech en Amazon seleccionados por Alexander.',activo:true},{orden:2,nombre:'AliExpress',subtitulo:'Gadgets & Accesorios',logoLabel:'ALI',logoColor:'#ff4d00',link:'https://s.click.aliexpress.com/e/_mqlFTO1',codigo:'',badge:'Link exclusivo',descripcion:'Gadgets y accesorios tech a los mejores precios desde AliExpress.',activo:true},{orden:3,nombre:'Gamsgo',subtitulo:'Software & Juegos',logoLabel:'GSG',logoColor:'#1a1a2e',link:'https://www.gamsgo.com/partner/BZ5R8',codigo:'ALEXAYA',badge:'',descripcion:'Licencias de software y juegos digitales al mejor precio.',activo:true},{orden:4,nombre:'Filmora 15',subtitulo:'Editor de video',logoLabel:'FLM',logoColor:'#00adef',link:'https://filmora.pxf.io/c/6239892/2810901/31971',codigo:'',badge:'Oferta especial',descripcion:'El editor de video favorito de creadores.',activo:true},{orden:5,nombre:'Parallels Desktop',subtitulo:'Mac & Windows',logoLabel:'PAR',logoColor:'#e84c3d',link:'https://prf.hn/l/OJvRMRm/',codigo:'',badge:'Descuento especial',descripcion:'Corre Windows en tu Mac sin reiniciar.',activo:true},{orden:6,nombre:'GoLogin',subtitulo:'Navegador antidetect',logoLabel:'GL',logoColor:'#4f46e5',link:'https://bit.ly/gologin_alexander-aya',codigo:'ALXGO',badge:'',descripcion:'Gestión de múltiples cuentas y perfiles de navegador.',activo:true}];try{for(const d of defaultDeals)await addDoc(collection(db,'cms_deals'),{...d,createdAt:serverTimestamp()});window.notif('Deals cargados en Firestore');loadDeals();}catch(err){window.notif('Error','error');}};
 window.openModalDeal=function(){document.getElementById('deal-id').value='';['nombre','subtitulo','logoLabel','logoColor','link','codigo','badge','descripcion','orden'].forEach(f=>document.getElementById('deal-'+f).value='');document.getElementById('deal-activo').checked=true;document.getElementById('modalDealTitle').textContent='Nuevo deal';document.getElementById('modalDeal').classList.add('open');};
 window.closeModalDeal=function(){document.getElementById('modalDeal').classList.remove('open');};
 window.editDeal=async function(id){const snap=await getDoc(doc(db,'cms_deals',id));if(!snap.exists())return;const deal=snap.data();document.getElementById('deal-id').value=id;document.getElementById('deal-nombre').value=deal.nombre||'';document.getElementById('deal-subtitulo').value=deal.subtitulo||'';document.getElementById('deal-logoLabel').value=deal.logoLabel||'';document.getElementById('deal-logoColor').value=deal.logoColor||'';document.getElementById('deal-link').value=deal.link||'';document.getElementById('deal-codigo').value=deal.codigo||'';document.getElementById('deal-badge').value=deal.badge||'';document.getElementById('deal-descripcion').value=deal.descripcion||'';document.getElementById('deal-orden').value=deal.orden||'';document.getElementById('deal-activo').checked=!!deal.activo;document.getElementById('modalDealTitle').textContent='Editar deal';document.getElementById('modalDeal').classList.add('open');};
@@ -1106,7 +1106,7 @@ window.deleteCliente=async function(id){if(!confirm('¿Eliminar este cliente?'))
 
 // ─── CMS MARCAS ───────────────────────────────────────
 async function loadMarcas(){try{const snap=await getDocs(query(collection(db,'cms_marcas'),orderBy('orden')));const container=document.getElementById('marcasContainer');if(snap.empty){container.innerHTML=`<div class="empty-state"><div class="empty-state-ico">🎖️</div><div class="empty-state-t">No hay marcas en Firestore</div><div class="empty-state-s" style="margin-bottom:20px">Carga las marcas del carrusel como punto de partida</div><button class="btn-action primary" onclick="seedMarcas()">Cargar marcas por defecto →</button></div>`;return;}container.innerHTML='<div class="cms-grid" id="marcasGrid"></div>';const grid=document.getElementById('marcasGrid');snap.forEach(d=>{const m=d.data();grid.innerHTML+=`<div class="cms-item"><div class="cms-item-header"><div class="cms-item-title">${m.nombre}</div><span class="status-badge ${m.activo?'status-activo':'status-inactivo'}">${m.activo?'Activo':'Inactivo'}</span></div><div style="font-size:11px;color:var(--gray);margin-bottom:12px">${m.tipo==='texto'?'📝 Texto: '+m.logoTexto:'🖼️ Logo: '+(m.logoUrl||'').substring(0,50)}</div><div class="cms-item-actions"><button class="btn-action" onclick="editMarca('${d.id}')">Editar</button><button class="btn-action ${m.activo?'danger':'success'}" onclick="toggleMarca('${d.id}',${!m.activo})">${m.activo?'Desactivar':'Activar'}</button><button class="btn-action danger" onclick="deleteMarca('${d.id}')">Eliminar</button></div></div>`;});}catch(err){console.warn(err);}}
-window.seedMarcas=async function(){const defaults=[{orden:1,nombre:'Amazon',tipo:'logo',logoUrl:'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg',logoTexto:'',color:'',activo:true},{orden:2,nombre:'Motorola',tipo:'logo',logoUrl:'https://upload.wikimedia.org/wikipedia/commons/f/f9/Motorola_new_logo.svg',logoTexto:'',color:'',activo:true},{orden:3,nombre:'Lenovo',tipo:'logo',logoUrl:'https://upload.wikimedia.org/wikipedia/commons/b/b8/Lenovo_logo_2015.svg',logoTexto:'',color:'',activo:true},{orden:4,nombre:'AliExpress',tipo:'logo',logoUrl:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/AliExpress_logo.svg/2560px-AliExpress_logo.svg.png',logoTexto:'',color:'',activo:true},{orden:5,nombre:'Keysfan',tipo:'texto',logoUrl:'',logoTexto:'KEYSFAN',color:'#c4a25a',activo:true},{orden:6,nombre:'GoLogin',tipo:'texto',logoUrl:'',logoTexto:'GoLogin',color:'#4f46e5',activo:true},{orden:7,nombre:'Filmora',tipo:'texto',logoUrl:'',logoTexto:'Filmora',color:'#00adef',activo:true},{orden:8,nombre:'Gamsgo',tipo:'texto',logoUrl:'',logoTexto:'GAMSGO',color:'#1a1a2e',activo:true}];try{for(const m of defaults)await addDoc(collection(db,'cms_marcas'),{...m,createdAt:serverTimestamp()});window.notif('Marcas cargadas en Firestore');loadMarcas();}catch(err){window.notif('Error','error');}};
+window.seedMarcas=async function(){const defaults=[{orden:1,nombre:'Motorola',tipo:'logo',logoUrl:'https://upload.wikimedia.org/wikipedia/commons/f/f9/Motorola_new_logo.svg',logoTexto:'',color:'',activo:true},{orden:2,nombre:'Lenovo',tipo:'logo',logoUrl:'https://upload.wikimedia.org/wikipedia/commons/b/b8/Lenovo_logo_2015.svg',logoTexto:'',color:'',activo:true},{orden:3,nombre:'Amazon',tipo:'logo',logoUrl:'https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg',logoTexto:'',color:'',activo:true},{orden:4,nombre:'AliExpress',tipo:'logo',logoUrl:'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/AliExpress_logo.svg/2560px-AliExpress_logo.svg.png',logoTexto:'',color:'',activo:true},{orden:5,nombre:'OPPO',tipo:'texto',logoUrl:'',logoTexto:'OPPO',color:'',activo:true},{orden:6,nombre:'TCL',tipo:'texto',logoUrl:'',logoTexto:'TCL',color:'',activo:true},{orden:7,nombre:'GoLogin',tipo:'texto',logoUrl:'',logoTexto:'GoLogin',color:'',activo:true},{orden:8,nombre:'AOMEI Backupper',tipo:'texto',logoUrl:'',logoTexto:'AOMEI',color:'',activo:true},{orden:9,nombre:'RecoveryFox AI',tipo:'texto',logoUrl:'',logoTexto:'RecoveryFox',color:'',activo:true},{orden:10,nombre:'LensGo',tipo:'texto',logoUrl:'',logoTexto:'LensGo',color:'',activo:true},{orden:11,nombre:'1hora',tipo:'texto',logoUrl:'',logoTexto:'1hora',color:'',activo:true},{orden:12,nombre:'Gamsgo',tipo:'texto',logoUrl:'',logoTexto:'GAMSGO',color:'',activo:true}];try{for(const m of defaults)await addDoc(collection(db,'cms_marcas'),{...m,createdAt:serverTimestamp()});window.notif('Marcas cargadas en Firestore');loadMarcas();}catch(err){window.notif('Error','error');}};
 window.openModalMarca=function(){document.getElementById('marca-id').value='';['nombre','logoUrl','logoTexto','color','orden'].forEach(f=>document.getElementById('marca-'+f).value='');document.getElementById('marca-tipo').value='logo';document.getElementById('marca-activo').checked=true;document.getElementById('modalMarcaTitle').textContent='Nueva marca';document.getElementById('modalMarca').classList.add('open');updateMarcaTipo();};
 window.closeModalMarca=function(){document.getElementById('modalMarca').classList.remove('open');};
 window.updateMarcaTipo=function(){const tipo=document.getElementById('marca-tipo').value;document.getElementById('marca-logo-group').style.display=tipo==='logo'?'block':'none';document.getElementById('marca-texto-group').style.display=tipo==='texto'?'block':'none';};
@@ -1253,7 +1253,7 @@ window.updateCCPreview = function() {
   const h2fields = document.getElementById('cc-hoja2-fields');
   if(h2fields) h2fields.style.display = inclHoja2 ? 'block' : 'none';
 
-  const d=getCCData(); const total=getCCTotal(); const gold='#c4a25a';
+  const d=getCCData(); const total=getCCTotal(); const gold='#D08C6E';
   const inclGarantia = document.getElementById('cc-incluir-garantia').checked;
 
   let itemsHTML=d.items.map((it,i)=>`<tr style="border-bottom:1px solid #eee"><td style="padding:5px 4px;text-align:center;color:#666">${i+1}</td><td style="padding:5px 4px;font-size:8px;color:#333">${it.desc||'—'}</td><td style="padding:5px 4px;text-align:center">${it.cant}</td><td style="padding:5px 4px;text-align:right">${fmtPesos(it.vUnit)}</td><td style="padding:5px 4px;text-align:right;font-weight:bold">${fmtPesos(it.vTotal)}</td></tr>`).join('');
@@ -1290,7 +1290,7 @@ window.generarPDF = function() {
   if (typeof window.jspdf === 'undefined') { alert('La librería jsPDF no está cargada. Verifica la conexión a internet.'); return; }
   const { jsPDF } = window.jspdf;
   const d=getCCData(); const total=getCCTotal();
-  const gold=[196,162,90], negro=[17,17,17], gris=[100,100,100];
+  const gold=[208,140,110], negro=[17,17,17], gris=[100,100,100];
   const inclGarantia = document.getElementById('cc-incluir-garantia').checked;
   const inclHoja2    = document.getElementById('cc-incluir-hoja2').checked;
 
@@ -1599,7 +1599,7 @@ function formatCOTFecha(dateStr) {
 window.updateCOTPreview = function() {
   const d = getCOTData();
   const total = getCOTTotal();
-  const gold = '#c4a25a';
+  const gold = '#D08C6E';
 
   const itemsHTML = d.items.map((it,i) => `
     <tr style="background:${i%2===0?'#fff':'#fafafa'}">

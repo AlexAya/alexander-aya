@@ -192,7 +192,7 @@ const CC_PRESTADOR = {
   regimen:   'SOMOS REGIMEN SIMPLIFICADO - NO RESPONSABLE DE IVA - NO OBLIGADO A FACTURAR ELECTRÓNICAMENTE',
   garantia:  'Garantía correspondiente a la compra o servicio, no se aceptan cambios ni se realizan devoluciones de dinero. Para efectos de garantía se necesita copia de la cuenta de cobro y la mercancía con todos sus accesorios y empaque originales, no cubre daños ocasionados por alto voltaje, golpes, deterioro, virus, mala manipulación o por levantar los sellos de seguridad.',
   banco:     'TRANSFERENCIA BANCOLOMBIA, CUENTA DE AHORROS N° 04579897533 – NEQUI, DAVIPLATA 3219699676.',
-  gold:      '#c4a25a',
+  gold:      '#D08C6E',
 };
 
 let ccItems = [];           // [{desc, cant, vUnit, vTotal}]
@@ -357,7 +357,7 @@ function formatFecha(dateStr) {
 window.updateCCPreview = function() {
   const d = getCCData();
   const total = getCCTotal();
-  const gold = '#c4a25a';
+  const gold = '#D08C6E';
 
   let itemsHTML = d.items.map((it, i) => `
     <tr style="border-bottom:1px solid #eee">
@@ -440,7 +440,7 @@ window.generarPDF = function() {
   const { jsPDF } = window.jspdf;
   const d = getCCData();
   const total = getCCTotal();
-  const gold = [196, 162, 90];     // RGB del gold del sitio
+  const gold = [208, 140, 110];     // RGB del gold del sitio
   const negro = [17, 17, 17];
   const gris  = [100, 100, 100];
 
