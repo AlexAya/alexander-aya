@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blog Â· Alexander Aya</title>
+<title>Blog · Alexander Aya</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -76,7 +76,7 @@ footer{border-top:1px solid var(--border);padding:24px 0;margin-top:40px}
 
 @media(max-width:900px){.feed{grid-template-columns:1fr 1fr}.channels-grid{grid-template-columns:1fr}}
 @media(max-width:600px){.feed{grid-template-columns:1fr}.blog-h1{font-size:36px}}
-/* â”€â”€ RediseÃ±o 2026: tipografÃ­a, vidrio y esquinas redondeadas â”€â”€ */
+/* ── Rediseño 2026: tipografía, vidrio y esquinas redondeadas ── */
 body{font-family:"Inter",-apple-system,BlinkMacSystemFont,sans-serif;font-weight:400;-webkit-font-smoothing:antialiased}
 .logo-nav-text,.blog-h1,.feed-title,.ch-name{font-family:"Space Grotesk","Inter",sans-serif;letter-spacing:-.02em;text-transform:none}
 .logo-nav-text{font-size:16px;font-weight:600}
@@ -85,7 +85,7 @@ nav{background:rgba(10,10,12,0.6);-webkit-backdrop-filter:saturate(180%) blur(20
 .nav-back{font-size:13px}
 .blog-eyebrow{font-size:13px;font-weight:600;color:var(--gold)}
 .blog-eyebrow::before{display:none}
-.blog-h1{font-size:clamp(40px,6vw,64px);font-weight:700;letter-spacing:-.04em}
+.blog-h1{font-size:clamp(32px,4.2vw,48px);font-weight:700;letter-spacing:-.04em}
 .blog-sub{font-size:17px}
 .tabs{gap:8px;background:none;flex-wrap:wrap}
 .tab{font-size:14px;font-weight:500;padding:9px 18px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,0.04)}
@@ -117,7 +117,7 @@ nav{background:rgba(10,10,12,0.6);-webkit-backdrop-filter:saturate(180%) blur(20
     </svg>
     <span class="logo-nav-text">Alexander Aya</span>
   </a>
-  <a href="index.html" class="nav-back">â† Volver al inicio</a>
+  <a href="index.html" class="nav-back">← Volver al inicio</a>
 </div></div>
 </nav>
 
@@ -128,10 +128,10 @@ nav{background:rgba(10,10,12,0.6);-webkit-backdrop-filter:saturate(180%) blur(20
     <div class="blog-sub">Videos, tutoriales y contenido tech en todos mis canales</div>
 
     <div class="tabs">
-      <a class="tab active" onclick="setTab('yt');return false;" href="#">â–¶ YouTube</a>
-      <a class="tab" onclick="setTab('gaming');return false;" href="#">ðŸŽ® Gaming</a>
-      <a class="tab" onclick="setTab('tt');return false;" href="#">â™ª TikTok</a>
-      <a class="tab" onclick="setTab('ig');return false;" href="#">â—‰ Instagram</a>
+      <a class="tab active" onclick="setTab('yt');return false;" href="#">▶ YouTube</a>
+      <a class="tab" onclick="setTab('gaming');return false;" href="#">🎮 Gaming</a>
+      <a class="tab" onclick="setTab('tt');return false;" href="#">♪ TikTok</a>
+      <a class="tab" onclick="setTab('ig');return false;" href="#">◉ Instagram</a>
     </div>
   </div>
 
@@ -145,8 +145,8 @@ nav{background:rgba(10,10,12,0.6);-webkit-backdrop-filter:saturate(180%) blur(20
 <footer>
 <div class="w">
 <div class="foot-inner">
-  <span class="foot-text">Â© 2026 Alexander Aya Aponte Â· BogotÃ¡, Colombia</span>
-  <a href="index.html" class="foot-text" style="color:var(--gold);text-decoration:none">â† Volver al portafolio</a>
+  <span class="foot-text">© 2026 Alexander Aya Aponte · Bogotá, Colombia</span>
+  <a href="index.html" class="foot-text" style="color:var(--gold);text-decoration:none">← Volver al portafolio</a>
 </div>
 </div>
 </footer>
@@ -155,8 +155,8 @@ nav{background:rgba(10,10,12,0.6);-webkit-backdrop-filter:saturate(180%) blur(20
 var currentTab = 'yt';
 
 var tabConfig = {
-  yt:     { label: 'â–¶ YouTube Â· @AlexanderAya', cls: 'yt-lbl', channelId: 'UCCVyeHCXlxBnBH-F5gKXBRg', handle: '@AlexanderAya',  url: 'https://youtube.com/@AlexanderAya' },
-  gaming: { label: 'â–¶ YouTube Â· @xandersgamerspc', cls: 'yt-lbl', channelId: 'UCzK7LEnKMEbKAVFbmmf3Vpg', handle: '@xandersgamerspc', url: 'https://youtube.com/@xandersgamerspc' },
+  yt:     { label: '▶ YouTube · @AlexanderAya', cls: 'yt-lbl', channelId: 'UCCVyeHCXlxBnBH-F5gKXBRg', handle: '@AlexanderAya',  url: 'https://youtube.com/@AlexanderAya' },
+  gaming: { label: '▶ YouTube · @xandersgamerspc', cls: 'yt-lbl', channelId: 'UCzK7LEnKMEbKAVFbmmf3Vpg', handle: '@xandersgamerspc', url: 'https://youtube.com/@xandersgamerspc' },
   tt:     { label: null, cls: 'tt-lbl', handle: '@alexander_aya_tech', url: 'https://tiktok.com/@alexander_aya_tech' },
   ig:     { label: null, cls: 'ig-lbl', handle: '@alex.ayaaponte', url: 'https://instagram.com/alex.ayaaponte' }
 };
@@ -206,9 +206,9 @@ function renderYT(items, cfg){
     if(thumb){
       html += '<img src="'+thumb+'" loading="lazy" alt="'+escHtml(item.title)+'">';
     } else {
-      html += '<div class="feed-thumb-placeholder">â–¶</div>';
+      html += '<div class="feed-thumb-placeholder">▶</div>';
     }
-    html += '<div class="feed-thumb-play"><div class="play-icon">â–¶</div></div></div>';
+    html += '<div class="feed-thumb-play"><div class="play-icon">▶</div></div></div>';
     html += '<div class="feed-meta">';
     html += '<div class="feed-platform '+cfg.cls+'">'+cfg.label+'</div>';
     html += '<div class="feed-title">'+escHtml(item.title)+'</div>';
@@ -220,10 +220,10 @@ function renderYT(items, cfg){
 
 function renderNote(cfg){
   var feed = document.getElementById('feed');
-  var icon = cfg.cls === 'yt-lbl' ? 'â–¶' : cfg.cls === 'tt-lbl' ? 'â™ª' : 'â—‰';
+  var icon = cfg.cls === 'yt-lbl' ? '▶' : cfg.cls === 'tt-lbl' ? '♪' : '◉';
   feed.innerHTML = '<div class="feed-note">'+
-    '<p style="margin-bottom:20px;font-size:16px">Visita el canal directamente para ver el contenido mÃ¡s reciente:</p>'+
-    '<a href="'+cfg.url+'" target="_blank" class="channel-link '+cfg.cls+'">'+icon+' '+cfg.handle+'  â†’</a>'+
+    '<p style="margin-bottom:20px;font-size:16px">Visita el canal directamente para ver el contenido más reciente:</p>'+
+    '<a href="'+cfg.url+'" target="_blank" class="channel-link '+cfg.cls+'">'+icon+' '+cfg.handle+'  →</a>'+
     '</div>';
 }
 
