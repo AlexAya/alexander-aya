@@ -621,7 +621,7 @@ footer{border-top:1px solid var(--border);padding:30px 0}
     <div class="hero-left">
       <div class="hero-eyebrow" data-reveal><span class="nav-dot"></span>Disponible · Bogotá, Colombia · Remoto</div>
       <h1 class="hero-name" data-reveal style="--d:80ms"><span class="line1">Alexander</span><br><span class="gold">Aya.</span></h1>
-      <div class="hero-role" data-reveal style="--d:160ms">Ingeniero de Sistemas &amp; Software · Docente · Creador de contenido tech</div>
+      <div class="hero-role" data-reveal style="--d:160ms">Ingeniero de Sistemas &amp; Software · Creador de contenido tech</div>
       <p class="hero-bio" data-reveal style="--d:220ms">Creador de contenido tech con <strong>10.9K suscriptores</strong> en YouTube. Unboxing, reviews, hardware y upgrades explicados en español.</p>
       <div class="hero-btns" data-reveal style="--d:300ms">
         <button class="btn-cotizar" onclick="openModal()">Cotizar servicio</button>
@@ -717,7 +717,27 @@ footer{border-top:1px solid var(--border);padding:30px 0}
   </div>
   <div class="tray-grid" data-stagger>
 
-    <div class="tray-card active" id="tc0">
+    <div class="tray-card active" id="tc2">
+      <div class="tray-header" onclick="toggleTray(2)">
+        <div class="tray-ico">💻</div>
+        <div class="tray-cargo">Desarrollador de Software Freelance</div>
+        <div class="tray-brief">Desarrollo de aplicaciones y sitios web para empresas y clientes independientes: frontend, APIs REST, bases de datos y despliegue.</div>
+        <div class="tray-toggle">Ver detalle <span class="tray-toggle-arrow">▾</span></div>
+      </div>
+      <div class="tray-body">
+        <div class="tray-content"><div class="tray-content-inner">
+          <div class="tray-item">Desarrollo de aplicaciones y sitios web para empresas y clientes independientes.</div>
+          <div class="tray-item">Implementación de interfaces con HTML5, CSS3, JavaScript, React y Next.js.</div>
+          <div class="tray-item">Desarrollo e integración de APIs REST con NestJS y TypeScript, como la plataforma de reservas de Back to Bag.</div>
+          <div class="tray-item">Diseño y administración de bases de datos relacionales y no relacionales.</div>
+          <div class="tray-item">Despliegue de aplicaciones en entornos Linux, contenedores Docker y servicios cloud, con control de versiones en Git y GitHub.</div>
+          <div class="tray-item">Levantamiento de requerimientos, soporte correctivo y evolutivo, y optimización de aplicaciones web.</div>
+          <div class="tray-tags"><span class="tag">React</span><span class="tag">Next.js</span><span class="tag">NestJS</span><span class="tag">TypeScript</span><span class="tag">APIs REST</span><span class="tag">Docker</span></div>
+        </div></div>
+      </div>
+    </div>
+
+    <div class="tray-card" id="tc0">
       <div class="tray-header" onclick="toggleTray(0)">
         <div class="tray-ico">🏗️</div>
         <div class="tray-cargo">Ingeniero de Infraestructura TI</div>
@@ -751,25 +771,6 @@ footer{border-top:1px solid var(--border);padding:30px 0}
           <div class="tray-item">Seguimiento de rendimiento estudiantil y creación de material didáctico técnico.</div>
           <div class="tray-item">Formación práctica en SQL, HTML, CSS y lógica de programación orientada a proyectos reales.</div>
           <div class="tray-tags"><span class="tag">Moodle</span><span class="tag">SQL</span><span class="tag">HTML/CSS</span><span class="tag">Docencia</span></div>
-        </div></div>
-      </div>
-    </div>
-
-    <div class="tray-card" id="tc2">
-      <div class="tray-header" onclick="toggleTray(2)">
-        <div class="tray-ico">💻</div>
-        <div class="tray-cargo">Desarrollador Web</div>
-        <div class="tray-brief">Desarrollo de interfaces web, integración de componentes y despliegue de sitios con buenas prácticas.</div>
-        <div class="tray-toggle">Ver detalle <span class="tray-toggle-arrow">▾</span></div>
-      </div>
-      <div class="tray-body">
-        <div class="tray-content"><div class="tray-content-inner">
-          <div class="tray-item">Desarrollo de interfaces web responsivas utilizando HTML5, CSS3 y JavaScript.</div>
-          <div class="tray-item">Aplicación de buenas prácticas en estructura de código, semántica y pruebas funcionales.</div>
-          <div class="tray-item">Integración de componentes y módulos en proyectos web existentes.</div>
-          <div class="tray-item">Despliegue de sitios web en ambientes de producción y verificación de funcionamiento.</div>
-          <div class="tray-item">Desarrollo full-stack con Next.js, NestJS y TypeScript, como la plataforma de reservas de Back to Bag.</div>
-          <div class="tray-tags"><span class="tag">Next.js</span><span class="tag">NestJS</span><span class="tag">TypeScript</span><span class="tag">Deploy</span></div>
         </div></div>
       </div>
     </div>
